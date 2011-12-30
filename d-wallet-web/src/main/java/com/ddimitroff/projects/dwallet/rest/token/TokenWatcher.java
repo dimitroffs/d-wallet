@@ -1,15 +1,12 @@
-package com.ddimitroff.projects.dwallet.rest.session;
+package com.ddimitroff.projects.dwallet.rest.token;
 
 import com.ddimitroff.projects.dwallet.db.UserDAO;
 import com.ddimitroff.projects.dwallet.db.UserDAOManager;
-import com.ddimitroff.projects.dwallet.rest.token.Token;
-import com.ddimitroff.projects.dwallet.rest.token.TokenGenerator;
 
-public class DWalletApplicationSession {
+public class TokenWatcher {
 
 	private UserDAOManager userManager;
 	private UserDAO admin;
-	private TokenGenerator tokenGenerator;
 
 	public UserDAO getAdmin() {
 		return admin;
@@ -25,17 +22,6 @@ public class DWalletApplicationSession {
 		if (dao == null) {
 			userManager.saveUser(admin, admin);
 		}
-		
-		Token t = tokenGenerator.generate(dao.getEmail(), dao.getHashPassword());
-		System.out.println(t);
-	}
-
-	public TokenGenerator getTokenGenerator() {
-		return tokenGenerator;
-	}
-
-	public void setTokenGenerator(TokenGenerator tokenGenerator) {
-		this.tokenGenerator = tokenGenerator;
 	}
 
 	public void destroy() {
