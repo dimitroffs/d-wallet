@@ -14,8 +14,7 @@
 
 	<bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
 
-	<bean id="entityManagerFactory"
-		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 
 		<property name="jpaVendorAdapter">
@@ -54,19 +53,15 @@
 		</property>
 	</bean>
 
-	<bean id="dataSource" class="com.jolbox.bonecp.BoneCPDataSource"
-		destroy-method="close">
+	<bean id="dataSource" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
 		<property name="driverClass" value="${hibernate.connection.driver_class}" />
 		<property name="jdbcUrl" value="${hibernate.connection.url}" />
 		<property name="username" value="${hibernate.connection.username}" />
 		<property name="password" value="${hibernate.connection.password}" />
-		<property name="idleConnectionTestPeriod"
-			value="${hibernate.connection.idleConnectionTestPeriod}" />
+		<property name="idleConnectionTestPeriod" value="${hibernate.connection.idleConnectionTestPeriod}" />
 		<property name="idleMaxAge" value="${hibernate.bonecp.idle_max_age}" />
-		<property name="maxConnectionsPerPartition"
-			value="${hibernate.bonecp.max_connections_per_partition}" />
-		<property name="minConnectionsPerPartition"
-			value="${hibernate.bonecp.min_connections_per_partition}" />
+		<property name="maxConnectionsPerPartition" value="${hibernate.bonecp.max_connections_per_partition}" />
+		<property name="minConnectionsPerPartition" value="${hibernate.bonecp.min_connections_per_partition}" />
 		<property name="partitionCount" value="${hibernate.bonecp.partition_count}" />
 		<property name="acquireIncrement" value="${hibernate.bonecp.acquire_increment}" />
 		<property name="statementsCacheSize" value="${hibernate.bonecp.statements_cache_size}" />
@@ -78,8 +73,7 @@
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 
-	<bean id="propertyConfigurer"
-		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="localOverride" value="true" />
 		<property name="ignoreResourceNotFound" value="true" />
 		<property name="locations">

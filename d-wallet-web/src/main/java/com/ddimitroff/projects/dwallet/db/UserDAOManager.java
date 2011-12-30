@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ddimitroff.projects.dwallet.rest.user.UserRO;
+
 @Component
 @Transactional
 public class UserDAOManager implements Serializable {
@@ -87,6 +89,13 @@ public class UserDAOManager implements Serializable {
 
 			logger.info("User " + user + " deleted successfully");
 		}
+	}
+
+	public UserRO convert(UserDAO dao) {
+		UserRO ro = new UserRO(dao.getEmail(), dao.getHashPassword());
+		logger.info("User Rest Object successfully converted!");
+		
+		return ro;
 	}
 
 }

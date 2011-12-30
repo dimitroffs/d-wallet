@@ -13,12 +13,23 @@
 		scope="prototype">
 	</bean>
 
-	<bean id="userSession" class="com.ddimitroff.projects.dwallet.rest.session.DWalletRestSession"
+	<bean id="userSession"
+		class="com.ddimitroff.projects.dwallet.rest.session.DWalletRestSession"
 		scope="session">
 	</bean>
-	
-	<bean id="applicationSession" class="com.ddimitroff.projects.dwallet.rest.session.DWalletApplicationSession"
-		init-method="init" scope="global session" destroy-method="destroy">
+
+	<bean id="applicationSession"
+		class="com.ddimitroff.projects.dwallet.rest.session.DWalletApplicationSession"
+		init-method="init" scope="singleton" destroy-method="destroy">
+		<property name="userManager" ref="userManager" />
+		<property name="admin" ref="admin1" />
+	</bean>
+
+	<!-- Admin users -->
+	<bean id="admin1" class="com.ddimitroff.projects.dwallet.db.UserDAO"
+		scope="prototype">
+		<property name="email" value="mykob.11@gmail.com" />
+		<property name="hashPassword" value="mykob.11" />
 	</bean>
 
 </beans>

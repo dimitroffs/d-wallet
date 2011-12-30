@@ -5,7 +5,7 @@ import java.util.Date;
 import com.ddimitroff.projects.dwallet.db.UserDAO;
 
 public class DWalletRestSession {
-
+//TODO NOT NEEDED DUE TO USING TokenWatcher
 	private UserDAO currentUser;
 	private Date loginDate;
 
