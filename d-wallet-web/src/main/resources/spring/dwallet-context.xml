@@ -22,8 +22,24 @@
 		class="com.ddimitroff.projects.dwallet.rest.session.DWalletApplicationSession"
 		init-method="init" scope="singleton" destroy-method="destroy">
 		<property name="userManager" ref="userManager" />
-		<property name="admin" ref="admin1" />
 		<property name="tokenGenerator" ref="tokenGenerator" />
+		<property name="adminUsers" ref="adminUsers" />
+	</bean>
+
+	<bean id="tokenGenerator"
+		class="com.ddimitroff.projects.dwallet.rest.token.TokenGenerator"
+		scope="singleton">
+		<constructor-arg ref="userManager" />
+	</bean>
+
+	<!-- Admin users collection -->
+	<bean id="adminUsers" class="java.util.ArrayList" scope="singleton">
+		<constructor-arg>
+			<list>
+				<ref bean="admin1" />
+				<ref bean="admin2" />
+			</list>
+		</constructor-arg>
 	</bean>
 
 	<!-- Admin users -->
@@ -33,10 +49,10 @@
 		<property name="hashPassword" value="mykob.11" />
 	</bean>
 
-	<bean id="tokenGenerator"
-		class="com.ddimitroff.projects.dwallet.rest.token.TokenGenerator"
+	<bean id="admin2" class="com.ddimitroff.projects.dwallet.db.UserDAO"
 		scope="prototype">
-		<property name="userManager" ref="userManager" />
+		<property name="email" value="mykob.12@gmail.com" />
+		<property name="hashPassword" value="mykob.12" />
 	</bean>
 
 </beans>

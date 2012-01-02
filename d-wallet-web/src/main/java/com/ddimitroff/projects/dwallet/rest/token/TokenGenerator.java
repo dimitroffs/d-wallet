@@ -7,6 +7,14 @@ public class TokenGenerator {
 
 	private UserDAOManager userManager;
 
+	public TokenGenerator(UserDAOManager userManager) {
+		if (null != userManager) {
+			this.userManager = userManager;
+		} else {
+			throw new NullPointerException("Error creating token generator object due to null user data access object manager.");
+		}
+	}
+
 	public Token generate(String username, String hashPassword) {
 		UserDAO dao = userManager.getUserByCredentialsEmail(username, hashPassword);
 

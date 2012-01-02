@@ -17,15 +17,7 @@ public class TokenWatcher {
 	}
 
 	public void init() throws Exception {
-		System.out.println("initttttttttttttttttt");
-		UserDAO dao = userManager.getUserByName(admin.getEmail());
-		if (dao == null) {
-			userManager.saveUser(admin, admin);
-		}
-	}
-
-	public void destroy() {
-		System.out.println("destroyyyyyyyyyyyyyyyy");
+		// TODO
 	}
 
 	public UserDAOManager getUserManager() {

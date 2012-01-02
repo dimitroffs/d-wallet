@@ -22,7 +22,7 @@ public class Token {
 	}
 
 	private String generateTokenId(String username) {
-		Md5Hash hash = new Md5Hash(username);
+		Md5Hash hash = new Md5Hash(username, String.valueOf(createdOn.getTime()));
 
 		return hash.toHex();
 	}

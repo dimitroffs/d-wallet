@@ -65,7 +65,7 @@ public class UserDAOManager implements Serializable {
 	}
 
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-	public void saveUser(UserDAO actor, UserDAO user) throws Exception {
+	public void saveUser(UserDAO user) throws Exception {
 		if (em.find(UserDAO.class, user.getId()) != null) {
 			em.merge(user);
 			logger.info("User " + user + " updated successfully.");
