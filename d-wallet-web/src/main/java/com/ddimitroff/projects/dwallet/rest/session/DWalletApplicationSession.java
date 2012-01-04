@@ -32,7 +32,7 @@ public class DWalletApplicationSession {
 		UserDAO dao = userManager.getUserByName("mykob.11@gmail.com");
 		Token t = tokenGenerator.generate(dao.getEmail(), dao.getHashPassword());
 		System.out.println(t);
-		logger.info("Initializing 'd-wallet' application session finished in " + (System.nanoTime() - start) / 1000000 +" ms.");
+		logger.info("Initializing 'd-wallet' application session finished in " + (System.nanoTime() - start) / 1000000 + " ms.");
 	}
 
 	private void validateAdminUsers(List<UserDAO> adminUsers) throws Exception {
@@ -49,7 +49,8 @@ public class DWalletApplicationSession {
 	}
 
 	public void destroy() {
-		//TODO invoke when DWalletApplicationSession object is destroyed
+		// TODO invoked when Spring web context is destroyed
+		logger.info("Closing 'd-wallet' application session...");
 	}
 
 	public TokenGenerator getTokenGenerator() {
