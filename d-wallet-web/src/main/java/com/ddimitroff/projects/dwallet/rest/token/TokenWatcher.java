@@ -1,31 +1,21 @@
 package com.ddimitroff.projects.dwallet.rest.token;
 
-import com.ddimitroff.projects.dwallet.db.UserDAO;
-import com.ddimitroff.projects.dwallet.db.UserDAOManager;
+import org.apache.log4j.Logger;
 
 public class TokenWatcher {
 
-	private UserDAOManager userManager;
-	private UserDAO admin;
+	private static final Logger logger = Logger.getLogger(TokenWatcher.class);
 
-	public UserDAO getAdmin() {
-		return admin;
-	}
+	public void init() {
+		long start = System.nanoTime();
 
-	public void setAdmin(UserDAO admin) {
-		this.admin = admin;
-	}
-
-	public void init() throws Exception {
 		// TODO
+
+		logger.info("Initializing 'd-wallet' token watcher finished in " + (System.nanoTime() - start) / 1000000 + " ms.");
 	}
 
-	public UserDAOManager getUserManager() {
-		return userManager;
-	}
-
-	public void setUserManager(UserDAOManager userManager) {
-		this.userManager = userManager;
+	public void destroy() {
+		logger.info("Shutting down 'd-wallet' token watcher...");
 	}
 
 }

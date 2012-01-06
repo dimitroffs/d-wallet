@@ -50,7 +50,7 @@ public class DWalletApplicationSession {
 
 	public void destroy() {
 		// TODO invoked when Spring web context is destroyed
-		logger.info("Closing 'd-wallet' application session...");
+		logger.info("Shutting down 'd-wallet' application session...");
 	}
 
 	public TokenGenerator getTokenGenerator() {

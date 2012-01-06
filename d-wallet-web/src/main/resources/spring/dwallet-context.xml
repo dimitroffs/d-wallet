@@ -29,7 +29,12 @@
 	<bean id="tokenGenerator"
 		class="com.ddimitroff.projects.dwallet.rest.token.TokenGenerator"
 		scope="singleton">
-		<constructor-arg ref="userManager" />
+		<property name="userManager" ref="userManager" />
+		<property name="tokenWatcher" ref="tokenWatcher" />
+	</bean>
+
+	<bean id="tokenWatcher" class="com.ddimitroff.projects.dwallet.rest.token.TokenWatcher"
+		init-method="init" scope="singleton" destroy-method="destroy">
 	</bean>
 
 	<!-- Admin users collection -->
