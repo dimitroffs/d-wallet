@@ -36,26 +36,6 @@ public class UserDAOManager implements Serializable {
 	}
 
 	@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-	public UserDAO getUserByCredentialsUserName(String userName, String password) {
-		try {
-			UserDAO user = (UserDAO) em.createNamedQuery(UserDAO.GET_USER_BY_CREDENTIALS_USER).setParameter("userName", userName)
-					.setParameter("password", password).getSingleResult();
-			return user;
-		} catch (NoResultException e) {
-			return null;
-		}
-	}
-
-	@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-	public UserDAO getUserByUserName(String userName) {
-		try {
-			return (UserDAO) em.createNamedQuery(UserDAO.GET_USER_BY_USERNAME).setParameter("u", userName).getSingleResult();
-		} catch (NoResultException ex) {
-			return null;
-		}
-	}
-
-	@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 	public UserDAO getUserByName(String email) {
 		try {
 			return (UserDAO) em.createNamedQuery(UserDAO.GET_USER_BY_EMAIL).setParameter("email", email).getSingleResult();
@@ -93,9 +73,19 @@ public class UserDAOManager implements Serializable {
 
 	public UserRO convert(UserDAO dao) {
 		UserRO ro = new UserRO(dao.getEmail(), dao.getHashPassword());
-		logger.info("User Rest Object successfully converted!");
-		
+		logger.info("UserDAO successfully converted to UserRO!");
+
 		return ro;
+	}
+
+	public UserDAO convert(UserRO ro) {
+		UserDAO dao = new UserDAO();
+		dao.setEmail(ro.getUsername());
+		dao.setHashPassword(ro.getHashPassword());
+		dao.setRole(UserDAORoles.USER);
+		logger.info("UserRO successfully converted to UserDAO!");
+
+		return dao;
 	}
 
 }

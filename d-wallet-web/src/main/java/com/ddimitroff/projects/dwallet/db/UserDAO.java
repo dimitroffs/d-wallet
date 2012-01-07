@@ -1,7 +1,6 @@
 package com.ddimitroff.projects.dwallet.db;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,18 +17,13 @@ import javax.persistence.Table;
 @Table(name = "USERS")
 @NamedQueries({
 		@NamedQuery(name = UserDAO.GET_USER_BY_CREDENTIALS, query = "SELECT user FROM UserDAO user WHERE user.email = :email AND user.hashPassword = :password"),
-		@NamedQuery(name = UserDAO.GET_USER_BY_CREDENTIALS_USER, query = "SELECT user FROM UserDAO user WHERE user.userName = :userName AND user.hashPassword = :password"),
-		@NamedQuery(name = UserDAO.GET_USER_BY_EMAIL, query = "SELECT user FROM UserDAO user WHERE user.email = :email"),
-		@NamedQuery(name = UserDAO.GET_USER_BY_USERNAME, query = "SELECT user FROM UserDAO user WHERE user.userName = :userName") })
+		@NamedQuery(name = UserDAO.GET_USER_BY_EMAIL, query = "SELECT user FROM UserDAO user WHERE user.email = :email") })
 public class UserDAO implements Comparable<UserDAO>, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	public static final String GET_USER_BY_EMAIL = "User.getUserByEmail";
 	public static final String GET_USER_BY_CREDENTIALS = "User.getUserByCredentials";
-	public static final String GET_USER_BY_CREDENTIALS_USER = "User.getUserByCredentialsUser";
-	public static final String GET_ALL_USERS = "User.getAllUsers";
-	public static final String GET_USER_BY_USERNAME = "User.getUserByUserName";
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -44,88 +38,6 @@ public class UserDAO implements Comparable<UserDAO>, Serializable {
 	@Column(length = 32)
 	@Enumerated(EnumType.STRING)
 	private UserDAORoles role;
-
-	@Column(unique = true, length = 16)
-	private String userName;
-
-	@Column
-	private Date birthDate;
-
-	@Column(length = 1)
-	private String gender;
-
-	@Column
-	private Date lastLoginDate;
-
-	@Column
-	private Date createDate;
-
-	@Column
-	private boolean userActive;
-
-	@Column
-	private boolean emailVisible;
-
-	@Column
-	private boolean userNameVisible;
-
-	public Date getBirthDate() {
-		return birthDate;
-	}
-
-	public void setBirthDate(Date birthDate) {
-		this.birthDate = birthDate;
-	}
-
-	public String getGender() {
-		return gender;
-	}
-
-	public void setGender(String gender) {
-		this.gender = gender;
-	}
-
-	public Date getLastLoginDate() {
-		return lastLoginDate;
-	}
-
-	public void setLastLoginDate(Date lastLoginDate) {
-		this.lastLoginDate = lastLoginDate;
-	}
-
-	public Date getCreateDate() {
-		return createDate;
-	}
-
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
-	}
-
-	public boolean isUserActive() {
-		return userActive;
-	}
-
-	public void setUserActive(boolean userActive) {
-		this.userActive = userActive;
-	}
-
-	public boolean isEmailVisible() {
-		return emailVisible;
-	}
-
-	public void setEmailVisible(boolean emailVisible) {
-		this.emailVisible = emailVisible;
-	}
-
-	public boolean isUserNameVisible() {
-		return userNameVisible;
-	}
-
-	public void setUserNameVisible(boolean userNameVisible) {
-		this.userNameVisible = userNameVisible;
-	}
-
-	public static final UserDAO SYSTEM_ADMINISTRATOR = new UserDAO("SYSADMIN", UserDAORoles.ADMIN);
 
 	public UserDAO() {
 	}
@@ -213,14 +125,6 @@ public class UserDAO implements Comparable<UserDAO>, Serializable {
 	@Override
 	public String toString() {
 		return email + " [" + role + "]";
-	}
-
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
 	}
 
 }

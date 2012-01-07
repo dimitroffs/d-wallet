@@ -13,11 +13,6 @@
 		scope="prototype">
 	</bean>
 
-	<bean id="userSession"
-		class="com.ddimitroff.projects.dwallet.rest.session.DWalletRestSession"
-		scope="session">
-	</bean>
-
 	<bean id="applicationSession"
 		class="com.ddimitroff.projects.dwallet.rest.session.DWalletApplicationSession"
 		init-method="init" scope="singleton" destroy-method="destroy">
