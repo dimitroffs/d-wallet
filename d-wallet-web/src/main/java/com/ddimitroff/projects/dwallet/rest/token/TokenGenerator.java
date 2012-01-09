@@ -1,45 +1,39 @@
 package com.ddimitroff.projects.dwallet.rest.token;
 
+import org.apache.log4j.Logger;
+
 import com.ddimitroff.projects.dwallet.db.UserDAO;
 import com.ddimitroff.projects.dwallet.db.UserDAOManager;
 
 public class TokenGenerator {
 
+	private static final Logger logger = Logger.getLogger(TokenGenerator.class);
+
 	private UserDAOManager userManager;
 	private TokenWatcher tokenWatcher;
 
-//	public TokenGenerator(UserDAOManager userManager) {
-//		if (null != userManager) {
-//			this.userManager = userManager;
-//		} else {
-//			throw new NullPointerException("Error creating token generator object due to null user data access object manager.");
-//		}
-//	}
-
-	public Token generate(String username, String hashPassword) {
-		UserDAO dao = userManager.getUserByCredentialsEmail(username, hashPassword);
+	public Token generate(UserDAO dao) {
 
 		if (null != dao) {
 			if (isUserLoggedIn(dao)) {
-				// TODO log user is currently logged in
-				System.out.println("User logged in");
+				logger.error("User " + dao.getEmail() + " already has token for 'd-wallet' server operations");
 				return null;
 			} else {
 				Token token = new Token(dao);
-				// Add token to token watcher
+				tokenWatcher.addToken(token);
 
 				return token;
 			}
 		} else {
-			// TODO log
-			System.out.println("null DAO");
-			return null;
+			throw new NullPointerException("Unable to generate token for NULL input user");
 		}
 	}
 
 	private boolean isUserLoggedIn(UserDAO dao) {
-		// TODO Check Token Watcher if user is currently holding another token
-		// (getTokenByUser - TokenWatcher);
+		if (null != tokenWatcher.getTokenByUser(dao)) {
+			return true;
+		}
+
 		return false;
 	}
 

@@ -17,7 +17,6 @@
 		class="com.ddimitroff.projects.dwallet.rest.session.DWalletApplicationSession"
 		init-method="init" scope="singleton" destroy-method="destroy">
 		<property name="userManager" ref="userManager" />
-		<property name="tokenGenerator" ref="tokenGenerator" />
 		<property name="adminUsers" ref="adminUsers" />
 	</bean>
 
@@ -53,6 +52,16 @@
 		scope="prototype">
 		<property name="email" value="mykob.12@gmail.com" />
 		<property name="hashPassword" value="mykob.12" />
+	</bean>
+
+	<!-- API keys collection -->
+	<bean id="apiKeys" class="java.util.ArrayList" scope="singleton">
+		<constructor-arg>
+			<list value-type="java.lang.String">
+				<value>testAPIkey1</value>
+				<value>testAPIkey2</value>
+			</list>
+		</constructor-arg>
 	</bean>
 
 </beans>

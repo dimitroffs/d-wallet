@@ -8,7 +8,7 @@ import org.jsecurity.crypto.hash.Md5Hash;
 
 import com.ddimitroff.projects.dwallet.db.UserDAO;
 
-public class Token {
+public class Token implements Comparable<Token> {
 
 	private static final int TOKEN_TIMEOUT = 30; // 30 minutes
 	private static final SimpleDateFormat TOKEN_DATE_FORMAT = new SimpleDateFormat("yyyyMMdd-hhmm");
@@ -74,6 +74,11 @@ public class Token {
 	@Override
 	public String toString() {
 		return "Token [owner=" + owner.getEmail() + ", createdOn=" + createdOn + ", id=" + id + ", validTo=" + validTo + "]";
+	}
+
+	@Override
+	public int compareTo(Token token) {
+		return this.getOwner().compareTo(token.getOwner());
 	}
 
 }

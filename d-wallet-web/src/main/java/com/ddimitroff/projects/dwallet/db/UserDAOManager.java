@@ -88,4 +88,14 @@ public class UserDAOManager implements Serializable {
 		return dao;
 	}
 
+	public UserDAO getConvertedUser(UserRO ro) {
+		UserDAO dao = getUserByCredentialsEmail(ro.getUsername(), ro.getHashPassword());
+		if (null != dao) {
+			logger.info("UserRO successfully converted to UserDAO and got from DB!");
+			return dao;
+		}
+
+		return null;
+	}
+
 }
