@@ -37,6 +37,18 @@ public class TokenGenerator {
 		return false;
 	}
 
+	public TokenRO convert(Token token) {
+		TokenRO output = new TokenRO(token.getId());
+
+		return output;
+	}
+
+	public Token getConvertedToken(TokenRO tokenRO) {
+		Token output = tokenWatcher.getTokenById(tokenRO.getToken());
+
+		return output;
+	}
+
 	public UserDAOManager getUserManager() {
 		return userManager;
 	}

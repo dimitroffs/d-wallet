@@ -14,9 +14,7 @@ public class TokenWatcher {
 
 	public void init() {
 		long start = System.nanoTime();
-
 		activeTokens = new HashMap<String, Token>();
-
 		logger.info("Initializing 'd-wallet' token watcher finished in " + (System.nanoTime() - start) / 1000000 + " ms.");
 	}
 

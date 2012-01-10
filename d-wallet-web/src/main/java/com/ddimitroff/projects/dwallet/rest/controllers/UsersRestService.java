@@ -6,7 +6,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +18,8 @@ import com.ddimitroff.projects.dwallet.db.UserDAOManager;
 import com.ddimitroff.projects.dwallet.rest.exception.DWalletResponseException;
 import com.ddimitroff.projects.dwallet.rest.token.Token;
 import com.ddimitroff.projects.dwallet.rest.token.TokenGenerator;
+import com.ddimitroff.projects.dwallet.rest.token.TokenRO;
+import com.ddimitroff.projects.dwallet.rest.token.TokenWatcher;
 import com.ddimitroff.projects.dwallet.rest.user.UserRO;
 
 /**
@@ -38,26 +39,46 @@ public class UsersRestService {
 	private TokenGenerator tokenGenerator;
 
 	@Autowired
+	private TokenWatcher tokenWatcher;
+
+	@Autowired
 	private ArrayList<String> apiKeys;
 
-	@RequestMapping(method = RequestMethod.GET, value = "/users/get/{productId}")
+	// DWallet-API-Key: <api-key> needed
+	@RequestMapping(method = RequestMethod.POST, value = "/users/get")
 	@ResponseBody
-	public UserRO getUserById(@PathVariable String productId) {
-		UserDAO dao = userManager.getUserByName(productId);
-		UserRO ro = userManager.convert(dao);
-
-		return ro;
+	public UserRO getActiveUserByTokenId(@RequestHeader(value = DWALLET_REQUEST_HEADER, required = false) String apiKey, @RequestBody TokenRO tokenRO)
+			throws DWalletResponseException {
+		if (isValidAPIKey(apiKey)) {
+			if (null != tokenRO) {
+				Token token = tokenWatcher.getTokenById(tokenRO.getToken());
+				if (null != token) {
+					UserDAO dao = token.getOwner();
+					UserRO ro = userManager.convert(dao);
+					return ro;
+				} else {
+					logger.error("Unable to find token with id " + tokenRO.getToken());
+					throw new DWalletResponseException("Unable to find token with id " + tokenRO.getToken());
+				}
+			} else {
+				logger.error("Wrong request body for getting user by token id");
+				throw new DWalletResponseException("Wrong request body for getting user by token id");
+			}
+		} else {
+			logger.error("Wrong 'd-wallet' API key");
+			throw new DWalletResponseException("Wrong 'd-wallet' API key");
+		}
 	}
 
 	// Content-Type: application/json needed
 	// DWallet-API-Key: <api-key> needed
 	@RequestMapping(method = RequestMethod.POST, value = "/users/register")
 	@ResponseStatus(value = HttpStatus.OK)
-	public void registerUser(@RequestHeader(value = DWALLET_REQUEST_HEADER, required = false) String apiKey, @RequestBody UserRO ro)
+	public void registerUser(@RequestHeader(value = DWALLET_REQUEST_HEADER, required = false) String apiKey, @RequestBody UserRO userRO)
 			throws DWalletResponseException {
 		if (isValidAPIKey(apiKey)) {
-			if (null != ro) {
-				UserDAO daoToRegister = userManager.convert(ro);
+			if (null != userRO) {
+				UserDAO daoToRegister = userManager.convert(userRO);
 				try {
 					userManager.saveUser(daoToRegister);
 				} catch (Exception e) {
@@ -65,8 +86,8 @@ public class UsersRestService {
 					throw new DWalletResponseException("Unable to register user " + daoToRegister.getEmail());
 				}
 			} else {
-				logger.error("Wrong request parameters for register of new user");
-				throw new DWalletResponseException("Wrong request parameters for register of new user");
+				logger.error("Wrong request body for register of new user");
+				throw new DWalletResponseException("Wrong request body for register of new user");
 			}
 		} else {
 			logger.error("Wrong 'd-wallet' API key");
@@ -78,21 +99,46 @@ public class UsersRestService {
 	// DWallet-API-Key: <api-key> needed
 	@RequestMapping(method = RequestMethod.POST, value = "/users/login")
 	@ResponseBody
-	public String loginUser(@RequestHeader(value = DWALLET_REQUEST_HEADER, required = false) String apiKey, @RequestBody UserRO ro)
+	public TokenRO loginUser(@RequestHeader(value = DWALLET_REQUEST_HEADER, required = false) String apiKey, @RequestBody UserRO userRO)
 			throws DWalletResponseException {
 		if (isValidAPIKey(apiKey)) {
-			if (null != ro) {
-				UserDAO daoToLogin = userManager.getConvertedUser(ro);
+			if (null != userRO) {
+				UserDAO daoToLogin = userManager.getConvertedUser(userRO);
 				Token token = tokenGenerator.generate(daoToLogin);
 				if (null != token) {
-					return token.getId();
+					TokenRO tokenRO = tokenGenerator.convert(token);
+					return tokenRO;
 				} else {
 					logger.error("Unable to generate token for user " + daoToLogin.getEmail());
 					throw new DWalletResponseException("Unable to generate token for user " + daoToLogin.getEmail());
 				}
 			} else {
-				logger.error("Wrong request parameters for login of user");
-				throw new DWalletResponseException("Wrong request parameters for login of user");
+				logger.error("Wrong request body for login of user");
+				throw new DWalletResponseException("Wrong request body for login of user");
+			}
+		} else {
+			logger.error("Wrong 'd-wallet' API key");
+			throw new DWalletResponseException("Wrong 'd-wallet' API key");
+		}
+	}
+
+	// DWallet-API-Key: <api-key> needed
+	@RequestMapping(method = RequestMethod.POST, value = "/users/logout")
+	@ResponseStatus(value = HttpStatus.OK)
+	public void logoutUser(@RequestHeader(value = DWALLET_REQUEST_HEADER, required = false) String apiKey, @RequestBody TokenRO tokenRO)
+			throws DWalletResponseException {
+		if (isValidAPIKey(apiKey)) {
+			if (null != tokenRO) {
+				Token token = tokenWatcher.getTokenById(tokenRO.getToken());
+				if (null != token) {
+					tokenWatcher.removeToken(tokenRO.getToken());
+				} else {
+					logger.error("Token " + tokenRO.getToken() + " is not valid active token");
+					throw new DWalletResponseException("Token " + tokenRO.getToken() + " is not valid active token");
+				}
+			} else {
+				logger.error("Wrong request body for logout of user");
+				throw new DWalletResponseException("Wrong request body for logout of user");
 			}
 		} else {
 			logger.error("Wrong 'd-wallet' API key");

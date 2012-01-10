@@ -25,6 +25,7 @@ public class DWalletApplicationSession {
 	public void init() throws Exception {
 		long start = System.nanoTime();
 		validateAdminUsers(adminUsers);
+		// TODO implement and start Quartz scheduler
 		logger.info("Initializing 'd-wallet' application session finished in " + (System.nanoTime() - start) / 1000000 + " ms.");
 	}
 
@@ -42,7 +43,7 @@ public class DWalletApplicationSession {
 	}
 
 	public void destroy() {
-		// TODO invoked when Spring web context is destroyed
+		// TODO implement and shutdown Quartz scheduler
 		logger.info("Shutting down 'd-wallet' application session...");
 	}
 
