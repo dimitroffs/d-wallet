@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import org.apache.log4j.Logger;
 
-import com.ddimitroff.projects.dwallet.db.UserDAO;
+import com.ddimitroff.projects.dwallet.db.user.UserDAO;
 
 public class TokenWatcher {
 

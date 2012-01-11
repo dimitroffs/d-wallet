@@ -6,7 +6,7 @@ import java.util.Date;
 
 import org.jsecurity.crypto.hash.Md5Hash;
 
-import com.ddimitroff.projects.dwallet.db.UserDAO;
+import com.ddimitroff.projects.dwallet.db.user.UserDAO;
 
 public class Token implements Comparable<Token> {
 

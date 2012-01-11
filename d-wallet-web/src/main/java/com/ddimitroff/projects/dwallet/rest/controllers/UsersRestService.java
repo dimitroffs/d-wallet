@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.ddimitroff.projects.dwallet.db.UserDAO;
-import com.ddimitroff.projects.dwallet.db.UserDAOManager;
+import com.ddimitroff.projects.dwallet.db.user.UserDAO;
+import com.ddimitroff.projects.dwallet.db.user.UserDAOManager;
 import com.ddimitroff.projects.dwallet.rest.exception.DWalletResponseException;
 import com.ddimitroff.projects.dwallet.rest.token.Token;
 import com.ddimitroff.projects.dwallet.rest.token.TokenGenerator;

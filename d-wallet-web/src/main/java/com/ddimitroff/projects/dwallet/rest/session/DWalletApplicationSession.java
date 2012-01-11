@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import com.ddimitroff.projects.dwallet.db.UserDAO;
-import com.ddimitroff.projects.dwallet.db.UserDAOManager;
+import com.ddimitroff.projects.dwallet.db.user.UserDAO;
+import com.ddimitroff.projects.dwallet.db.user.UserDAOManager;
 
 public class DWalletApplicationSession {
 
