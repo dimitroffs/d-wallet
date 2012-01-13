@@ -9,7 +9,7 @@
 
 	<aop:aspectj-autoproxy proxy-target-class="true" />
 
-	<bean id="userManager" class="com.ddimitroff.projects.dwallet.db.UserDAOManager"
+	<bean id="userManager" class="com.ddimitroff.projects.dwallet.db.user.UserDAOManager"
 		scope="prototype">
 	</bean>
 
@@ -42,16 +42,18 @@
 	</bean>
 
 	<!-- Admin users -->
-	<bean id="admin1" class="com.ddimitroff.projects.dwallet.db.UserDAO"
+	<bean id="admin1" class="com.ddimitroff.projects.dwallet.db.user.UserDAO"
 		scope="prototype">
 		<property name="email" value="mykob.11@gmail.com" />
 		<property name="hashPassword" value="mykob.11" />
+		<property name="role" value="ADMIN" />
 	</bean>
 
-	<bean id="admin2" class="com.ddimitroff.projects.dwallet.db.UserDAO"
+	<bean id="admin2" class="com.ddimitroff.projects.dwallet.db.user.UserDAO"
 		scope="prototype">
 		<property name="email" value="mykob.12@gmail.com" />
 		<property name="hashPassword" value="mykob.12" />
+		<property name="role" value="ADMIN" />
 	</bean>
 
 	<!-- API keys collection -->

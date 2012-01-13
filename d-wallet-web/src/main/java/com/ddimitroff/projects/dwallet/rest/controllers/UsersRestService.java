@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.ddimitroff.projects.dwallet.db.user.UserDAO;
 import com.ddimitroff.projects.dwallet.db.user.UserDAOManager;
+import com.ddimitroff.projects.dwallet.rest.DWalletRestUtils;
 import com.ddimitroff.projects.dwallet.rest.exception.DWalletResponseException;
 import com.ddimitroff.projects.dwallet.rest.token.Token;
 import com.ddimitroff.projects.dwallet.rest.token.TokenGenerator;
@@ -30,7 +31,6 @@ import com.ddimitroff.projects.dwallet.rest.user.UserRO;
 public class UsersRestService {
 
 	private static final Logger logger = Logger.getLogger(UsersRestService.class);
-	private static final String DWALLET_REQUEST_HEADER = "DWallet-API-Key";
 
 	@Autowired
 	private UserDAOManager userManager;
@@ -47,18 +47,18 @@ public class UsersRestService {
 	// DWallet-API-Key: <api-key> needed
 	@RequestMapping(method = RequestMethod.POST, value = "/users/get")
 	@ResponseBody
-	public UserRO getActiveUserByTokenId(@RequestHeader(value = DWALLET_REQUEST_HEADER, required = false) String apiKey, @RequestBody TokenRO tokenRO)
-			throws DWalletResponseException {
-		if (isValidAPIKey(apiKey)) {
+	public UserRO getActiveUserByTokenId(@RequestHeader(value = DWalletRestUtils.DWALLET_REQUEST_HEADER, required = false) String apiKey,
+			@RequestBody TokenRO tokenRO) throws DWalletResponseException {
+		if (DWalletRestUtils.isValidAPIKey(apiKey, apiKeys)) {
 			if (null != tokenRO) {
-				Token token = tokenWatcher.getTokenById(tokenRO.getToken());
+				Token token = tokenWatcher.getTokenById(tokenRO.getTokenId());
 				if (null != token) {
 					UserDAO dao = token.getOwner();
 					UserRO ro = userManager.convert(dao);
 					return ro;
 				} else {
-					logger.error("Unable to find token with id " + tokenRO.getToken());
-					throw new DWalletResponseException("Unable to find token with id " + tokenRO.getToken());
+					logger.error("Unable to find token with id " + tokenRO.getTokenId());
+					throw new DWalletResponseException("Unable to find token with id " + tokenRO.getTokenId());
 				}
 			} else {
 				logger.error("Wrong request body for getting user by token id");
@@ -74,9 +74,9 @@ public class UsersRestService {
 	// DWallet-API-Key: <api-key> needed
 	@RequestMapping(method = RequestMethod.POST, value = "/users/register")
 	@ResponseStatus(value = HttpStatus.OK)
-	public void registerUser(@RequestHeader(value = DWALLET_REQUEST_HEADER, required = false) String apiKey, @RequestBody UserRO userRO)
+	public void registerUser(@RequestHeader(value = DWalletRestUtils.DWALLET_REQUEST_HEADER, required = false) String apiKey, @RequestBody UserRO userRO)
 			throws DWalletResponseException {
-		if (isValidAPIKey(apiKey)) {
+		if (DWalletRestUtils.isValidAPIKey(apiKey, apiKeys)) {
 			if (null != userRO) {
 				UserDAO daoToRegister = userManager.convert(userRO);
 				try {
@@ -99,9 +99,9 @@ public class UsersRestService {
 	// DWallet-API-Key: <api-key> needed
 	@RequestMapping(method = RequestMethod.POST, value = "/users/login")
 	@ResponseBody
-	public TokenRO loginUser(@RequestHeader(value = DWALLET_REQUEST_HEADER, required = false) String apiKey, @RequestBody UserRO userRO)
+	public TokenRO loginUser(@RequestHeader(value = DWalletRestUtils.DWALLET_REQUEST_HEADER, required = false) String apiKey, @RequestBody UserRO userRO)
 			throws DWalletResponseException {
-		if (isValidAPIKey(apiKey)) {
+		if (DWalletRestUtils.isValidAPIKey(apiKey, apiKeys)) {
 			if (null != userRO) {
 				UserDAO daoToLogin = userManager.getConvertedUser(userRO);
 				Token token = tokenGenerator.generate(daoToLogin);
@@ -125,16 +125,16 @@ public class UsersRestService {
 	// DWallet-API-Key: <api-key> needed
 	@RequestMapping(method = RequestMethod.POST, value = "/users/logout")
 	@ResponseStatus(value = HttpStatus.OK)
-	public void logoutUser(@RequestHeader(value = DWALLET_REQUEST_HEADER, required = false) String apiKey, @RequestBody TokenRO tokenRO)
+	public void logoutUser(@RequestHeader(value = DWalletRestUtils.DWALLET_REQUEST_HEADER, required = false) String apiKey, @RequestBody TokenRO tokenRO)
 			throws DWalletResponseException {
-		if (isValidAPIKey(apiKey)) {
+		if (DWalletRestUtils.isValidAPIKey(apiKey, apiKeys)) {
 			if (null != tokenRO) {
-				Token token = tokenWatcher.getTokenById(tokenRO.getToken());
+				Token token = tokenWatcher.getTokenById(tokenRO.getTokenId());
 				if (null != token) {
-					tokenWatcher.removeToken(tokenRO.getToken());
+					tokenWatcher.removeToken(tokenRO.getTokenId());
 				} else {
-					logger.error("Token " + tokenRO.getToken() + " is not valid active token");
-					throw new DWalletResponseException("Token " + tokenRO.getToken() + " is not valid active token");
+					logger.error("Token " + tokenRO.getTokenId() + " is not valid active token");
+					throw new DWalletResponseException("Token " + tokenRO.getTokenId() + " is not valid active token");
 				}
 			} else {
 				logger.error("Wrong request body for logout of user");
@@ -146,11 +146,4 @@ public class UsersRestService {
 		}
 	}
 
-	private boolean isValidAPIKey(String apiKey) {
-		if (null == apiKey) {
-			return false;
-		}
-
-		return apiKeys.contains(apiKey);
-	}
 }

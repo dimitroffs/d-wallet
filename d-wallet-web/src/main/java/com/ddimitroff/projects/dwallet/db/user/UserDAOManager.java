@@ -82,7 +82,7 @@ public class UserDAOManager implements Serializable {
 		UserDAO dao = new UserDAO();
 		dao.setEmail(ro.getUsername());
 		dao.setHashPassword(ro.getHashPassword());
-		dao.setRole(UserDAORoles.USER);
+		dao.setRole(UserDAORole.USER);
 		logger.info("UserRO successfully converted to UserDAO!");
 
 		return dao;

@@ -2,21 +2,21 @@ package com.ddimitroff.projects.dwallet.rest.token;
 
 public class TokenRO {
 
-	private String token;
+	private String tokenId;
 
 	public TokenRO() {
 	}
 
-	public TokenRO(String token) {
-		this.token = token;
+	public TokenRO(String tokenId) {
+		this.tokenId = tokenId;
 	}
 
-	public String getToken() {
-		return token;
+	public String getTokenId() {
+		return tokenId;
 	}
 
-	public void setToken(String token) {
-		this.token = token;
+	public void setTokenId(String tokenId) {
+		this.tokenId = tokenId;
 	}
 
 }

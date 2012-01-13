@@ -44,7 +44,7 @@ public class TokenGenerator {
 	}
 
 	public Token getConvertedToken(TokenRO tokenRO) {
-		Token output = tokenWatcher.getTokenById(tokenRO.getToken());
+		Token output = tokenWatcher.getTokenById(tokenRO.getTokenId());
 
 		return output;
 	}

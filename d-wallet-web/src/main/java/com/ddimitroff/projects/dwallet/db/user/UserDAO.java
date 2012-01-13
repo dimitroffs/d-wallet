@@ -37,12 +37,12 @@ public class UserDAO implements Comparable<UserDAO>, Serializable {
 
 	@Column(length = 32)
 	@Enumerated(EnumType.STRING)
-	private UserDAORoles role;
+	private UserDAORole role;
 
 	public UserDAO() {
 	}
 
-	public UserDAO(String email, UserDAORoles role) {
+	public UserDAO(String email, UserDAORole role) {
 		if (email == null)
 			throw new IllegalArgumentException("User name should be specified!");
 		if (role == null)
@@ -76,11 +76,11 @@ public class UserDAO implements Comparable<UserDAO>, Serializable {
 		this.hashPassword = hashPassword;
 	}
 
-	public UserDAORoles getRole() {
+	public UserDAORole getRole() {
 		return role;
 	}
 
-	public void setRole(UserDAORoles role) {
+	public void setRole(UserDAORole role) {
 		this.role = role;
 	}
 
