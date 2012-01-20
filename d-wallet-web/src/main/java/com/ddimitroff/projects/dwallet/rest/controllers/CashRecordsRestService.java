@@ -75,7 +75,7 @@ public class CashRecordsRestService {
 	// Content-Type: application/json needed
 	// DWallet-API-Key: <api-key> needed
 	@RequestMapping(method = RequestMethod.POST, value = "/cash/balance")
-	@ResponseStatus(value = HttpStatus.OK)
+	@ResponseBody
 	public CashBalanceRO getCashBalance(@RequestHeader(value = DWalletRestUtils.DWALLET_REQUEST_HEADER, required = false) String apiKey,
 			@RequestBody TokenRO tokenRO) throws DWalletResponseException {
 		if (DWalletRestUtils.isValidAPIKey(apiKey, apiKeys)) {
