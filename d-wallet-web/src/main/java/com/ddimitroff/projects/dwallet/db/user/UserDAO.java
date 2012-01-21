@@ -43,10 +43,12 @@ public class UserDAO implements Comparable<UserDAO>, Serializable {
 	}
 
 	public UserDAO(String email, UserDAORole role) {
-		if (email == null)
+		if (email == null) {
 			throw new IllegalArgumentException("User name should be specified!");
-		if (role == null)
+		}
+		if (role == null) {
 			throw new IllegalArgumentException("User role should be specified!");
+		}
 
 		this.email = email;
 		this.role = role;
