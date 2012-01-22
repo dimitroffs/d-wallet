@@ -18,16 +18,16 @@ import javax.persistence.Table;
 import com.ddimitroff.projects.dwallet.db.user.UserDAO;
 
 @Entity
-@Table(name = "CASHFLOWS")
+@Table(name = "CASH_FLOWS")
 @NamedQueries({
 // @NamedQuery(name = CashFlowDAO.GET_USER_BY_CREDENTIALS, query =
 // "SELECT user FROM UserDAO user WHERE user.email = :email AND user.hashPassword = :password"),
-@NamedQuery(name = CashFlowDAO.GET_CASHFLOWS_BY_USER, query = "SELECT cashFlow FROM CashFlowDAO cashFlow WHERE cashFlow.owner = :owner ORDER BY cashFlow.date") })
+@NamedQuery(name = CashFlowDAO.GET_CASH_FLOWS_BY_USER, query = "SELECT cashFlow FROM CashFlowDAO cashFlow WHERE cashFlow.owner = :owner ORDER BY cashFlow.date") })
 public class CashFlowDAO implements Comparable<CashFlowDAO>, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public static final String GET_CASHFLOWS_BY_USER = "CashFlowDAO.getCashFlowsByUser";
+	public static final String GET_CASH_FLOWS_BY_USER = "CashFlowDAO.getCashFlowsByUser";
 	// public static final String GET_USER_BY_CREDENTIALS =
 	// "User.getUserByCredentials";
 

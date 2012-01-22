@@ -31,7 +31,7 @@ public class CashDAOManager implements Serializable {
 	@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 	public List<CashFlowDAO> getCashFlowsByUser(UserDAO owner) {
 		try {
-			List<CashFlowDAO> user = em.createNamedQuery(CashFlowDAO.GET_CASHFLOWS_BY_USER).setParameter("owner", owner).getResultList();
+			List<CashFlowDAO> user = em.createNamedQuery(CashFlowDAO.GET_CASH_FLOWS_BY_USER).setParameter("owner", owner).getResultList();
 			return user;
 		} catch (NoResultException e) {
 			return null;
