@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ddimitroff.projects.dwallet.db.user.UserDAO;
+import com.ddimitroff.projects.dwallet.rest.cash.CashBalanceRO;
 import com.ddimitroff.projects.dwallet.rest.cash.CashFlowRO;
 
 @Component
@@ -31,26 +32,24 @@ public class CashDAOManager implements Serializable {
 	@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 	public List<CashFlowDAO> getCashFlowsByUser(UserDAO owner) {
 		try {
-			List<CashFlowDAO> user = em.createNamedQuery(CashFlowDAO.GET_CASH_FLOWS_BY_USER).setParameter("owner", owner).getResultList();
-			return user;
+			List<CashFlowDAO> cashFlows = em.createNamedQuery(CashFlowDAO.GET_CASH_FLOWS_BY_USER).setParameter("owner", owner).getResultList();
+			return cashFlows;
 		} catch (NoResultException e) {
 			return null;
 		}
 	}
 
-	// @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-	// public CashFlowDAO getUserByName(String email) {
-	// try {
-	// return (CashFlowDAO)
-	// em.createNamedQuery(CashFlowDAO.GET_USER_BY_EMAIL).setParameter("email",
-	// email).getSingleResult();
-	// } catch (NoResultException ex) {
-	// return null;
-	// }
-	// }
+	@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+	public CashBalanceDAO getCashBalanceByUser(UserDAO owner) {
+		try {
+			return (CashBalanceDAO) em.createNamedQuery(CashBalanceDAO.GET_CASH_BALANCE_BY_USER).setParameter("owner", owner).getSingleResult();
+		} catch (NoResultException ex) {
+			return null;
+		}
+	}
 
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-	public void saveCashFlow(CashFlowDAO cashFlow) throws Exception {
+	public void saveCashFlow(CashFlowDAO cashFlow) {
 		if (em.find(CashFlowDAO.class, cashFlow.getId()) != null) {
 			em.merge(cashFlow);
 			logger.info(cashFlow + " updated successfully.");
@@ -73,15 +72,35 @@ public class CashDAOManager implements Serializable {
 		}
 	}
 
-	// public UserRO convert(CashFlowDAO dao) {
-	// UserRO ro = new UserRO(dao.getEmail(), dao.getHashPassword());
-	// logger.info("UserDAO successfully converted to UserRO!");
-	//
-	// return ro;
-	// }
-	//
+	/*
+	 * Used for creating REST cash balance object from database one. !Please note
+	 * that correct CashBalanceDAO object of specified user should be provided as
+	 * parameter
+	 */
+	public CashBalanceRO convert(CashBalanceDAO dao) {
+		CashBalanceRO ro = new CashBalanceRO(dao.getDebit(), dao.getCredit());
+		logger.info("CashBalanceDAO successfully converted to CashBalanceRO!");
 
-	// Every convert request for cash flow creates new CashFlowDAO object
+		return ro;
+	}
+
+	/*
+	 * Used for creating REST cash flow object from database one
+	 */
+	public CashFlowRO convert(CashFlowDAO dao) {
+		int cashFlowType = dao.getType().getIntType();
+		int cashFlowCurrencyType = dao.getCurrencyType().getIntCurrencyCode();
+		double cashFlowSum = dao.getSum();
+
+		CashFlowRO ro = new CashFlowRO(cashFlowType, cashFlowCurrencyType, cashFlowSum);
+		logger.info("CashFlowDAO successfully converted to CashFlowRO!");
+
+		return ro;
+	}
+
+	/*
+	 * Used for storing cash flow record in database
+	 */
 	public CashFlowDAO convert(CashFlowRO ro, UserDAO owner) {
 		CashFlowDAOType cashFlowType = CashFlowDAOType.getType(ro.getCashFlowType());
 		CashFlowDAOCurrencyType cashFlowCurrencyType = CashFlowDAOCurrencyType.getCurrencyType(ro.getCashFlowCurrency());

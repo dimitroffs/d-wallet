@@ -61,7 +61,7 @@ public class UserDAOManager implements Serializable {
 	}
 
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-	public void deleteUser(UserDAO actor, UserDAO user) {
+	public void deleteUser(UserDAO user) {
 		UserDAO toBeDeleted = em.find(UserDAO.class, user.getId());
 		if (toBeDeleted != null) {
 			em.remove(toBeDeleted);
@@ -78,20 +78,24 @@ public class UserDAOManager implements Serializable {
 		return ro;
 	}
 
+	/*
+	 * Used for registration of new user
+	 */
 	public UserDAO convert(UserRO ro) {
-		UserDAO dao = new UserDAO();
-		dao.setEmail(ro.getUsername());
+		UserDAO dao = new UserDAO(ro.getUsername(), UserDAORole.USER);
 		dao.setHashPassword(ro.getHashPassword());
-		dao.setRole(UserDAORole.USER);
 		logger.info("UserRO successfully converted to UserDAO!");
 
 		return dao;
 	}
 
+	/*
+	 * Used for login of user
+	 */
 	public UserDAO getConvertedUser(UserRO ro) {
 		UserDAO dao = getUserByCredentialsEmail(ro.getUsername(), ro.getHashPassword());
 		if (null != dao) {
-			logger.info("UserRO successfully converted to UserDAO and got from DB!");
+			logger.info("UserRO successfully got from DB and converted to UserDAO!");
 			return dao;
 		}
 

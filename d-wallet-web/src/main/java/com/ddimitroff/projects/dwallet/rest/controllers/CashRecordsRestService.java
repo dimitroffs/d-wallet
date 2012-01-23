@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.ddimitroff.projects.dwallet.db.cash.CashBalanceDAO;
+import com.ddimitroff.projects.dwallet.db.cash.CashDAOManager;
+import com.ddimitroff.projects.dwallet.db.cash.CashFlowDAO;
 import com.ddimitroff.projects.dwallet.db.user.UserDAO;
 import com.ddimitroff.projects.dwallet.db.user.UserDAOManager;
 import com.ddimitroff.projects.dwallet.rest.DWalletRestUtils;
@@ -36,6 +39,9 @@ public class CashRecordsRestService {
 
 	@Autowired
 	private UserDAOManager userManager;
+
+	@Autowired
+	private CashDAOManager cashManager;
 
 	@Autowired
 	private TokenGenerator tokenGenerator;
@@ -83,7 +89,14 @@ public class CashRecordsRestService {
 				Token token = tokenWatcher.getTokenById(tokenRO.getTokenId());
 				if (null != token) {
 					// TODO get balance from DB and return it as rest object
-					return null;
+					CashBalanceDAO cashBalanceDAO = cashManager.getCashBalanceByUser(token.getOwner());
+					if (null != cashBalanceDAO) {
+						CashBalanceRO output = cashManager.convert(cashBalanceDAO);
+						return output;
+					} else {
+						logger.error("Unable to find cash balance for user " + token.getOwner());
+						throw new DWalletResponseException("Unable to find cash balance for user " + token.getOwner());
+					}
 				} else {
 					logger.error("Unable to find token with id " + tokenRO.getTokenId());
 					throw new DWalletResponseException("Unable to find token with id " + tokenRO.getTokenId());
@@ -108,7 +121,16 @@ public class CashRecordsRestService {
 			if (null != cashRecordRO) {
 				Token token = tokenWatcher.getTokenById(cashRecordRO.getToken().getTokenId());
 				if (null != token) {
-					// TODO convert and add cashRecordRO to db
+					long start = System.nanoTime();
+					// iterate over every cash flow from the record
+					for (int i = 0; i < cashRecordRO.getCashFlows().size(); i++) {
+						CashFlowRO current = cashRecordRO.getCashFlows().get(i);
+						CashFlowDAO currentDAO = cashManager.convert(current, token.getOwner());
+						cashManager.saveCashFlow(currentDAO);
+					}
+					logger.info("Importing cash record from user " + token.getOwner() + " finished in " + (System.nanoTime() - start) / 1000000 + " ms.");
+
+					// TODO calculate the balance and store it in DB
 				} else {
 					logger.error("Unable to find token with id " + cashRecordRO.getToken().getTokenId());
 					throw new DWalletResponseException("Unable to find token with id " + cashRecordRO.getToken().getTokenId());
