@@ -1,5 +1,8 @@
 package com.ddimitroff.projects.dwallet.rest.user;
 
+/*
+ * {"username":"mykob.11@gmail.com", "hashPassword":"mykob.11"}
+ */
 public class UserRO {
 
 	private String username;

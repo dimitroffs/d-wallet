@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import com.ddimitroff.projects.dwallet.db.cash.CashBalanceDAO;
 import com.ddimitroff.projects.dwallet.db.cash.CashDAOManager;
 import com.ddimitroff.projects.dwallet.db.cash.CashFlowDAO;
+import com.ddimitroff.projects.dwallet.db.cash.CashFlowDAOType;
 import com.ddimitroff.projects.dwallet.db.user.UserDAO;
 import com.ddimitroff.projects.dwallet.db.user.UserDAOManager;
 import com.ddimitroff.projects.dwallet.rest.DWalletRestUtils;
@@ -88,7 +89,6 @@ public class CashRecordsRestService {
 			if (null != tokenRO) {
 				Token token = tokenWatcher.getTokenById(tokenRO.getTokenId());
 				if (null != token) {
-					// TODO get balance from DB and return it as rest object
 					CashBalanceDAO cashBalanceDAO = cashManager.getCashBalanceByUser(token.getOwner());
 					if (null != cashBalanceDAO) {
 						CashBalanceRO output = cashManager.convert(cashBalanceDAO);
@@ -122,15 +122,28 @@ public class CashRecordsRestService {
 				Token token = tokenWatcher.getTokenById(cashRecordRO.getToken().getTokenId());
 				if (null != token) {
 					long start = System.nanoTime();
+
+					CashBalanceDAO cashBalanceDAO = cashManager.getCashBalanceByUser(token.getOwner());
+					if (null == cashBalanceDAO) {
+						cashBalanceDAO = new CashBalanceDAO(token.getOwner(), 0, 0);
+					}
+
 					// iterate over every cash flow from the record
 					for (int i = 0; i < cashRecordRO.getCashFlows().size(); i++) {
 						CashFlowRO current = cashRecordRO.getCashFlows().get(i);
 						CashFlowDAO currentDAO = cashManager.convert(current, token.getOwner());
+
+						// TODO check for correct currencies
+						if (CashFlowDAOType.PROFIT == currentDAO.getType()) {
+							cashBalanceDAO.setDebit(cashBalanceDAO.getDebit() + currentDAO.getSum());
+						} else {
+							cashBalanceDAO.setCredit(cashBalanceDAO.getCredit() + currentDAO.getSum());
+						}
+
 						cashManager.saveCashFlow(currentDAO);
 					}
+					cashManager.saveCashBalance(cashBalanceDAO);
 					logger.info("Importing cash record from user " + token.getOwner() + " finished in " + (System.nanoTime() - start) / 1000000 + " ms.");
-
-					// TODO calculate the balance and store it in DB
 				} else {
 					logger.error("Unable to find token with id " + cashRecordRO.getToken().getTokenId());
 					throw new DWalletResponseException("Unable to find token with id " + cashRecordRO.getToken().getTokenId());

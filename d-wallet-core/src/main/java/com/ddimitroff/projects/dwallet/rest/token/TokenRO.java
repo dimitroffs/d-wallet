@@ -1,5 +1,8 @@
 package com.ddimitroff.projects.dwallet.rest.token;
 
+/*
+ * {"tokenId":"<id>"}
+ */
 public class TokenRO {
 
 	private String tokenId;

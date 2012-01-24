@@ -28,6 +28,27 @@ public class CashDAOManager implements Serializable {
 	@PersistenceContext(name = "dwallet", type = PersistenceContextType.EXTENDED)
 	private EntityManager em;
 
+	@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+	public CashBalanceDAO getCashBalanceByUser(UserDAO owner) {
+		try {
+			return (CashBalanceDAO) em.createNamedQuery(CashBalanceDAO.GET_CASH_BALANCE_BY_USER).setParameter("owner", owner).getSingleResult();
+		} catch (NoResultException ex) {
+			return null;
+		}
+	}
+
+	public void saveCashBalance(CashBalanceDAO cashBalanceDAO) {
+		if (null != em.find(CashBalanceDAO.class, cashBalanceDAO.getId())) {
+			em.merge(cashBalanceDAO);
+			logger.info(cashBalanceDAO + " updated successfully.");
+		} else {
+			em.persist(cashBalanceDAO);
+
+			logger.info(cashBalanceDAO + " created successfully");
+		}
+		em.flush();
+	}
+
 	@SuppressWarnings("unchecked")
 	@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 	public List<CashFlowDAO> getCashFlowsByUser(UserDAO owner) {
@@ -39,24 +60,15 @@ public class CashDAOManager implements Serializable {
 		}
 	}
 
-	@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-	public CashBalanceDAO getCashBalanceByUser(UserDAO owner) {
-		try {
-			return (CashBalanceDAO) em.createNamedQuery(CashBalanceDAO.GET_CASH_BALANCE_BY_USER).setParameter("owner", owner).getSingleResult();
-		} catch (NoResultException ex) {
-			return null;
-		}
-	}
-
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	public void saveCashFlow(CashFlowDAO cashFlow) {
-		if (em.find(CashFlowDAO.class, cashFlow.getId()) != null) {
+		if (null != em.find(CashFlowDAO.class, cashFlow.getId())) {
 			em.merge(cashFlow);
 			logger.info(cashFlow + " updated successfully.");
 		} else {
 			em.persist(cashFlow);
 
-			logger.info(cashFlow + "] created successfully");
+			logger.info(cashFlow + " created successfully");
 		}
 		em.flush();
 	}

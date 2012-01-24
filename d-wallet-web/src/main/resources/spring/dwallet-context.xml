@@ -12,6 +12,10 @@
 	<bean id="userManager" class="com.ddimitroff.projects.dwallet.db.user.UserDAOManager"
 		scope="prototype">
 	</bean>
+	
+	<bean id="cashManager" class="com.ddimitroff.projects.dwallet.db.cash.CashDAOManager"
+		scope="prototype">
+	</bean>
 
 	<bean id="applicationSession"
 		class="com.ddimitroff.projects.dwallet.rest.session.DWalletApplicationSession"
