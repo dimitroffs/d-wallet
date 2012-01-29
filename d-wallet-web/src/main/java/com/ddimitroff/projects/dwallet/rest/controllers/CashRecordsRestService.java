@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import com.ddimitroff.projects.dwallet.db.cash.CashBalanceDAO;
 import com.ddimitroff.projects.dwallet.db.cash.CashDAOManager;
 import com.ddimitroff.projects.dwallet.db.cash.CashFlowDAO;
+import com.ddimitroff.projects.dwallet.db.cash.CashFlowDAOCurrencyType;
 import com.ddimitroff.projects.dwallet.db.cash.CashFlowDAOType;
 import com.ddimitroff.projects.dwallet.db.user.UserDAO;
 import com.ddimitroff.projects.dwallet.db.user.UserDAOManager;
@@ -28,6 +29,7 @@ import com.ddimitroff.projects.dwallet.rest.token.Token;
 import com.ddimitroff.projects.dwallet.rest.token.TokenGenerator;
 import com.ddimitroff.projects.dwallet.rest.token.TokenRO;
 import com.ddimitroff.projects.dwallet.rest.token.TokenWatcher;
+import com.ddimitroff.projects.dwallet.xml.exchange.ExchangeRatesParser;
 
 /**
  * This is an example REST style MVC controller. It serves as an endpoint for
@@ -49,6 +51,9 @@ public class CashRecordsRestService {
 
 	@Autowired
 	private TokenWatcher tokenWatcher;
+
+	@Autowired
+	private ExchangeRatesParser exchangeRatesParser;
 
 	@Autowired
 	private ArrayList<String> apiKeys;
@@ -133,7 +138,8 @@ public class CashRecordsRestService {
 						CashFlowRO current = cashRecordRO.getCashFlows().get(i);
 						CashFlowDAO currentDAO = cashManager.convert(current, token.getOwner());
 
-						// TODO check for correct currencies
+						manageCashFlowCurrencies(currentDAO);
+
 						if (CashFlowDAOType.PROFIT == currentDAO.getType()) {
 							cashBalanceDAO.setDebit(cashBalanceDAO.getDebit() + currentDAO.getSum());
 						} else {
@@ -155,6 +161,27 @@ public class CashRecordsRestService {
 		} else {
 			logger.error("Wrong 'd-wallet' API key");
 			throw new DWalletResponseException("Wrong 'd-wallet' API key");
+		}
+	}
+
+	/*
+	 * Checks every cash flow and transforms each currency to BGN. TODO round
+	 * double sum value to second sign after dot
+	 */
+	private void manageCashFlowCurrencies(CashFlowDAO currentDAO) {
+		switch (currentDAO.getCurrencyType()) {
+		case BGN:
+			break;
+		case USD:
+			double dollarSumInLeva = exchangeRatesParser.getExchangeRateByCurrency("USD") * currentDAO.getSum();
+			currentDAO.setSum(DWalletRestUtils.roundTwoDecimals(dollarSumInLeva));
+			currentDAO.setCurrencyType(CashFlowDAOCurrencyType.BGN);
+			break;
+		case EUR:
+			double euroSumInLeva = exchangeRatesParser.getExchangeRateByCurrency("EUR") * currentDAO.getSum();
+			currentDAO.setSum(DWalletRestUtils.roundTwoDecimals(euroSumInLeva));
+			currentDAO.setCurrencyType(CashFlowDAOCurrencyType.BGN);
+			break;
 		}
 	}
 

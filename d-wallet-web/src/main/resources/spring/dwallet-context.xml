@@ -12,7 +12,7 @@
 	<bean id="userManager" class="com.ddimitroff.projects.dwallet.db.user.UserDAOManager"
 		scope="prototype">
 	</bean>
-	
+
 	<bean id="cashManager" class="com.ddimitroff.projects.dwallet.db.cash.CashDAOManager"
 		scope="prototype">
 	</bean>
@@ -33,6 +33,11 @@
 
 	<bean id="tokenWatcher" class="com.ddimitroff.projects.dwallet.rest.token.TokenWatcher"
 		init-method="init" scope="singleton" destroy-method="destroy">
+	</bean>
+
+	<bean id="exchangeRatesParser"
+		class="com.ddimitroff.projects.dwallet.xml.exchange.ExchangeRatesParser"
+		init-method="downloadExchangeRates" scope="singleton">
 	</bean>
 
 	<!-- Admin users collection -->
