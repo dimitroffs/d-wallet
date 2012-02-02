@@ -15,6 +15,7 @@ import nu.xom.ParsingException;
 import nu.xom.ValidityException;
 
 import org.apache.log4j.Logger;
+import org.springframework.scheduling.annotation.Scheduled;
 
 public class ExchangeRatesParser {
 
@@ -66,7 +67,9 @@ public class ExchangeRatesParser {
 		}
 	}
 
+	@Scheduled(cron = "0 30 16 * * MON-FRI")
 	public void downloadExchangeRates() {
+		logger.info("Downloading exchange rates from BNB server...");
 		BufferedInputStream in;
 		try {
 			in = new BufferedInputStream(new URL(EXCHANGE_RATES_DOWNLOAD_URL).openStream());
