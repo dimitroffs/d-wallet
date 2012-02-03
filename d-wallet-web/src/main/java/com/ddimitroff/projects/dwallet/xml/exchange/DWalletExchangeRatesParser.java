@@ -17,9 +17,9 @@ import nu.xom.ValidityException;
 import org.apache.log4j.Logger;
 import org.springframework.scheduling.annotation.Scheduled;
 
-public class ExchangeRatesParser {
+public class DWalletExchangeRatesParser {
 
-	private static final Logger logger = Logger.getLogger(ExchangeRatesParser.class);
+	private static final Logger logger = Logger.getLogger(DWalletExchangeRatesParser.class);
 	private static final String FIXED_RATES_FILEPATH = System.getenv("CATALINA_HOME") + "/webapps/d-wallet-web/exchange/Fixed_Rates.xml";
 	private static final String EXCHANGE_RATES_FILEPATH = System.getenv("CATALINA_HOME") + "/webapps/d-wallet-web/exchange/Exchange_Rates.xml";
 	private static final String EXCHANGE_RATES_DOWNLOAD_URL = "http://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERForeignCurrencies/index.htm?download=xml&search=&lang=BG";
@@ -27,7 +27,7 @@ public class ExchangeRatesParser {
 	private static Builder builder;
 	private static Elements rates;
 
-	public ExchangeRatesParser() {
+	public DWalletExchangeRatesParser() {
 		builder = new Builder();
 	}
 

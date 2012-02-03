@@ -29,7 +29,7 @@ import com.ddimitroff.projects.dwallet.rest.token.Token;
 import com.ddimitroff.projects.dwallet.rest.token.TokenGenerator;
 import com.ddimitroff.projects.dwallet.rest.token.TokenRO;
 import com.ddimitroff.projects.dwallet.rest.token.TokenWatcher;
-import com.ddimitroff.projects.dwallet.xml.exchange.ExchangeRatesParser;
+import com.ddimitroff.projects.dwallet.xml.exchange.DWalletExchangeRatesParser;
 
 /**
  * This is an example REST style MVC controller. It serves as an endpoint for
@@ -53,7 +53,7 @@ public class CashRecordsRestService {
 	private TokenWatcher tokenWatcher;
 
 	@Autowired
-	private ExchangeRatesParser exchangeRatesParser;
+	private DWalletExchangeRatesParser exchangeRatesParser;
 
 	@Autowired
 	private ArrayList<String> apiKeys;
