@@ -36,7 +36,7 @@
 	</bean>
 
 	<bean id="exchangeRatesParser"
-		class="com.ddimitroff.projects.dwallet.xml.exchange.ExchangeRatesParser"
+		class="com.ddimitroff.projects.dwallet.xml.exchange.DWalletExchangeRatesParser"
 		init-method="downloadExchangeRates" scope="singleton">
 	</bean>
 
