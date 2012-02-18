@@ -9,9 +9,9 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
-			/spring/spring-servlet.xml
-			/spring/dwallet-context.xml
-			/db/database-config.xml
+			/WEB-INF/spring/spring-servlet.xml
+			/WEB-INF/spring/dwallet-context.xml
+			/WEB-INF/db/database-config.xml
 		</param-value>
 	</context-param>
 	

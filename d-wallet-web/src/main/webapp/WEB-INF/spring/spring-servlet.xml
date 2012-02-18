@@ -17,8 +17,7 @@
 	<!-- Enable annotation scanning. -->
 	<context:component-scan base-package="com.ddimitroff.projects.dwallet" />
 
-	<bean
-		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
 		<property name="messageConverters">
 			<util:list id="beanList">
 				<ref bean="jacksonMessageConverter" />
