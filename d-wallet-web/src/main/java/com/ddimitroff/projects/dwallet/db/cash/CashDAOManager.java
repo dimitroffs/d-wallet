@@ -90,7 +90,7 @@ public class CashDAOManager implements Serializable {
 	 * parameter
 	 */
 	public CashBalanceRO convert(CashBalanceDAO dao) {
-		CashBalanceRO ro = new CashBalanceRO(dao.getDebit(), dao.getCredit());
+		CashBalanceRO ro = new CashBalanceRO(dao.getCurrency().getIntCurrencyCode(), dao.getDebit(), dao.getCredit());
 		logger.info("CashBalanceDAO successfully converted to CashBalanceRO!");
 
 		return ro;

@@ -20,7 +20,6 @@ import com.ddimitroff.projects.dwallet.db.cash.CashFlowDAOCurrencyType;
 import com.ddimitroff.projects.dwallet.db.cash.CashFlowDAOType;
 import com.ddimitroff.projects.dwallet.db.user.UserDAO;
 import com.ddimitroff.projects.dwallet.db.user.UserDAOManager;
-import com.ddimitroff.projects.dwallet.mail.MailSender;
 import com.ddimitroff.projects.dwallet.rest.DWalletRestUtils;
 import com.ddimitroff.projects.dwallet.rest.cash.CashBalanceRO;
 import com.ddimitroff.projects.dwallet.rest.cash.CashFlowRO;
@@ -150,7 +149,7 @@ public class CashRecordsRestService {
 							.getCashBalanceByUser(token.getOwner());
 					if (null == cashBalanceDAO) {
 						cashBalanceDAO = new CashBalanceDAO(token.getOwner(),
-								0, 0);
+								token.getOwner().getDefaultCurrency(), 0, 0);
 					}
 
 					// iterate over every cash flow from the record
@@ -171,6 +170,7 @@ public class CashRecordsRestService {
 
 						cashManager.saveCashFlow(currentDAO);
 					}
+					
 					cashManager.saveCashBalance(cashBalanceDAO);
 					logger.info("Importing cash record from user "
 							+ token.getOwner() + " finished in "
@@ -194,27 +194,53 @@ public class CashRecordsRestService {
 	}
 
 	/*
-	 * Checks every cash flow and transforms each currency to BGN. TODO round
-	 * double sum value to second sign after dot
+	 * Checks every cash flow and transforms each currency to BGN. Round double
+	 * sum value to second sign after dot
 	 */
 	private void manageCashFlowCurrencies(CashFlowDAO currentDAO) {
-		switch (currentDAO.getCurrencyType()) {
+		double factor = 0.0;
+		double refactoredSum = currentDAO.getSum();
+
+		switch (currentDAO.getOwner().getDefaultCurrency()) {
 		case BGN:
+			factor = currencyExchangeFactor(currentDAO.getCurrencyType(),
+					CashFlowDAOCurrencyType.BGN);
+			refactoredSum *= factor;
+			currentDAO.setSum(DWalletRestUtils.roundTwoDecimals(refactoredSum));
+			currentDAO.setCurrencyType(CashFlowDAOCurrencyType.BGN);
 			break;
 		case USD:
-			double dollarSumInLeva = exchangeRatesParser
-					.getExchangeRateByCurrency("USD") * currentDAO.getSum();
-			currentDAO.setSum(DWalletRestUtils
-					.roundTwoDecimals(dollarSumInLeva));
-			currentDAO.setCurrencyType(CashFlowDAOCurrencyType.BGN);
+			factor = currencyExchangeFactor(currentDAO.getCurrencyType(),
+					CashFlowDAOCurrencyType.USD);
+			refactoredSum *= factor;
+			currentDAO.setSum(DWalletRestUtils.roundTwoDecimals(refactoredSum));
+			currentDAO.setCurrencyType(CashFlowDAOCurrencyType.USD);
 			break;
 		case EUR:
-			double euroSumInLeva = exchangeRatesParser
-					.getExchangeRateByCurrency("EUR") * currentDAO.getSum();
-			currentDAO.setSum(DWalletRestUtils.roundTwoDecimals(euroSumInLeva));
-			currentDAO.setCurrencyType(CashFlowDAOCurrencyType.BGN);
+			factor = currencyExchangeFactor(currentDAO.getCurrencyType(),
+					CashFlowDAOCurrencyType.EUR);
+			refactoredSum *= factor;
+			currentDAO.setSum(DWalletRestUtils.roundTwoDecimals(refactoredSum));
+			currentDAO.setCurrencyType(CashFlowDAOCurrencyType.EUR);
 			break;
 		}
+	}
+
+	private double currencyExchangeFactor(CashFlowDAOCurrencyType from,
+			CashFlowDAOCurrencyType to) {
+		double exchangeRateFrom = 1.0;
+		if (CashFlowDAOCurrencyType.BGN != from) {
+			exchangeRateFrom = exchangeRatesParser
+					.getExchangeRateByCurrency(from.name());
+		}
+
+		double exchangeRateTo = 1.0;
+		if (CashFlowDAOCurrencyType.BGN != to) {
+			exchangeRateTo = exchangeRatesParser.getExchangeRateByCurrency(to
+					.name());
+		}
+
+		return exchangeRateFrom / exchangeRateTo;
 	}
 
 }

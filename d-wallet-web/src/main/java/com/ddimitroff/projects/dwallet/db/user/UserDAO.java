@@ -13,6 +13,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import com.ddimitroff.projects.dwallet.db.cash.CashFlowDAOCurrencyType;
+
 @Entity
 @Table(name = "USERS")
 @NamedQueries({
@@ -39,15 +41,24 @@ public class UserDAO implements Comparable<UserDAO>, Serializable {
 	@Enumerated(EnumType.STRING)
 	private UserDAORole role;
 
+	@Column(length = 32)
+	@Enumerated(EnumType.STRING)
+	private CashFlowDAOCurrencyType defaultCurrency;
+
 	public UserDAO() {
 	}
 
-	public UserDAO(String email, UserDAORole role) {
-		if (email == null) {
+	public UserDAO(String email, UserDAORole role,
+			CashFlowDAOCurrencyType defaultCurrency) {
+		if (null == email) {
 			throw new IllegalArgumentException("User name should be specified!");
 		}
-		if (role == null) {
+		if (null == role) {
 			throw new IllegalArgumentException("User role should be specified!");
+		}
+		if (null == defaultCurrency) {
+			throw new IllegalArgumentException(
+					"User default balance currency should be specified!");
 		}
 
 		this.email = email;
@@ -86,6 +97,14 @@ public class UserDAO implements Comparable<UserDAO>, Serializable {
 		this.role = role;
 	}
 
+	public CashFlowDAOCurrencyType getDefaultCurrency() {
+		return defaultCurrency;
+	}
+
+	public void setDefaultCurrency(CashFlowDAOCurrencyType defaultCurrency) {
+		this.defaultCurrency = defaultCurrency;
+	}
+
 	@Override
 	public int compareTo(UserDAO user) {
 		return this.getEmail().compareTo(user.getEmail());
@@ -95,9 +114,10 @@ public class UserDAO implements Comparable<UserDAO>, Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result
+				+ ((defaultCurrency == null) ? 0 : defaultCurrency.hashCode());
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + ((role == null) ? 0 : role.hashCode());
-
 		return result;
 	}
 
@@ -110,23 +130,21 @@ public class UserDAO implements Comparable<UserDAO>, Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		UserDAO other = (UserDAO) obj;
+		if (defaultCurrency != other.defaultCurrency)
+			return false;
 		if (email == null) {
 			if (other.email != null)
 				return false;
 		} else if (!email.equals(other.email))
 			return false;
-		if (role == null) {
-			if (other.role != null)
-				return false;
-		} else if (!role.equals(other.role))
+		if (role != other.role)
 			return false;
-
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return email + " [" + role + "]";
+		return email + " [" + role + "]" + " has balance in " + defaultCurrency;
 	}
 
 }

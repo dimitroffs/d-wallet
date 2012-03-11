@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -35,6 +37,10 @@ public class CashBalanceDAO implements Comparable<CashBalanceDAO>, Serializable 
 	@ManyToOne
 	private UserDAO owner;
 
+	@Column(length = 32)
+	@Enumerated(EnumType.STRING)
+	private CashFlowDAOCurrencyType currency;
+
 	@Column
 	private double debit;
 
@@ -44,12 +50,19 @@ public class CashBalanceDAO implements Comparable<CashBalanceDAO>, Serializable 
 	public CashBalanceDAO() {
 	}
 
-	public CashBalanceDAO(UserDAO owner, double debit, double credit) {
+	public CashBalanceDAO(UserDAO owner, CashFlowDAOCurrencyType currency,
+			double debit, double credit) {
 		if (null == owner) {
-			throw new IllegalArgumentException("Cash balance owner should be specified!");
+			throw new IllegalArgumentException(
+					"Cash balance owner should be specified!");
+		}
+		if (null == currency) {
+			throw new IllegalArgumentException(
+					"Cash balance currency type should be specified!");
 		}
 
 		this.owner = owner;
+		this.currency = currency;
 		this.debit = debit;
 		this.credit = credit;
 	}
@@ -68,6 +81,14 @@ public class CashBalanceDAO implements Comparable<CashBalanceDAO>, Serializable 
 
 	public void setOwner(UserDAO owner) {
 		this.owner = owner;
+	}
+
+	public CashFlowDAOCurrencyType getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(CashFlowDAOCurrencyType currency) {
+		this.currency = currency;
 	}
 
 	public double getDebit() {
@@ -93,6 +114,8 @@ public class CashBalanceDAO implements Comparable<CashBalanceDAO>, Serializable 
 		long temp;
 		temp = Double.doubleToLongBits(credit);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result
+				+ ((currency == null) ? 0 : currency.hashCode());
 		temp = Double.doubleToLongBits(debit);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		result = prime * result + ((owner == null) ? 0 : owner.hashCode());
@@ -108,9 +131,13 @@ public class CashBalanceDAO implements Comparable<CashBalanceDAO>, Serializable 
 		if (getClass() != obj.getClass())
 			return false;
 		CashBalanceDAO other = (CashBalanceDAO) obj;
-		if (Double.doubleToLongBits(credit) != Double.doubleToLongBits(other.credit))
+		if (Double.doubleToLongBits(credit) != Double
+				.doubleToLongBits(other.credit))
 			return false;
-		if (Double.doubleToLongBits(debit) != Double.doubleToLongBits(other.debit))
+		if (currency != other.currency)
+			return false;
+		if (Double.doubleToLongBits(debit) != Double
+				.doubleToLongBits(other.debit))
 			return false;
 		if (owner == null) {
 			if (other.owner != null)

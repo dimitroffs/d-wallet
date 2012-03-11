@@ -2,15 +2,25 @@ package com.ddimitroff.projects.dwallet.rest.cash;
 
 public class CashBalanceRO {
 
+	private int currency;
 	private double profit;
 	private double cost;
 
 	public CashBalanceRO() {
 	}
 
-	public CashBalanceRO(double profit, double cost) {
+	public CashBalanceRO(int currency, double profit, double cost) {
+		this.currency = currency;
 		this.profit = profit;
 		this.cost = cost;
+	}
+
+	public int getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(int currency) {
+		this.currency = currency;
 	}
 
 	public double getProfit() {
