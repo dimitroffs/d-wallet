@@ -39,6 +39,10 @@
 		class="com.ddimitroff.projects.dwallet.xml.exchange.DWalletExchangeRatesParser"
 		init-method="downloadExchangeRates" scope="singleton">
 	</bean>
+	
+	<bean id="mailSender"
+		class="com.ddimitroff.projects.dwallet.mail.MailSender" scope="singleton">
+	</bean>
 
 	<!-- Admin users collection -->
 	<bean id="adminUsers" class="java.util.ArrayList" scope="singleton">
