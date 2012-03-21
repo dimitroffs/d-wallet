@@ -14,7 +14,7 @@ import com.ddimitroff.projects.dwallet.rest.token.TokenRO;
 import com.ddimitroff.projects.dwallet.rest.user.UserRO;
 
 /*
- * {"username":"testName1","hashPassword":"testPassword1"}
+ * {"username":"mykob.11@gmail.com", "hashPassword":"mykob.11", "defaultCurrency":"1", "startupBalance":"1000.50"}
  */
 public class DWalletJsonParser {
 

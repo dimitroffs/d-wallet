@@ -28,10 +28,8 @@ public class UserDAOManager implements Serializable {
 	@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 	public UserDAO getUserByCredentialsEmail(String email, String password) {
 		try {
-			UserDAO user = (UserDAO) em
-					.createNamedQuery(UserDAO.GET_USER_BY_CREDENTIALS)
-					.setParameter("email", email)
-					.setParameter("password", password).getSingleResult();
+			UserDAO user = (UserDAO) em.createNamedQuery(UserDAO.GET_USER_BY_CREDENTIALS).setParameter("email", email).setParameter("password", password)
+					.getSingleResult();
 			return user;
 		} catch (NoResultException e) {
 			return null;
@@ -41,8 +39,7 @@ public class UserDAOManager implements Serializable {
 	@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 	public UserDAO getUserByName(String email) {
 		try {
-			return (UserDAO) em.createNamedQuery(UserDAO.GET_USER_BY_EMAIL)
-					.setParameter("email", email).getSingleResult();
+			return (UserDAO) em.createNamedQuery(UserDAO.GET_USER_BY_EMAIL).setParameter("email", email).getSingleResult();
 		} catch (NoResultException ex) {
 			return null;
 		}
@@ -55,8 +52,7 @@ public class UserDAOManager implements Serializable {
 			logger.info("User " + user + " updated successfully.");
 		} else {
 			if (getUserByName(user.getEmail()) != null) {
-				throw new Exception("User [" + user.getEmail()
-						+ "] already exists in database");
+				throw new Exception("User [" + user.getEmail() + "] already exists in database");
 			}
 			em.persist(user);
 
@@ -77,8 +73,7 @@ public class UserDAOManager implements Serializable {
 	}
 
 	public UserRO convert(UserDAO dao) {
-		UserRO ro = new UserRO(dao.getEmail(), dao.getHashPassword(), dao
-				.getDefaultCurrency().getIntCurrencyCode());
+		UserRO ro = new UserRO(dao.getEmail(), dao.getHashPassword(), dao.getDefaultCurrency().getIntCurrencyCode(), dao.getStartupBalance());
 		logger.info("UserDAO successfully converted to UserRO!");
 
 		return ro;
@@ -88,10 +83,8 @@ public class UserDAOManager implements Serializable {
 	 * Used for registration of new user
 	 */
 	public UserDAO convert(UserRO ro) {
-		UserDAO dao = new UserDAO(
-				ro.getUsername(),
-				UserDAORole.USER,
-				CashFlowDAOCurrencyType.getCurrencyType(ro.getDefaultCurrency()));
+		UserDAO dao = new UserDAO(ro.getUsername(), UserDAORole.USER, CashFlowDAOCurrencyType.getCurrencyType(ro.getDefaultCurrency()),
+				ro.getStartupBalance());
 		dao.setHashPassword(ro.getHashPassword());
 		logger.info("UserRO successfully converted to UserDAO!");
 
@@ -102,8 +95,7 @@ public class UserDAOManager implements Serializable {
 	 * Used for login of user
 	 */
 	public UserDAO getConvertedUser(UserRO ro) {
-		UserDAO dao = getUserByCredentialsEmail(ro.getUsername(),
-				ro.getHashPassword());
+		UserDAO dao = getUserByCredentialsEmail(ro.getUsername(), ro.getHashPassword());
 		if (null != dao) {
 			logger.info("UserRO successfully got from DB and converted to UserDAO!");
 			return dao;

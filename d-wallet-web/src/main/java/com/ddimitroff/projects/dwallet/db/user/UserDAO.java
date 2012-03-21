@@ -45,11 +45,13 @@ public class UserDAO implements Comparable<UserDAO>, Serializable {
 	@Enumerated(EnumType.STRING)
 	private CashFlowDAOCurrencyType defaultCurrency;
 
+	@Column
+	private double startupBalance;
+
 	public UserDAO() {
 	}
 
-	public UserDAO(String email, UserDAORole role,
-			CashFlowDAOCurrencyType defaultCurrency) {
+	public UserDAO(String email, UserDAORole role, CashFlowDAOCurrencyType defaultCurrency, double startupBalance) {
 		if (null == email) {
 			throw new IllegalArgumentException("User name should be specified!");
 		}
@@ -57,12 +59,13 @@ public class UserDAO implements Comparable<UserDAO>, Serializable {
 			throw new IllegalArgumentException("User role should be specified!");
 		}
 		if (null == defaultCurrency) {
-			throw new IllegalArgumentException(
-					"User default balance currency should be specified!");
+			throw new IllegalArgumentException("User default balance currency should be specified!");
 		}
 
 		this.email = email;
 		this.role = role;
+		this.defaultCurrency = defaultCurrency;
+		this.startupBalance = startupBalance;
 	}
 
 	public int getId() {
@@ -105,6 +108,14 @@ public class UserDAO implements Comparable<UserDAO>, Serializable {
 		this.defaultCurrency = defaultCurrency;
 	}
 
+	public double getStartupBalance() {
+		return startupBalance;
+	}
+
+	public void setStartupBalance(double startupBalance) {
+		this.startupBalance = startupBalance;
+	}
+
 	@Override
 	public int compareTo(UserDAO user) {
 		return this.getEmail().compareTo(user.getEmail());
@@ -114,8 +125,10 @@ public class UserDAO implements Comparable<UserDAO>, Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((defaultCurrency == null) ? 0 : defaultCurrency.hashCode());
+		long temp;
+		temp = Double.doubleToLongBits(startupBalance);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((defaultCurrency == null) ? 0 : defaultCurrency.hashCode());
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + ((role == null) ? 0 : role.hashCode());
 		return result;
@@ -130,6 +143,8 @@ public class UserDAO implements Comparable<UserDAO>, Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		UserDAO other = (UserDAO) obj;
+		if (Double.doubleToLongBits(startupBalance) != Double.doubleToLongBits(other.startupBalance))
+			return false;
 		if (defaultCurrency != other.defaultCurrency)
 			return false;
 		if (email == null) {
@@ -144,7 +159,7 @@ public class UserDAO implements Comparable<UserDAO>, Serializable {
 
 	@Override
 	public String toString() {
-		return email + " [" + role + "]" + " has balance in " + defaultCurrency;
+		return email + " [" + role + "]" + " has " + startupBalance + " balance in " + defaultCurrency;
 	}
 
 }

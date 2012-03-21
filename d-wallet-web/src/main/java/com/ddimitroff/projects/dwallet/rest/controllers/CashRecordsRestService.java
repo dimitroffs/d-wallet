@@ -38,8 +38,7 @@ import com.ddimitroff.projects.dwallet.xml.exchange.DWalletExchangeRatesParser;
 @Controller
 public class CashRecordsRestService {
 
-	private static final Logger logger = Logger
-			.getLogger(CashRecordsRestService.class);
+	private static final Logger logger = Logger.getLogger(CashRecordsRestService.class);
 
 	@Autowired
 	private UserDAOManager userManager;
@@ -80,11 +79,8 @@ public class CashRecordsRestService {
 
 			return record;
 		} else {
-			logger.error("Unable to generate token for user "
-					+ daoToLogin.getEmail());
-			throw new DWalletResponseException(
-					"Unable to generate token for user "
-							+ daoToLogin.getEmail());
+			logger.error("Unable to generate token for user " + daoToLogin.getEmail());
+			throw new DWalletResponseException("Unable to generate token for user " + daoToLogin.getEmail());
 		}
 	}
 
@@ -92,37 +88,27 @@ public class CashRecordsRestService {
 	// DWallet-API-Key: <api-key> needed
 	@RequestMapping(method = RequestMethod.POST, value = "/cash/balance")
 	@ResponseBody
-	public CashBalanceRO getCashBalance(
-			@RequestHeader(value = DWalletRestUtils.DWALLET_REQUEST_HEADER, required = false) String apiKey,
+	public CashBalanceRO getCashBalance(@RequestHeader(value = DWalletRestUtils.DWALLET_REQUEST_HEADER, required = false) String apiKey,
 			@RequestBody TokenRO tokenRO) throws DWalletResponseException {
 		if (DWalletRestUtils.isValidAPIKey(apiKey, apiKeys)) {
 			if (null != tokenRO) {
 				Token token = tokenWatcher.getTokenById(tokenRO.getTokenId());
 				if (null != token) {
-					CashBalanceDAO cashBalanceDAO = cashManager
-							.getCashBalanceByUser(token.getOwner());
+					CashBalanceDAO cashBalanceDAO = cashManager.getCashBalanceByUser(token.getOwner());
 					if (null != cashBalanceDAO) {
-						CashBalanceRO output = cashManager
-								.convert(cashBalanceDAO);
+						CashBalanceRO output = cashManager.convert(cashBalanceDAO);
 						return output;
 					} else {
-						logger.error("Unable to find cash balance for user "
-								+ token.getOwner());
-						throw new DWalletResponseException(
-								"Unable to find cash balance for user "
-										+ token.getOwner());
+						logger.error("Unable to find cash balance for user " + token.getOwner());
+						throw new DWalletResponseException("Unable to find cash balance for user " + token.getOwner());
 					}
 				} else {
-					logger.error("Unable to find token with id "
-							+ tokenRO.getTokenId());
-					throw new DWalletResponseException(
-							"Unable to find token with id "
-									+ tokenRO.getTokenId());
+					logger.error("Unable to find token with id " + tokenRO.getTokenId());
+					throw new DWalletResponseException("Unable to find token with id " + tokenRO.getTokenId());
 				}
 			} else {
 				logger.error("Wrong request body post of cash record");
-				throw new DWalletResponseException(
-						"Wrong request body post of cash record");
+				throw new DWalletResponseException("Wrong request body post of cash record");
 			}
 		} else {
 			logger.error("Wrong 'd-wallet' API key");
@@ -134,58 +120,48 @@ public class CashRecordsRestService {
 	// DWallet-API-Key: <api-key> needed
 	@RequestMapping(method = RequestMethod.POST, value = "/cash/post")
 	@ResponseStatus(value = HttpStatus.OK)
-	public void postCashRecord(
-			@RequestHeader(value = DWalletRestUtils.DWALLET_REQUEST_HEADER, required = false) String apiKey,
-			@RequestBody CashRecordRO cashRecordRO)
-			throws DWalletResponseException {
+	public void postCashRecord(@RequestHeader(value = DWalletRestUtils.DWALLET_REQUEST_HEADER, required = false) String apiKey,
+			@RequestBody CashRecordRO cashRecordRO) throws DWalletResponseException {
 		if (DWalletRestUtils.isValidAPIKey(apiKey, apiKeys)) {
 			if (null != cashRecordRO) {
-				Token token = tokenWatcher.getTokenById(cashRecordRO.getToken()
-						.getTokenId());
+				Token token = tokenWatcher.getTokenById(cashRecordRO.getToken().getTokenId());
 				if (null != token) {
 					long start = System.nanoTime();
 
-					CashBalanceDAO cashBalanceDAO = cashManager
-							.getCashBalanceByUser(token.getOwner());
+					CashBalanceDAO cashBalanceDAO = cashManager.getCashBalanceByUser(token.getOwner());
 					if (null == cashBalanceDAO) {
-						cashBalanceDAO = new CashBalanceDAO(token.getOwner(),
-								token.getOwner().getDefaultCurrency(), 0, 0);
+						if (token.getOwner().getStartupBalance() < 0) {
+							cashBalanceDAO = new CashBalanceDAO(token.getOwner(), token.getOwner().getDefaultCurrency(), 0, token.getOwner().getStartupBalance());
+						} else {
+							cashBalanceDAO = new CashBalanceDAO(token.getOwner(), token.getOwner().getDefaultCurrency(), token.getOwner().getStartupBalance(), 0);
+						}
 					}
 
 					// iterate over every cash flow from the record
 					for (int i = 0; i < cashRecordRO.getCashFlows().size(); i++) {
 						CashFlowRO current = cashRecordRO.getCashFlows().get(i);
-						CashFlowDAO currentDAO = cashManager.convert(current,
-								token.getOwner());
+						CashFlowDAO currentDAO = cashManager.convert(current, token.getOwner());
 
 						manageCashFlowCurrencies(currentDAO);
 
 						if (CashFlowDAOType.PROFIT == currentDAO.getType()) {
-							cashBalanceDAO.setDebit(cashBalanceDAO.getDebit()
-									+ currentDAO.getSum());
+							cashBalanceDAO.setDebit(cashBalanceDAO.getDebit() + currentDAO.getSum());
 						} else {
-							cashBalanceDAO.setCredit(cashBalanceDAO.getCredit()
-									+ currentDAO.getSum());
+							cashBalanceDAO.setCredit(cashBalanceDAO.getCredit() + currentDAO.getSum());
 						}
 
 						cashManager.saveCashFlow(currentDAO);
 					}
-					
+
 					cashManager.saveCashBalance(cashBalanceDAO);
-					logger.info("Importing cash record from user "
-							+ token.getOwner() + " finished in "
-							+ (System.nanoTime() - start) / 1000000 + " ms.");
+					logger.info("Importing cash record from user " + token.getOwner() + " finished in " + (System.nanoTime() - start) / 1000000 + " ms.");
 				} else {
-					logger.error("Unable to find token with id "
-							+ cashRecordRO.getToken().getTokenId());
-					throw new DWalletResponseException(
-							"Unable to find token with id "
-									+ cashRecordRO.getToken().getTokenId());
+					logger.error("Unable to find token with id " + cashRecordRO.getToken().getTokenId());
+					throw new DWalletResponseException("Unable to find token with id " + cashRecordRO.getToken().getTokenId());
 				}
 			} else {
 				logger.error("Wrong request body post of cash record");
-				throw new DWalletResponseException(
-						"Wrong request body post of cash record");
+				throw new DWalletResponseException("Wrong request body post of cash record");
 			}
 		} else {
 			logger.error("Wrong 'd-wallet' API key");
@@ -203,22 +179,19 @@ public class CashRecordsRestService {
 
 		switch (currentDAO.getOwner().getDefaultCurrency()) {
 		case BGN:
-			factor = currencyExchangeFactor(currentDAO.getCurrencyType(),
-					CashFlowDAOCurrencyType.BGN);
+			factor = currencyExchangeFactor(currentDAO.getCurrencyType(), CashFlowDAOCurrencyType.BGN);
 			refactoredSum *= factor;
 			currentDAO.setSum(DWalletRestUtils.roundTwoDecimals(refactoredSum));
 			currentDAO.setCurrencyType(CashFlowDAOCurrencyType.BGN);
 			break;
 		case USD:
-			factor = currencyExchangeFactor(currentDAO.getCurrencyType(),
-					CashFlowDAOCurrencyType.USD);
+			factor = currencyExchangeFactor(currentDAO.getCurrencyType(), CashFlowDAOCurrencyType.USD);
 			refactoredSum *= factor;
 			currentDAO.setSum(DWalletRestUtils.roundTwoDecimals(refactoredSum));
 			currentDAO.setCurrencyType(CashFlowDAOCurrencyType.USD);
 			break;
 		case EUR:
-			factor = currencyExchangeFactor(currentDAO.getCurrencyType(),
-					CashFlowDAOCurrencyType.EUR);
+			factor = currencyExchangeFactor(currentDAO.getCurrencyType(), CashFlowDAOCurrencyType.EUR);
 			refactoredSum *= factor;
 			currentDAO.setSum(DWalletRestUtils.roundTwoDecimals(refactoredSum));
 			currentDAO.setCurrencyType(CashFlowDAOCurrencyType.EUR);
@@ -226,18 +199,15 @@ public class CashRecordsRestService {
 		}
 	}
 
-	private double currencyExchangeFactor(CashFlowDAOCurrencyType from,
-			CashFlowDAOCurrencyType to) {
+	private double currencyExchangeFactor(CashFlowDAOCurrencyType from, CashFlowDAOCurrencyType to) {
 		double exchangeRateFrom = 1.0;
 		if (CashFlowDAOCurrencyType.BGN != from) {
-			exchangeRateFrom = exchangeRatesParser
-					.getExchangeRateByCurrency(from.name());
+			exchangeRateFrom = exchangeRatesParser.getExchangeRateByCurrency(from.name());
 		}
 
 		double exchangeRateTo = 1.0;
 		if (CashFlowDAOCurrencyType.BGN != to) {
-			exchangeRateTo = exchangeRatesParser.getExchangeRateByCurrency(to
-					.name());
+			exchangeRateTo = exchangeRatesParser.getExchangeRateByCurrency(to.name());
 		}
 
 		return exchangeRateFrom / exchangeRateTo;
