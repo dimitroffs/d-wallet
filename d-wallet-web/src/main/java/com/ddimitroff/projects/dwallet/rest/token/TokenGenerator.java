@@ -1,6 +1,10 @@
 package com.ddimitroff.projects.dwallet.rest.token;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import org.apache.log4j.Logger;
+import org.springframework.scheduling.TaskScheduler;
 
 import com.ddimitroff.projects.dwallet.db.user.UserDAO;
 import com.ddimitroff.projects.dwallet.db.user.UserDAOManager;
@@ -8,12 +12,13 @@ import com.ddimitroff.projects.dwallet.db.user.UserDAOManager;
 public class TokenGenerator {
 
 	private static final Logger logger = Logger.getLogger(TokenGenerator.class);
+	private static final int TOKEN_EXPIRATION_INTERVAL = 5; // TODO
 
 	private UserDAOManager userManager;
 	private TokenWatcher tokenWatcher;
+	private TaskScheduler tokenScheduler;
 
 	public Token generate(UserDAO dao) {
-
 		if (null != dao) {
 			if (isUserLoggedIn(dao)) {
 				logger.error("User " + dao.getEmail() + " already has token for 'd-wallet' server operations");
@@ -21,6 +26,7 @@ public class TokenGenerator {
 			} else {
 				Token token = new Token(dao);
 				tokenWatcher.addToken(token);
+				tokenScheduler.schedule(new TokenExpirationTask(token.getId()), getTokenExpireDate());
 
 				return token;
 			}
@@ -49,6 +55,13 @@ public class TokenGenerator {
 		return output;
 	}
 
+	private Date getTokenExpireDate() {
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.MINUTE, TOKEN_EXPIRATION_INTERVAL);
+
+		return cal.getTime();
+	}
+
 	public UserDAOManager getUserManager() {
 		return userManager;
 	}
@@ -63,6 +76,14 @@ public class TokenGenerator {
 
 	public void setTokenWatcher(TokenWatcher tokenWatcher) {
 		this.tokenWatcher = tokenWatcher;
+	}
+
+	public TaskScheduler getTokenScheduler() {
+		return tokenScheduler;
+	}
+
+	public void setTokenScheduler(TaskScheduler tokenScheduler) {
+		this.tokenScheduler = tokenScheduler;
 	}
 
 }
