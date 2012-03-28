@@ -3,12 +3,13 @@
     <wb-module deploy-name="d-wallet-web">
         <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/java"/>
         <dependent-module archiveName="d-wallet-core-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/d-wallet-core/d-wallet-core">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <property name="context-root" value="d-wallet-web"/>
         <property name="java-output-path" value="/d-wallet-web/target/classes"/>
+        <property name="component.exclusion.patterns" value="WEB-INF/web.xml"/>
     </wb-module>
 </project-modules>

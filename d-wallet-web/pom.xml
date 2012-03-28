@@ -87,7 +87,7 @@
 			<artifactId>spring-jpa</artifactId>
 			<version>2.0.8</version>
 		</dependency>
-		
+
 		<!-- JPA & Hibernate dependencies -->
 		<dependency>
 			<groupId>javax.persistence</groupId>
@@ -114,29 +114,29 @@
 			<artifactId>hibernate-entitymanager</artifactId>
 			<version>${hibernate.version}</version>
 		</dependency>
-		
+
 		<!-- Logging dependencies -->
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>1.2.16</version>
 			<exclusions>
-		        <exclusion>
-		          <groupId>com.sun.jdmk</groupId>
-		          <artifactId>jmxtools</artifactId>
-		        </exclusion>
-		        <exclusion>
-		          <groupId>com.sun.jmx</groupId>
-		          <artifactId>jmxri</artifactId>
-		        </exclusion>
-		    </exclusions>
+				<exclusion>
+					<groupId>com.sun.jdmk</groupId>
+					<artifactId>jmxtools</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sun.jmx</groupId>
+					<artifactId>jmxri</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>1.6.4</version>
 		</dependency>
-		
+
 		<!-- Other dependencies -->
 		<dependency>
 			<groupId>org.aspectj</groupId>
@@ -188,14 +188,13 @@
 			<artifactId>mail</artifactId>
 			<version>1.4.4</version>
 		</dependency>
-            
-		
+
 		<!-- CloudFoundry dependency -->
 		<dependency>
-	        <groupId>org.cloudfoundry</groupId>
-	        <artifactId>cloudfoundry-runtime</artifactId>
-	        <version>0.8.1</version>
-	    </dependency>
+			<groupId>org.cloudfoundry</groupId>
+			<artifactId>cloudfoundry-runtime</artifactId>
+			<version>0.8.1</version>
+		</dependency>
 
 	</dependencies>
 
