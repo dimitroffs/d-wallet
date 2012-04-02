@@ -49,8 +49,6 @@
 				<!-- second level cache settings -->
 				<prop key="hibernate.cache.provider_class">${hibernate.cache.provider_class}</prop>
 				<prop key="net.sf.ehcache.configurationResourceName">${net.sf.ehcache.configurationResourceName}</prop>
-				<prop key="hibernate.cache.use_query_cache">${hibernate.cache.use_query_cache}</prop>
-				<prop key="hibernate.cache.use_second_level_cache">${hibernate.cache.use_second_level_cache}</prop>
 			</props>
 		</property>
 	</bean>
