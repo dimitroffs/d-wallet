@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.ddimitroff.projects.dwallet.db.user.UserDAO;
-import com.ddimitroff.projects.dwallet.db.user.UserDAOManager;
+import com.ddimitroff.projects.dwallet.db.entities.User;
+import com.ddimitroff.projects.dwallet.managers.UserManager;
 import com.ddimitroff.projects.dwallet.rest.DWalletRestUtils;
 import com.ddimitroff.projects.dwallet.rest.exception.DWalletResponseException;
 import com.ddimitroff.projects.dwallet.rest.token.Token;
@@ -23,17 +23,13 @@ import com.ddimitroff.projects.dwallet.rest.token.TokenRO;
 import com.ddimitroff.projects.dwallet.rest.token.TokenWatcher;
 import com.ddimitroff.projects.dwallet.rest.user.UserRO;
 
-/**
- * This is an example REST style MVC controller. It serves as an endpoint for
- * retrieving Product Objects.
- */
 @Controller
 public class UsersRestService {
 
 	private static final Logger logger = Logger.getLogger(UsersRestService.class);
 
 	@Autowired
-	private UserDAOManager userManager;
+	private UserManager userManager;
 
 	@Autowired
 	private TokenGenerator tokenGenerator;
@@ -47,14 +43,15 @@ public class UsersRestService {
 	// DWallet-API-Key: <api-key> needed
 	@RequestMapping(method = RequestMethod.POST, value = "/users/get")
 	@ResponseBody
-	public UserRO getActiveUserByTokenId(@RequestHeader(value = DWalletRestUtils.DWALLET_REQUEST_HEADER, required = false) String apiKey,
+	public UserRO getActiveUserByTokenId(
+			@RequestHeader(value = DWalletRestUtils.DWALLET_REQUEST_HEADER, required = false) String apiKey,
 			@RequestBody TokenRO tokenRO) throws DWalletResponseException {
 		if (DWalletRestUtils.isValidAPIKey(apiKey, apiKeys)) {
 			if (null != tokenRO) {
 				Token token = tokenWatcher.getTokenById(tokenRO.getTokenId());
 				if (null != token) {
-					UserDAO dao = token.getOwner();
-					UserRO ro = userManager.convert(dao);
+					User entity = token.getOwner();
+					UserRO ro = userManager.convert(entity);
 					return ro;
 				} else {
 					logger.error("Unable to find token with id " + tokenRO.getTokenId());
@@ -74,16 +71,17 @@ public class UsersRestService {
 	// DWallet-API-Key: <api-key> needed
 	@RequestMapping(method = RequestMethod.POST, value = "/users/register")
 	@ResponseStatus(value = HttpStatus.OK)
-	public void registerUser(@RequestHeader(value = DWalletRestUtils.DWALLET_REQUEST_HEADER, required = false) String apiKey, @RequestBody UserRO userRO)
-			throws DWalletResponseException {
+	public void registerUser(
+			@RequestHeader(value = DWalletRestUtils.DWALLET_REQUEST_HEADER, required = false) String apiKey,
+			@RequestBody UserRO userRO) throws DWalletResponseException {
 		if (DWalletRestUtils.isValidAPIKey(apiKey, apiKeys)) {
 			if (null != userRO) {
-				UserDAO daoToRegister = userManager.convert(userRO);
+				User entityToRegister = userManager.convert(userRO);
 				try {
-					userManager.saveUser(daoToRegister);
+					userManager.save(entityToRegister);
 				} catch (Exception e) {
-					logger.error("Unable to register user " + daoToRegister.getEmail(), e);
-					throw new DWalletResponseException("Unable to register user " + daoToRegister.getEmail());
+					logger.error("Unable to register user " + entityToRegister.getEmail(), e);
+					throw new DWalletResponseException("Unable to register user " + entityToRegister.getEmail());
 				}
 			} else {
 				logger.error("Wrong request body for register of new user");
@@ -99,18 +97,19 @@ public class UsersRestService {
 	// DWallet-API-Key: <api-key> needed
 	@RequestMapping(method = RequestMethod.POST, value = "/users/login")
 	@ResponseBody
-	public TokenRO loginUser(@RequestHeader(value = DWalletRestUtils.DWALLET_REQUEST_HEADER, required = false) String apiKey, @RequestBody UserRO userRO)
-			throws DWalletResponseException {
+	public TokenRO loginUser(
+			@RequestHeader(value = DWalletRestUtils.DWALLET_REQUEST_HEADER, required = false) String apiKey,
+			@RequestBody UserRO userRO) throws DWalletResponseException {
 		if (DWalletRestUtils.isValidAPIKey(apiKey, apiKeys)) {
 			if (null != userRO) {
-				UserDAO daoToLogin = userManager.getConvertedUser(userRO);
-				Token token = tokenGenerator.generate(daoToLogin);
+				User entityToLogin = userManager.getConvertedUser(userRO);
+				Token token = tokenGenerator.generate(entityToLogin);
 				if (null != token) {
 					TokenRO tokenRO = tokenGenerator.convert(token);
 					return tokenRO;
 				} else {
-					logger.error("Unable to generate token for user " + daoToLogin.getEmail());
-					throw new DWalletResponseException("Unable to generate token for user " + daoToLogin.getEmail());
+					logger.error("Unable to generate token for user " + entityToLogin.getEmail());
+					throw new DWalletResponseException("Unable to generate token for user " + entityToLogin.getEmail());
 				}
 			} else {
 				logger.error("Wrong request body for login of user");
@@ -125,8 +124,9 @@ public class UsersRestService {
 	// DWallet-API-Key: <api-key> needed
 	@RequestMapping(method = RequestMethod.POST, value = "/users/logout")
 	@ResponseStatus(value = HttpStatus.OK)
-	public void logoutUser(@RequestHeader(value = DWalletRestUtils.DWALLET_REQUEST_HEADER, required = false) String apiKey, @RequestBody TokenRO tokenRO)
-			throws DWalletResponseException {
+	public void logoutUser(
+			@RequestHeader(value = DWalletRestUtils.DWALLET_REQUEST_HEADER, required = false) String apiKey,
+			@RequestBody TokenRO tokenRO) throws DWalletResponseException {
 		if (DWalletRestUtils.isValidAPIKey(apiKey, apiKeys)) {
 			if (null != tokenRO) {
 				Token token = tokenWatcher.getTokenById(tokenRO.getTokenId());

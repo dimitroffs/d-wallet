@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
-	xmlns:task="http://www.springframework.org/schema/task"	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:task="http://www.springframework.org/schema/task" xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
 		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 		http://www.springframework.org/schema/aop
@@ -10,14 +10,6 @@
 		http://www.springframework.org/schema/task/spring-task-3.0.xsd">
 
 	<aop:aspectj-autoproxy proxy-target-class="true" />
-
-	<bean id="userManager" class="com.ddimitroff.projects.dwallet.db.user.UserDAOManager"
-		scope="prototype">
-	</bean>
-
-	<bean id="cashManager" class="com.ddimitroff.projects.dwallet.db.cash.CashDAOManager"
-		scope="prototype">
-	</bean>
 
 	<bean id="applicationSession"
 		class="com.ddimitroff.projects.dwallet.rest.session.DWalletApplicationSession"
@@ -37,19 +29,20 @@
 	<bean id="tokenWatcher" class="com.ddimitroff.projects.dwallet.rest.token.TokenWatcher"
 		init-method="init" scope="singleton" destroy-method="destroy">
 	</bean>
-	
+
 	<!-- Task scheduler -->
-	<task:scheduler id="taskScheduler" pool-size="3"/>
-    <task:executor id="taskExecutor" pool-size="3"/>
-    <task:annotation-driven executor="taskExecutor" scheduler="taskScheduler"/>
+	<task:scheduler id="taskScheduler" pool-size="3" />
+	<task:executor id="taskExecutor" pool-size="3" />
+	<task:annotation-driven executor="taskExecutor"
+		scheduler="taskScheduler" />
 
 	<bean id="exchangeRatesParser"
 		class="com.ddimitroff.projects.dwallet.xml.exchange.DWalletExchangeRatesParser"
 		init-method="downloadExchangeRates" scope="singleton">
 	</bean>
-	
-	<bean id="mailSender"
-		class="com.ddimitroff.projects.dwallet.mail.MailSender" scope="singleton">
+
+	<bean id="mailSender" class="com.ddimitroff.projects.dwallet.mail.MailSender"
+		scope="singleton">
 	</bean>
 
 	<!-- Admin users collection -->
@@ -63,14 +56,14 @@
 	</bean>
 
 	<!-- Admin users -->
-	<bean id="admin1" class="com.ddimitroff.projects.dwallet.db.user.UserDAO"
+	<bean id="admin1" class="com.ddimitroff.projects.dwallet.db.entities.User"
 		scope="prototype">
 		<property name="email" value="mykob.11@gmail.com" />
 		<property name="hashPassword" value="mykob.11" />
 		<property name="role" value="ADMIN" />
 	</bean>
 
-	<bean id="admin2" class="com.ddimitroff.projects.dwallet.db.user.UserDAO"
+	<bean id="admin2" class="com.ddimitroff.projects.dwallet.db.entities.User"
 		scope="prototype">
 		<property name="email" value="mykob.12@gmail.com" />
 		<property name="hashPassword" value="mykob.12" />

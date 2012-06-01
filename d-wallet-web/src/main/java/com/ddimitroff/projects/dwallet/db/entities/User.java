@@ -1,35 +1,27 @@
-package com.ddimitroff.projects.dwallet.db.user;
-
-import java.io.Serializable;
+package com.ddimitroff.projects.dwallet.db.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
-import com.ddimitroff.projects.dwallet.db.cash.CashFlowDAOCurrencyType;
+import com.ddimitroff.projects.dwallet.enums.CashFlowCurrencyType;
+import com.ddimitroff.projects.dwallet.enums.UserRole;
 
 @Entity
 @Table(name = "USERS")
 @NamedQueries({
-		@NamedQuery(name = UserDAO.GET_USER_BY_CREDENTIALS, query = "SELECT user FROM UserDAO user WHERE user.email = :email AND user.hashPassword = :password"),
-		@NamedQuery(name = UserDAO.GET_USER_BY_EMAIL, query = "SELECT user FROM UserDAO user WHERE user.email = :email") })
-public class UserDAO implements Comparable<UserDAO>, Serializable {
+		@NamedQuery(name = User.GET_USER_BY_CREDENTIALS, query = "SELECT user FROM User user WHERE user.email = :email AND user.hashPassword = :password"),
+		@NamedQuery(name = User.GET_USER_BY_EMAIL, query = "SELECT user FROM User user WHERE user.email = :email") })
+public class User extends BaseEntity implements Comparable<User> {
 
 	private static final long serialVersionUID = 1L;
 
 	public static final String GET_USER_BY_EMAIL = "User.getUserByEmail";
 	public static final String GET_USER_BY_CREDENTIALS = "User.getUserByCredentials";
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int id;
 
 	@Column(unique = true, length = 64)
 	private String email;
@@ -39,19 +31,19 @@ public class UserDAO implements Comparable<UserDAO>, Serializable {
 
 	@Column(length = 32)
 	@Enumerated(EnumType.STRING)
-	private UserDAORole role;
+	private UserRole role;
 
 	@Column(length = 32)
 	@Enumerated(EnumType.STRING)
-	private CashFlowDAOCurrencyType defaultCurrency;
+	private CashFlowCurrencyType defaultCurrency;
 
 	@Column
 	private double startupBalance;
 
-	public UserDAO() {
+	public User() {
 	}
 
-	public UserDAO(String email, UserDAORole role, CashFlowDAOCurrencyType defaultCurrency, double startupBalance) {
+	public User(String email, UserRole role, CashFlowCurrencyType defaultCurrency, double startupBalance) {
 		if (null == email) {
 			throw new IllegalArgumentException("User name should be specified!");
 		}
@@ -66,14 +58,6 @@ public class UserDAO implements Comparable<UserDAO>, Serializable {
 		this.role = role;
 		this.defaultCurrency = defaultCurrency;
 		this.startupBalance = startupBalance;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	public String getEmail() {
@@ -92,19 +76,19 @@ public class UserDAO implements Comparable<UserDAO>, Serializable {
 		this.hashPassword = hashPassword;
 	}
 
-	public UserDAORole getRole() {
+	public UserRole getRole() {
 		return role;
 	}
 
-	public void setRole(UserDAORole role) {
+	public void setRole(UserRole role) {
 		this.role = role;
 	}
 
-	public CashFlowDAOCurrencyType getDefaultCurrency() {
+	public CashFlowCurrencyType getDefaultCurrency() {
 		return defaultCurrency;
 	}
 
-	public void setDefaultCurrency(CashFlowDAOCurrencyType defaultCurrency) {
+	public void setDefaultCurrency(CashFlowCurrencyType defaultCurrency) {
 		this.defaultCurrency = defaultCurrency;
 	}
 
@@ -117,7 +101,7 @@ public class UserDAO implements Comparable<UserDAO>, Serializable {
 	}
 
 	@Override
-	public int compareTo(UserDAO user) {
+	public int compareTo(User user) {
 		return this.getEmail().compareTo(user.getEmail());
 	}
 
@@ -142,7 +126,7 @@ public class UserDAO implements Comparable<UserDAO>, Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		UserDAO other = (UserDAO) obj;
+		User other = (User) obj;
 		if (Double.doubleToLongBits(startupBalance) != Double.doubleToLongBits(other.startupBalance))
 			return false;
 		if (defaultCurrency != other.defaultCurrency)

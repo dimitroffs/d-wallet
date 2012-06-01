@@ -6,39 +6,36 @@ import java.util.Date;
 import org.apache.log4j.Logger;
 import org.springframework.scheduling.TaskScheduler;
 
-import com.ddimitroff.projects.dwallet.db.user.UserDAO;
-import com.ddimitroff.projects.dwallet.db.user.UserDAOManager;
+import com.ddimitroff.projects.dwallet.db.entities.User;
+import com.ddimitroff.projects.dwallet.managers.UserManager;
 
 public class TokenGenerator {
 
 	private static final Logger logger = Logger.getLogger(TokenGenerator.class);
 	private static final int TOKEN_EXPIRATION_INTERVAL = 1; // TODO
 
-	private UserDAOManager userManager;
+	private UserManager userManager;
 	private TokenWatcher tokenWatcher;
 	private TaskScheduler tokenScheduler;
 
-	public Token generate(UserDAO dao) {
+	public Token generate(User dao) {
 		if (null != dao) {
 			if (isUserLoggedIn(dao)) {
-				logger.error("User " + dao.getEmail()
-						+ " already has token for 'd-wallet' server operations");
+				logger.error("User " + dao.getEmail() + " already has token for 'd-wallet' server operations");
 				return null;
 			} else {
 				Token token = new Token(dao);
 				tokenWatcher.addToken(token);
-				tokenScheduler.schedule(new TokenExpirationTask(token.getId(),
-						tokenWatcher), getTokenExpireDate());
+				tokenScheduler.schedule(new TokenExpirationTask(token.getId(), tokenWatcher), getTokenExpireDate());
 
 				return token;
 			}
 		} else {
-			throw new NullPointerException(
-					"Unable to generate token for NULL input user");
+			throw new NullPointerException("Unable to generate token for NULL input user");
 		}
 	}
 
-	private boolean isUserLoggedIn(UserDAO dao) {
+	private boolean isUserLoggedIn(User dao) {
 		if (null != tokenWatcher.getTokenByUser(dao)) {
 			return true;
 		}
@@ -65,11 +62,11 @@ public class TokenGenerator {
 		return cal.getTime();
 	}
 
-	public UserDAOManager getUserManager() {
+	public UserManager getUserManager() {
 		return userManager;
 	}
 
-	public void setUserManager(UserDAOManager userManager) {
+	public void setUserManager(UserManager userManager) {
 		this.userManager = userManager;
 	}
 

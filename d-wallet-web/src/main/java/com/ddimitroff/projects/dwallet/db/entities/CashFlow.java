@@ -1,29 +1,26 @@
-package com.ddimitroff.projects.dwallet.db.cash;
+package com.ddimitroff.projects.dwallet.db.entities;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
-import com.ddimitroff.projects.dwallet.db.user.UserDAO;
+import com.ddimitroff.projects.dwallet.enums.CashFlowCurrencyType;
+import com.ddimitroff.projects.dwallet.enums.CashFlowType;
 
 @Entity
 @Table(name = "CASH_FLOWS")
 @NamedQueries({
 // @NamedQuery(name = CashFlowDAO.GET_USER_BY_CREDENTIALS, query =
 // "SELECT user FROM UserDAO user WHERE user.email = :email AND user.hashPassword = :password"),
-@NamedQuery(name = CashFlowDAO.GET_CASH_FLOWS_BY_USER, query = "SELECT cashFlow FROM CashFlowDAO cashFlow WHERE cashFlow.owner = :owner ORDER BY cashFlow.date") })
-public class CashFlowDAO implements Comparable<CashFlowDAO>, Serializable {
+@NamedQuery(name = CashFlow.GET_CASH_FLOWS_BY_USER, query = "SELECT cashFlow FROM CashFlow cashFlow WHERE cashFlow.owner = :owner ORDER BY cashFlow.date") })
+public class CashFlow extends BaseEntity implements Comparable<CashFlow> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -31,20 +28,16 @@ public class CashFlowDAO implements Comparable<CashFlowDAO>, Serializable {
 	// public static final String GET_USER_BY_CREDENTIALS =
 	// "User.getUserByCredentials";
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int id;
-
 	@ManyToOne
-	private UserDAO owner;
+	private User owner;
 
 	@Column(length = 32)
 	@Enumerated(EnumType.STRING)
-	private CashFlowDAOType type;
+	private CashFlowType type;
 
 	@Column(length = 32)
 	@Enumerated(EnumType.STRING)
-	private CashFlowDAOCurrencyType currencyType;
+	private CashFlowCurrencyType currencyType;
 
 	@Column
 	private double sum;
@@ -52,10 +45,10 @@ public class CashFlowDAO implements Comparable<CashFlowDAO>, Serializable {
 	@Column
 	private Date date;
 
-	public CashFlowDAO() {
+	public CashFlow() {
 	}
 
-	public CashFlowDAO(UserDAO owner, CashFlowDAOType type, CashFlowDAOCurrencyType currencyType, double sum, Date date) {
+	public CashFlow(User owner, CashFlowType type, CashFlowCurrencyType currencyType, double sum, Date date) {
 		if (null == owner) {
 			throw new IllegalArgumentException("Cash flow owner should be specified!");
 		}
@@ -79,35 +72,27 @@ public class CashFlowDAO implements Comparable<CashFlowDAO>, Serializable {
 		this.date = date;
 	}
 
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public UserDAO getOwner() {
+	public User getOwner() {
 		return owner;
 	}
 
-	public void setOwner(UserDAO owner) {
+	public void setOwner(User owner) {
 		this.owner = owner;
 	}
 
-	public CashFlowDAOType getType() {
+	public CashFlowType getType() {
 		return type;
 	}
 
-	public void setType(CashFlowDAOType type) {
+	public void setType(CashFlowType type) {
 		this.type = type;
 	}
 
-	public CashFlowDAOCurrencyType getCurrencyType() {
+	public CashFlowCurrencyType getCurrencyType() {
 		return currencyType;
 	}
 
-	public void setCurrencyType(CashFlowDAOCurrencyType currencyType) {
+	public void setCurrencyType(CashFlowCurrencyType currencyType) {
 		this.currencyType = currencyType;
 	}
 
@@ -128,7 +113,7 @@ public class CashFlowDAO implements Comparable<CashFlowDAO>, Serializable {
 	}
 
 	@Override
-	public int compareTo(CashFlowDAO o) {
+	public int compareTo(CashFlow o) {
 		return date.compareTo(o.getDate());
 	}
 
@@ -154,7 +139,7 @@ public class CashFlowDAO implements Comparable<CashFlowDAO>, Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		CashFlowDAO other = (CashFlowDAO) obj;
+		CashFlow other = (CashFlow) obj;
 		if (currencyType != other.currencyType)
 			return false;
 		if (date == null) {

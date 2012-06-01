@@ -20,8 +20,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 public class DWalletExchangeRatesParser {
 
 	private static final Logger logger = Logger.getLogger(DWalletExchangeRatesParser.class);
-	private static final String FIXED_RATES_FILEPATH = System.getenv("HOME") + "/tomcat/webapps/ROOT/WEB-INF/exchange/Fixed_Rates.xml";
-	private static final String EXCHANGE_RATES_FILEPATH = System.getenv("HOME") + "/tomcat/webapps/ROOT/WEB-INF/exchange/Exchange_Rates.xml";
+	private static final String FIXED_RATES_FILEPATH = System.getenv("HOME")
+			+ "/tomcat/webapps/ROOT/WEB-INF/exchange/Fixed_Rates.xml";
+	private static final String EXCHANGE_RATES_FILEPATH = System.getenv("HOME")
+			+ "/tomcat/webapps/ROOT/WEB-INF/exchange/Exchange_Rates.xml";
 	private static final String EXCHANGE_RATES_DOWNLOAD_URL = "http://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERForeignCurrencies/index.htm?download=xml&search=&lang=BG";
 
 	private static Builder builder;

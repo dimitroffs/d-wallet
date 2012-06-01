@@ -1,11 +1,11 @@
-package com.ddimitroff.projects.dwallet.db.cash;
+package com.ddimitroff.projects.dwallet.enums;
 
-public enum CashFlowDAOCurrencyType {
+public enum CashFlowCurrencyType {
 	BGN(1), USD(2), EUR(3);
 
 	private final int currencyCode;
 
-	CashFlowDAOCurrencyType(int currencyCode) {
+	CashFlowCurrencyType(int currencyCode) {
 		this.currencyCode = currencyCode;
 	}
 
@@ -13,8 +13,8 @@ public enum CashFlowDAOCurrencyType {
 		return currencyCode;
 	}
 
-	public static final CashFlowDAOCurrencyType getCurrencyType(int currencyCode) {
-		for (CashFlowDAOCurrencyType current : CashFlowDAOCurrencyType.values()) {
+	public static final CashFlowCurrencyType getCurrencyType(int currencyCode) {
+		for (CashFlowCurrencyType current : CashFlowCurrencyType.values()) {
 			if (current.getIntCurrencyCode() != currencyCode) {
 				continue;
 			} else {

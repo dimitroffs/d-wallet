@@ -4,54 +4,53 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import com.ddimitroff.projects.dwallet.db.user.UserDAO;
-import com.ddimitroff.projects.dwallet.db.user.UserDAOManager;
+import com.ddimitroff.projects.dwallet.db.entities.User;
+import com.ddimitroff.projects.dwallet.managers.UserManager;
 
 public class DWalletApplicationSession {
 
 	private static final Logger logger = Logger.getLogger(DWalletApplicationSession.class);
 
-	private UserDAOManager userManager;
-	private List<UserDAO> adminUsers;
+	private UserManager userManager;
+	private List<User> adminUsers;
 
-	public List<UserDAO> getAdminUsers() {
+	public List<User> getAdminUsers() {
 		return adminUsers;
 	}
 
-	public void setAdminUsers(List<UserDAO> adminUsers) {
+	public void setAdminUsers(List<User> adminUsers) {
 		this.adminUsers = adminUsers;
 	}
 
 	public void init() throws Exception {
 		long start = System.nanoTime();
 		validateAdminUsers(adminUsers);
-		// TODO implement and start Quartz scheduler
-		logger.info("Initializing 'd-wallet' application session finished in " + (System.nanoTime() - start) / 1000000 + " ms.");
+		logger.info("Initializing 'd-wallet' application session finished in " + (System.nanoTime() - start) / 1000000
+				+ " ms.");
 	}
 
-	private void validateAdminUsers(List<UserDAO> adminUsers) throws Exception {
+	private void validateAdminUsers(List<User> adminUsers) throws Exception {
 		for (int i = 0; i < adminUsers.size(); i++) {
-			UserDAO currentAdmin = adminUsers.get(i);
+			User currentAdmin = adminUsers.get(i);
 
-			UserDAO dao = userManager.getUserByName(currentAdmin.getEmail());
-			if (null != dao) {
+			User entity = userManager.getUserByEmail(currentAdmin.getEmail());
+			if (null != entity) {
 				continue;
 			} else {
-				userManager.saveUser(currentAdmin);
+				userManager.save(currentAdmin);
 			}
 		}
 	}
 
 	public void destroy() {
-		// TODO implement and shutdown Quartz scheduler
 		logger.info("Shutting down 'd-wallet' application session...");
 	}
 
-	public UserDAOManager getUserManager() {
+	public UserManager getUserManager() {
 		return userManager;
 	}
 
-	public void setUserManager(UserDAOManager userManager) {
+	public void setUserManager(UserManager userManager) {
 		this.userManager = userManager;
 	}
 

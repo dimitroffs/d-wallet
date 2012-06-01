@@ -1,11 +1,11 @@
-package com.ddimitroff.projects.dwallet.db.cash;
+package com.ddimitroff.projects.dwallet.enums;
 
-public enum CashFlowDAOType {
+public enum CashFlowType {
 	PROFIT(1), COST(2);
 
 	private final int type;
 
-	CashFlowDAOType(int type) {
+	CashFlowType(int type) {
 		this.type = type;
 	}
 
@@ -13,8 +13,8 @@ public enum CashFlowDAOType {
 		return type;
 	}
 
-	public static final CashFlowDAOType getType(int type) {
-		for (CashFlowDAOType current : CashFlowDAOType.values()) {
+	public static final CashFlowType getType(int type) {
+		for (CashFlowType current : CashFlowType.values()) {
 			if (current.getIntType() != type) {
 				continue;
 			} else {

@@ -6,19 +6,19 @@ import java.util.Date;
 
 import org.jsecurity.crypto.hash.Md5Hash;
 
-import com.ddimitroff.projects.dwallet.db.user.UserDAO;
+import com.ddimitroff.projects.dwallet.db.entities.User;
 
 public class Token implements Comparable<Token> {
 
 	private static final int TOKEN_TIMEOUT = 30; // 30 minutes
 	private static final SimpleDateFormat TOKEN_DATE_FORMAT = new SimpleDateFormat("yyyyMMdd-hhmm");
 
-	private UserDAO owner;
+	private User owner;
 	private Date createdOn;
 	private String id;
 	private String validTo;
 
-	public Token(UserDAO owner) {
+	public Token(User owner) {
 		this.owner = owner;
 		this.createdOn = new Date();
 		this.id = generateTokenId(owner.getEmail());
@@ -39,11 +39,11 @@ public class Token implements Comparable<Token> {
 		return TOKEN_DATE_FORMAT.format(cal.getTime());
 	}
 
-	public UserDAO getOwner() {
+	public User getOwner() {
 		return owner;
 	}
 
-	public void setOwner(UserDAO owner) {
+	public void setOwner(User owner) {
 		this.owner = owner;
 	}
 
@@ -73,7 +73,8 @@ public class Token implements Comparable<Token> {
 
 	@Override
 	public String toString() {
-		return "Token [owner=" + owner.getEmail() + ", createdOn=" + createdOn + ", id=" + id + ", validTo=" + validTo + "]";
+		return "Token [owner=" + owner.getEmail() + ", createdOn=" + createdOn + ", id=" + id + ", validTo=" + validTo
+				+ "]";
 	}
 
 	@Override

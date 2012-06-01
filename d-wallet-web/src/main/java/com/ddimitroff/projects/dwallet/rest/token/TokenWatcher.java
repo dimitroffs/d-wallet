@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import org.apache.log4j.Logger;
 
-import com.ddimitroff.projects.dwallet.db.user.UserDAO;
+import com.ddimitroff.projects.dwallet.db.entities.User;
 
 public class TokenWatcher {
 
@@ -43,7 +43,7 @@ public class TokenWatcher {
 		logger.info("Token " + tokenId + " successfully removed from 'd-wallet' token watcher.");
 	}
 
-	public Token getTokenByUser(UserDAO user) {
+	public Token getTokenByUser(User user) {
 		for (Token current : activeTokens.values()) {
 			if (current.getOwner().getEmail().equals(user.getEmail())) {
 				return current;
