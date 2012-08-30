@@ -1,25 +1,29 @@
 package com.ddimitroff.projects.dwallet.rest.token;
 
+import java.io.Serializable;
+
 /*
  * {"tokenId":"<id>"}
  */
-public class TokenRO {
+public class TokenRO implements Serializable {
 
-	private String tokenId;
+  private static final long serialVersionUID = 1L;
 
-	public TokenRO() {
-	}
+  private String tokenId;
 
-	public TokenRO(String tokenId) {
-		this.tokenId = tokenId;
-	}
+  public TokenRO() {
+  }
 
-	public String getTokenId() {
-		return tokenId;
-	}
+  public TokenRO(String tokenId) {
+    this.tokenId = tokenId;
+  }
 
-	public void setTokenId(String tokenId) {
-		this.tokenId = tokenId;
-	}
+  public String getTokenId() {
+    return tokenId;
+  }
+
+  public void setTokenId(String tokenId) {
+    this.tokenId = tokenId;
+  }
 
 }

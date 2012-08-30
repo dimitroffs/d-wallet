@@ -1,42 +1,46 @@
 package com.ddimitroff.projects.dwallet.rest.cash;
 
-public class CashFlowRO {
+import java.io.Serializable;
 
-	private int cashFlowType;
-	private int cashFlowCurrency;
-	private double cashFlowSum;
+public class CashFlowRO implements Serializable {
 
-	public CashFlowRO() {
-	}
+  private static final long serialVersionUID = 1L;
 
-	public CashFlowRO(int cashFlowType, int cashFlowCurrency, double cashFlowSum) {
-		this.cashFlowType = cashFlowType;
-		this.cashFlowCurrency = cashFlowCurrency;
-		this.cashFlowSum = cashFlowSum;
-	}
+  private int cashFlowType;
+  private int cashFlowCurrency;
+  private double cashFlowSum;
 
-	public int getCashFlowType() {
-		return cashFlowType;
-	}
+  public CashFlowRO() {
+  }
 
-	public void setCashFlowType(int cashFlowType) {
-		this.cashFlowType = cashFlowType;
-	}
+  public CashFlowRO(int cashFlowType, int cashFlowCurrency, double cashFlowSum) {
+    this.cashFlowType = cashFlowType;
+    this.cashFlowCurrency = cashFlowCurrency;
+    this.cashFlowSum = cashFlowSum;
+  }
 
-	public int getCashFlowCurrency() {
-		return cashFlowCurrency;
-	}
+  public int getCashFlowType() {
+    return cashFlowType;
+  }
 
-	public void setCashFlowCurrency(int cashFlowCurrency) {
-		this.cashFlowCurrency = cashFlowCurrency;
-	}
+  public void setCashFlowType(int cashFlowType) {
+    this.cashFlowType = cashFlowType;
+  }
 
-	public double getCashFlowSum() {
-		return cashFlowSum;
-	}
+  public int getCashFlowCurrency() {
+    return cashFlowCurrency;
+  }
 
-	public void setCashFlowSum(double cashFlowSum) {
-		this.cashFlowSum = cashFlowSum;
-	}
+  public void setCashFlowCurrency(int cashFlowCurrency) {
+    this.cashFlowCurrency = cashFlowCurrency;
+  }
+
+  public double getCashFlowSum() {
+    return cashFlowSum;
+  }
+
+  public void setCashFlowSum(double cashFlowSum) {
+    this.cashFlowSum = cashFlowSum;
+  }
 
 }

@@ -1,36 +1,39 @@
 package com.ddimitroff.projects.dwallet.rest.cash;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import com.ddimitroff.projects.dwallet.rest.token.TokenRO;
 
-public class CashRecordRO {
+public class CashRecordRO implements Serializable {
 
-	private TokenRO token;
-	private ArrayList<CashFlowRO> cashFlows;
+  private static final long serialVersionUID = 1L;
 
-	public CashRecordRO() {
-	}
+  private TokenRO token;
+  private ArrayList<CashFlowRO> cashFlows;
 
-	public CashRecordRO(TokenRO token, ArrayList<CashFlowRO> cashFlows) {
-		this.token = token;
-		this.cashFlows = cashFlows;
-	}
+  public CashRecordRO() {
+  }
 
-	public TokenRO getToken() {
-		return token;
-	}
+  public CashRecordRO(TokenRO token, ArrayList<CashFlowRO> cashFlows) {
+    this.token = token;
+    this.cashFlows = cashFlows;
+  }
 
-	public void setToken(TokenRO token) {
-		this.token = token;
-	}
+  public TokenRO getToken() {
+    return token;
+  }
 
-	public ArrayList<CashFlowRO> getCashFlows() {
-		return cashFlows;
-	}
+  public void setToken(TokenRO token) {
+    this.token = token;
+  }
 
-	public void setCashFlows(ArrayList<CashFlowRO> cashFlows) {
-		this.cashFlows = cashFlows;
-	}
+  public ArrayList<CashFlowRO> getCashFlows() {
+    return cashFlows;
+  }
+
+  public void setCashFlows(ArrayList<CashFlowRO> cashFlows) {
+    this.cashFlows = cashFlows;
+  }
 
 }

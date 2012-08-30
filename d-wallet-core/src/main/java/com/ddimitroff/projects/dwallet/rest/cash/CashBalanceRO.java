@@ -1,42 +1,46 @@
 package com.ddimitroff.projects.dwallet.rest.cash;
 
-public class CashBalanceRO {
+import java.io.Serializable;
 
-	private int currency;
-	private double profit;
-	private double cost;
+public class CashBalanceRO implements Serializable {
 
-	public CashBalanceRO() {
-	}
+  private static final long serialVersionUID = 1L;
 
-	public CashBalanceRO(int currency, double profit, double cost) {
-		this.currency = currency;
-		this.profit = profit;
-		this.cost = cost;
-	}
+  private int currency;
+  private double profit;
+  private double cost;
 
-	public int getCurrency() {
-		return currency;
-	}
+  public CashBalanceRO() {
+  }
 
-	public void setCurrency(int currency) {
-		this.currency = currency;
-	}
+  public CashBalanceRO(int currency, double profit, double cost) {
+    this.currency = currency;
+    this.profit = profit;
+    this.cost = cost;
+  }
 
-	public double getProfit() {
-		return profit;
-	}
+  public int getCurrency() {
+    return currency;
+  }
 
-	public void setProfit(double profit) {
-		this.profit = profit;
-	}
+  public void setCurrency(int currency) {
+    this.currency = currency;
+  }
 
-	public double getCost() {
-		return cost;
-	}
+  public double getProfit() {
+    return profit;
+  }
 
-	public void setCost(double cost) {
-		this.cost = cost;
-	}
+  public void setProfit(double profit) {
+    this.profit = profit;
+  }
+
+  public double getCost() {
+    return cost;
+  }
+
+  public void setCost(double cost) {
+    this.cost = cost;
+  }
 
 }
