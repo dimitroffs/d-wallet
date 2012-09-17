@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+<meta charset="utf-8" />
+<title>Apache Wicket Quickstart</title>
+<link
+	href='http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:regular,bold'
+	rel='stylesheet' type='text/css' />
+<link rel="stylesheet" href="css/style.css" type="text/css"
+	media="screen" title="Stylesheet" />
+</head>
+<body>
+	<div id="hd">
+		<div id="logo">
+			<img src="img/logo.png" width="50px" height="50px" alt="Wicket Logo" />
+			<h1>Apache Wicket</h1>
+		</div>
+	</div>
+	<div id="bd">
+		<h3>All users:</h3>
+
+		<table border="1">
+			<thead>
+				<tr>
+					<td>Id</td>
+					<td>E-mail</td>
+					<td>Password</td>
+					<td>Role</td>
+					<td>Currency</td>
+					<td>Balance</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr wicket:id="usersView">
+					<td><span wicket:id="id"></span></td>
+					<td><span wicket:id="email"></span></td>
+					<td><span wicket:id="hashPassword"></span></td>
+					<td><span wicket:id="role"></span></td>
+					<td><span wicket:id="defaultCurrency"></span></td>
+					<td><span wicket:id="startupBalance"></span></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<p>
+			Please mention the correct Wicket version:
+			<wicket:container wicket:id="version">1.5-SNAPSHOT</wicket:container>
+			.
+		</p>
+	</div>
+	<div id="ft"></div>
+</body>
+</html>
