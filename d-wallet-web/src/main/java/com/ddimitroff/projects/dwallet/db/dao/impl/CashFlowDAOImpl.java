@@ -14,19 +14,19 @@ import com.ddimitroff.projects.dwallet.db.entities.User;
 @Repository("cashFlowDao")
 public class CashFlowDAOImpl extends BaseDAOImpl<CashFlow> implements CashFlowDAO {
 
-	private static final Logger LOG = Logger.getLogger(CashFlowDAOImpl.class);
+  private static final Logger LOG = Logger.getLogger(CashFlowDAOImpl.class);
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<CashFlow> getCashFlowsByUser(User owner) {
-		try {
-			List<CashFlow> cashFlows = em.createNamedQuery(CashFlow.GET_CASH_FLOWS_BY_USER).setParameter("owner", owner)
-					.getResultList();
-			return cashFlows;
-		} catch (NoResultException e) {
-			LOG.error("Unable to find cash flows by user [e-mail=" + owner.getEmail() + "]");
-			return null;
-		}
-	}
+  @SuppressWarnings("unchecked")
+  @Override
+  public List<CashFlow> getCashFlowsByUser(User owner) {
+    try {
+      List<CashFlow> cashFlows = em.createNamedQuery(CashFlow.GET_CASH_FLOWS_BY_USER).setParameter("owner", owner)
+          .getResultList();
+      return cashFlows;
+    } catch (NoResultException e) {
+      LOG.error("Unable to find cash flows by user [e-mail='" + owner.getEmail() + "']");
+      return null;
+    }
+  }
 
 }

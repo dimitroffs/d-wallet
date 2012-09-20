@@ -41,10 +41,10 @@ public class BaseDAOImpl<E extends BaseEntity> implements BaseDAO<E> {
   public void save(E entity) {
     if (null != em.find(entity.getClass(), entity.getId())) {
       em.merge(entity);
-      LOG.debug("Successfully updated entity [class=" + entity.getClass() + "id=" + entity.getId() + "]");
+      LOG.debug("Successfully updated entity [class=" + entity.getClass() + " id=" + entity.getId() + "]");
     } else {
       em.persist(entity);
-      LOG.debug("Successfully created entity [class=" + entity.getClass() + "id=" + entity.getId() + "]");
+      LOG.debug("Successfully created entity [class=" + entity.getClass() + " id=" + entity.getId() + "]");
     }
     em.flush();
   }
@@ -53,7 +53,7 @@ public class BaseDAOImpl<E extends BaseEntity> implements BaseDAO<E> {
     if (null != em.find(entity.getClass(), entity.getId())) {
       em.remove(entity);
       em.flush();
-      LOG.debug("Successfully deleted entity [class=" + entity.getClass() + "id=" + entity.getId() + "]");
+      LOG.debug("Successfully deleted entity [class=" + entity.getClass() + " id=" + entity.getId() + "]");
     }
   }
 

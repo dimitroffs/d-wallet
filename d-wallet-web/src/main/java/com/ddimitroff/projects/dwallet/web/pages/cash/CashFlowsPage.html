@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html xmlns:wicket="http://wicket.apache.org">
+    <head>
+        <title>Cash flows check</title>
+        <style type="text/css">         
+            body {
+                font-family: verdana, sans-serif;
+                font-size: 82%;
+                background-color: white;                
+            }
+        </style>
+    </head> 
+    <body>
+        Cash flows statistics:<br />
+        <br />
+        User <span wicket:id="userEmail" /> has made following cash flows:<br />
+        <br />
+        <table border="1">
+			<thead>
+				<tr>
+					<td>Type</td>
+					<td>Currency</td>
+					<td>Sum</td>
+					<td>Date</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr wicket:id="flowsView">
+					<td><span wicket:id="type"></span></td>
+					<td><span wicket:id="currencyType"></span></td>
+					<td><span wicket:id="sum"></span></td>
+					<td><span wicket:id="date"></span></td>
+				</tr>
+			</tbody>
+		</table>
+    </body>
+</html>

@@ -12,16 +12,17 @@ import com.ddimitroff.projects.dwallet.db.entities.User;
 @Component("cashBalanceDao")
 public class CashBalanceDAOImpl extends BaseDAOImpl<CashBalance> implements CashBalanceDAO {
 
-	private static final Logger LOG = Logger.getLogger(CashBalanceDAOImpl.class);
+  private static final Logger LOG = Logger.getLogger(CashBalanceDAOImpl.class);
 
-	public CashBalance getCashBalanceByUser(User owner) {
-		try {
-			return (CashBalance) em.createNamedQuery(CashBalance.GET_CASH_BALANCE_BY_USER).setParameter("owner", owner)
-					.getSingleResult();
-		} catch (NoResultException ex) {
-			LOG.error("Unable to get cash balance by user [e-mail=" + owner.getEmail() + "]");
-			return null;
-		}
-	}
+  @Override
+  public CashBalance getCashBalanceByUser(User owner) {
+    try {
+      return (CashBalance) em.createNamedQuery(CashBalance.GET_CASH_BALANCE_BY_USER).setParameter("owner", owner)
+          .getSingleResult();
+    } catch (NoResultException ex) {
+      LOG.error("Unable to get cash balance by user [e-mail=" + owner.getEmail() + "]");
+      return null;
+    }
+  }
 
 }

@@ -38,5 +38,9 @@ public class CashBalanceManagerImpl extends BaseManagerImpl<CashBalance> impleme
 
 		return ro;
 	}
+	
+	public CashBalance getByUser(User user) {
+	  return cashBalanceDao.getCashBalanceByUser(user);
+	}
 
 }

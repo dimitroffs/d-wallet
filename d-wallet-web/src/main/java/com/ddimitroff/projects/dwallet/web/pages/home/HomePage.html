@@ -27,7 +27,8 @@
 					<td>Password</td>
 					<td>Role</td>
 					<td>Currency</td>
-					<td>Balance</td>
+					<td>Check Balance</td>
+					<td>Check Flows</td>
 				</tr>
 			</thead>
 			<tbody>
@@ -37,10 +38,15 @@
 					<td><span wicket:id="hashPassword"></span></td>
 					<td><span wicket:id="role"></span></td>
 					<td><span wicket:id="defaultCurrency"></span></td>
-					<td><span wicket:id="startupBalance"></span></td>
+    				<td><a wicket:id="showCashBalanceModal">check</a></td>
+    				<td><a wicket:id="showCashFlowsModal">check</a></td>
+    				<div wicket:id="cashBalanceModal"></div>
+					<div wicket:id="cashFlowsModal"></div>
 				</tr>
 			</tbody>
 		</table>
+		
+		
 
 		<p>
 			Please mention the correct Wicket version:

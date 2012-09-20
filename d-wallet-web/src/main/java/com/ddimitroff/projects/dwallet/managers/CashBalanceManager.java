@@ -13,4 +13,6 @@ public interface CashBalanceManager extends BaseManager<CashBalance> {
 	
 	public CashBalanceRO convert(CashBalance entity);
 
+  public CashBalance getByUser(User user);
+
 }
