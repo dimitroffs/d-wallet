@@ -2,6 +2,8 @@ package com.ddimitroff.projects.dwallet.db.dao;
 
 import java.util.List;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import com.ddimitroff.projects.dwallet.db.entities.BaseEntity;
 
 public interface BaseDAO<E extends BaseEntity> {

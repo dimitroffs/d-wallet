@@ -37,7 +37,6 @@ public class HomePage extends WebPage {
     add(new Label("version", getApplication().getFrameworkSettings().getVersion()));
 
     List<User> allUsers = userManager.getAll(User.class);
-    System.out.println("ALL users " + allUsers.size());
 
     add(new ListView<User>("usersView", allUsers) {
 
@@ -51,6 +50,18 @@ public class HomePage extends WebPage {
         item.add(new Label("role", user.getRole().name()));
         item.add(new Label("defaultCurrency", null != user.getDefaultCurrency() ? user.getDefaultCurrency().name()
             : "N/A"));
+
+        item.add(new AjaxLink<Void>("deleteUser") {
+
+          private static final long serialVersionUID = 1L;
+
+          @Override
+          public void onClick(AjaxRequestTarget target) {
+            userManager.delete(user);
+            setResponsePage(HomePage.class);
+          }
+
+        });
 
         final ModalWindow cashBalanceModal = new ModalWindow("cashBalanceModal");
         item.add(cashBalanceModal);

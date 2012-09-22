@@ -6,6 +6,7 @@ import javax.persistence.NoResultException;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ddimitroff.projects.dwallet.db.dao.CashFlowDAO;
 import com.ddimitroff.projects.dwallet.db.entities.CashFlow;
@@ -18,6 +19,7 @@ public class CashFlowDAOImpl extends BaseDAOImpl<CashFlow> implements CashFlowDA
 
   @SuppressWarnings("unchecked")
   @Override
+  @Transactional(readOnly = true)
   public List<CashFlow> getCashFlowsByUser(User owner) {
     try {
       List<CashFlow> cashFlows = em.createNamedQuery(CashFlow.GET_CASH_FLOWS_BY_USER).setParameter("owner", owner)

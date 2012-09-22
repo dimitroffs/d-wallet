@@ -4,6 +4,7 @@ import javax.persistence.NoResultException;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ddimitroff.projects.dwallet.db.dao.CashBalanceDAO;
 import com.ddimitroff.projects.dwallet.db.entities.CashBalance;
@@ -15,6 +16,7 @@ public class CashBalanceDAOImpl extends BaseDAOImpl<CashBalance> implements Cash
   private static final Logger LOG = Logger.getLogger(CashBalanceDAOImpl.class);
 
   @Override
+  @Transactional(readOnly = true)
   public CashBalance getCashBalanceByUser(User owner) {
     try {
       return (CashBalance) em.createNamedQuery(CashBalance.GET_CASH_BALANCE_BY_USER).setParameter("owner", owner)

@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ddimitroff.projects.dwallet.db.dao.BaseDAO;
 import com.ddimitroff.projects.dwallet.db.entities.BaseEntity;
@@ -17,6 +18,7 @@ public class BaseDAOImpl<E extends BaseEntity> implements BaseDAO<E> {
   @PersistenceContext(name = "dwallet")
   protected EntityManager em;
 
+  @Transactional(readOnly=true)
   public E getById(Class<E> clazz, int id) {
     E entity = (E) em.find(clazz, id);
 
@@ -28,6 +30,7 @@ public class BaseDAOImpl<E extends BaseEntity> implements BaseDAO<E> {
   }
 
   @SuppressWarnings("unchecked")
+  @Transactional(readOnly=true)
   public List<E> getAll(Class<E> clazz) {
     List<E> objects = em.createQuery("from " + clazz.getName()).getResultList();
 
@@ -38,6 +41,7 @@ public class BaseDAOImpl<E extends BaseEntity> implements BaseDAO<E> {
     return null;
   }
 
+  @Transactional
   public void save(E entity) {
     if (null != em.find(entity.getClass(), entity.getId())) {
       em.merge(entity);
@@ -49,11 +53,16 @@ public class BaseDAOImpl<E extends BaseEntity> implements BaseDAO<E> {
     em.flush();
   }
 
+  @SuppressWarnings("unchecked")
+  @Transactional
   public void delete(E entity) {
-    if (null != em.find(entity.getClass(), entity.getId())) {
-      em.remove(entity);
-      em.flush();
+    E entityToDelete = (E) em.find(entity.getClass(), entity.getId());
+    if (null != entityToDelete) {
+      em.remove(entityToDelete);
       LOG.debug("Successfully deleted entity [class=" + entity.getClass() + " id=" + entity.getId() + "]");
+      // em.flush();
+    } else {
+      LOG.error("Unable to find entity for delete [class=" + entity.getClass() + " id=" + entity.getId() + "]");
     }
   }
 
