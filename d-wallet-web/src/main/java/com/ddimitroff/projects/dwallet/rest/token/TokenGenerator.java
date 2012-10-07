@@ -12,7 +12,7 @@ import com.ddimitroff.projects.dwallet.managers.UserManager;
 public class TokenGenerator {
 
 	private static final Logger logger = Logger.getLogger(TokenGenerator.class);
-	private static final int TOKEN_EXPIRATION_INTERVAL = 1; // TODO
+	private static final int TOKEN_EXPIRATION_INTERVAL = 5; // TODO
 
 	private UserManager userManager;
 	private TokenWatcher tokenWatcher;
