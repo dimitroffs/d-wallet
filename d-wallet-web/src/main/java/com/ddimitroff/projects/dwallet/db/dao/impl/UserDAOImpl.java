@@ -9,9 +9,17 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ddimitroff.projects.dwallet.db.dao.UserDAO;
 import com.ddimitroff.projects.dwallet.db.entities.User;
 
+/**
+ * Implementation class of {@link UserDAO} interface. It is used as Spring
+ * component.
+ * 
+ * @author Dimitar Dimitrov
+ * 
+ */
 @Repository("userDao")
 public class UserDAOImpl extends BaseDAOImpl<User> implements UserDAO {
 
+  /** Logger constant */
   private static final Logger LOG = Logger.getLogger(UserDAOImpl.class);
 
   @Transactional(readOnly = true)

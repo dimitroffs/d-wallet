@@ -3,19 +3,26 @@ package com.ddimitroff.projects.dwallet.db.dao.impl;
 import javax.persistence.NoResultException;
 
 import org.apache.log4j.Logger;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ddimitroff.projects.dwallet.db.dao.CashBalanceDAO;
 import com.ddimitroff.projects.dwallet.db.entities.CashBalance;
 import com.ddimitroff.projects.dwallet.db.entities.User;
 
-@Component("cashBalanceDao")
+/**
+ * Implementation class of {@link CashBalanceDAO} interface. It is used as
+ * Spring component.
+ * 
+ * @author Dimitar Dimitrov
+ * 
+ */
+@Repository("cashBalanceDao")
 public class CashBalanceDAOImpl extends BaseDAOImpl<CashBalance> implements CashBalanceDAO {
 
+  /** Logger constant */
   private static final Logger LOG = Logger.getLogger(CashBalanceDAOImpl.class);
 
-  @Override
   @Transactional(readOnly = true)
   public CashBalance getCashBalanceByUser(User owner) {
     try {

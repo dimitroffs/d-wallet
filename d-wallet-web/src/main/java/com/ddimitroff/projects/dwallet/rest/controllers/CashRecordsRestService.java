@@ -15,77 +15,71 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.ddimitroff.projects.dwallet.db.entities.CashBalance;
 import com.ddimitroff.projects.dwallet.db.entities.CashFlow;
-import com.ddimitroff.projects.dwallet.db.entities.User;
 import com.ddimitroff.projects.dwallet.enums.CashFlowCurrencyType;
 import com.ddimitroff.projects.dwallet.enums.CashFlowType;
 import com.ddimitroff.projects.dwallet.managers.CashBalanceManager;
 import com.ddimitroff.projects.dwallet.managers.CashFlowManager;
-import com.ddimitroff.projects.dwallet.managers.UserManager;
 import com.ddimitroff.projects.dwallet.rest.DWalletRestUtils;
 import com.ddimitroff.projects.dwallet.rest.cash.CashBalanceRO;
 import com.ddimitroff.projects.dwallet.rest.cash.CashFlowRO;
 import com.ddimitroff.projects.dwallet.rest.cash.CashRecordRO;
 import com.ddimitroff.projects.dwallet.rest.exception.DWalletResponseException;
 import com.ddimitroff.projects.dwallet.rest.token.Token;
-import com.ddimitroff.projects.dwallet.rest.token.TokenGenerator;
 import com.ddimitroff.projects.dwallet.rest.token.TokenRO;
 import com.ddimitroff.projects.dwallet.rest.token.TokenWatcher;
 import com.ddimitroff.projects.dwallet.xml.exchange.DWalletExchangeRatesParser;
 
+/**
+ * Spring REST implementation for cash record operations. It is used as Spring
+ * MVC component.
+ * 
+ * @author Dimitar Dimitrov
+ * 
+ */
 @Controller
 public class CashRecordsRestService {
 
+  /** Logger constant */
   private static final Logger logger = Logger.getLogger(CashRecordsRestService.class);
 
-  @Autowired
-  private UserManager userManager;
-
+  /** Injected {@link CashBalanceManager} component by Spring */
   @Autowired
   private CashBalanceManager cashBalanceManager;
 
+  /** Injected {@link CashFlowManager} component by Spring */
   @Autowired
   private CashFlowManager cashFlowManager;
 
-  @Autowired
-  private TokenGenerator tokenGenerator;
-
+  /** Injected {@link TokenWatcher} component by Spring */
   @Autowired
   private TokenWatcher tokenWatcher;
 
+  /** Injected {@link DWalletExchangeRatesParser} component by Spring */
   @Autowired
   private DWalletExchangeRatesParser exchangeRatesParser;
 
+  /** Injected supported API keys component by Spring */
   @Autowired
   private ArrayList<String> apiKeys;
 
-  // Content-Type: application/json needed
-  // DWallet-API-Key: <api-key> needed
-  @RequestMapping(method = RequestMethod.GET, value = "/cash/test")
-  @ResponseBody
-  public CashRecordRO getCashRecord() throws DWalletResponseException {
-    User daoToLogin = userManager.getUserByEmail("mykob.11@gmail.com");
-    Token token = tokenGenerator.generate(daoToLogin);
-    if (null != token) {
-      TokenRO tokenRO = tokenGenerator.convert(token);
-      CashFlowRO flow1 = new CashFlowRO(1, 1, 2.55);
-      CashFlowRO flow2 = new CashFlowRO(2, 2, 5.33);
-      CashFlowRO flow3 = new CashFlowRO(1, 2, 9.11);
-      ArrayList<CashFlowRO> cashFlows = new ArrayList<CashFlowRO>();
-      cashFlows.add(flow1);
-      cashFlows.add(flow2);
-      cashFlows.add(flow3);
-
-      CashRecordRO record = new CashRecordRO(tokenRO, cashFlows);
-
-      return record;
-    } else {
-      logger.error("Unable to generate token for user " + daoToLogin.getEmail());
-      throw new DWalletResponseException("Unable to generate token for user " + daoToLogin.getEmail());
-    }
-  }
-
-  // Content-Type: application/json needed
-  // DWallet-API-Key: <api-key> needed
+  /**
+   * HTTP POST method for getting cash balance by specifying existing token in
+   * system<br>
+   * Request path: /cash/balance<br>
+   * Headers needed:<br>
+   * Content-Type: application/json<br>
+   * DWallet-API-Key: api-key
+   * 
+   * @param apiKey
+   *          - valid application key, represented as header in HTTP POST
+   *          request
+   * @param tokenRO
+   *          - valid token in system, represented as {@link TokenRO} object
+   * @return {@link CashBalanceRO} object representing JSON notation<br>
+   *         Example: {"currency":"1", "profit":"11.8", "cost":"11.8"}
+   * @throws DWalletResponseException
+   *           if errors occur while trying to get cash balance
+   */
   @RequestMapping(method = RequestMethod.POST, value = "/cash/balance")
   @ResponseBody
   public CashBalanceRO getCashBalance(
@@ -117,8 +111,21 @@ public class CashRecordsRestService {
     }
   }
 
-  // Content-Type: application/json needed
-  // DWallet-API-Key: <api-key> needed
+  /**
+   * HTTP POST method for posting new cash record to the system<br>
+   * Request path: /cash/post<br>
+   * Headers needed:<br>
+   * Content-Type: application/json<br>
+   * DWallet-API-Key: api-key
+   * 
+   * @param apiKey
+   *          - valid application key, represented as header in HTTP POST
+   *          request
+   * @param cashRecordRO
+   *          - valid cash record, represented as {@link CashRecordRO} object
+   * @throws DWalletResponseException
+   *           if errors occur while trying to post new cash record
+   */
   @RequestMapping(method = RequestMethod.POST, value = "/cash/post")
   @ResponseStatus(value = HttpStatus.OK)
   public void postCashRecord(
@@ -175,8 +182,8 @@ public class CashRecordsRestService {
   }
 
   /**
-   * Checks every cash flow and transforms each currency to BGN. Round double
-   * sum value to second sign after dot
+   * A method for checking every cash flow and transforming each currency to
+   * BGN. Round double sum value to second sign after dot
    * 
    * @param cashflow
    *          - cash flow entity to manage its currencies
@@ -207,6 +214,16 @@ public class CashRecordsRestService {
     }
   }
 
+  /**
+   * A helper method for determining currency exchange rate factor.
+   * 
+   * @param from
+   *          - currency to change from
+   * @param to
+   *          - currency to change to
+   * 
+   * @return determined currency exchange rate factor
+   */
   private double currencyExchangeFactor(CashFlowCurrencyType from, CashFlowCurrencyType to) {
     double exchangeRateFrom = 1.0;
     if (CashFlowCurrencyType.BGN != from) {

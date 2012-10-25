@@ -14,51 +14,50 @@ import com.ddimitroff.projects.dwallet.enums.CashFlowType;
 import com.ddimitroff.projects.dwallet.managers.CashFlowManager;
 import com.ddimitroff.projects.dwallet.rest.cash.CashFlowRO;
 
+/**
+ * Implementation class of {@link CashFlowManager} interface. It is used as
+ * Spring component.
+ * 
+ * @author Dimitar Dimitrov
+ * 
+ */
 @Service("cashFlowManager")
 public class CashFlowManagerImpl extends BaseManagerImpl<CashFlow> implements CashFlowManager {
 
-	// private static final Logger LOG =
-	// Logger.getLogger(CashBalanceManagerImpl.class);
+  /** Injected {@link CashFlowDAO} component by Spring */
+  @Autowired
+  private CashFlowDAO cashFlowDao;
 
-	@Autowired
-	private CashFlowDAO cashFlowDao;
+  @Override
+  public void postConstruct() {
+    baseDao = cashFlowDao;
+  }
 
-	@Override
-	public void postConstruct() {
-		baseDao = cashFlowDao;
-	}
+  public List<CashFlow> getCashFlowsByUser(User owner) {
+    return cashFlowDao.getCashFlowsByUser(owner);
+  }
 
-	public List<CashFlow> getCashFlowsByUser(User owner) {
-		return cashFlowDao.getCashFlowsByUser(owner);
-	}
+  public CashFlowRO convert(CashFlow entity) {
+    int cashFlowType = entity.getType().getIntType();
+    int cashFlowCurrencyType = entity.getCurrencyType().getIntCurrencyCode();
+    double cashFlowSum = entity.getSum();
 
-	/*
-	 * Used for creating REST cash flow object from database one
-	 */
-	public CashFlowRO convert(CashFlow entity) {
-		int cashFlowType = entity.getType().getIntType();
-		int cashFlowCurrencyType = entity.getCurrencyType().getIntCurrencyCode();
-		double cashFlowSum = entity.getSum();
+    CashFlowRO ro = new CashFlowRO(cashFlowType, cashFlowCurrencyType, cashFlowSum);
 
-		CashFlowRO ro = new CashFlowRO(cashFlowType, cashFlowCurrencyType, cashFlowSum);
+    return ro;
+  }
 
-		return ro;
-	}
+  public CashFlow convert(CashFlowRO ro, User owner) {
+    CashFlowType cashFlowType = CashFlowType.getType(ro.getCashFlowType());
+    CashFlowCurrencyType cashFlowCurrencyType = CashFlowCurrencyType.getCurrencyType(ro.getCashFlowCurrency());
+    double cashFlowSum = ro.getCashFlowSum();
 
-	/*
-	 * Used for storing cash flow record in database
-	 */
-	public CashFlow convert(CashFlowRO ro, User owner) {
-		CashFlowType cashFlowType = CashFlowType.getType(ro.getCashFlowType());
-		CashFlowCurrencyType cashFlowCurrencyType = CashFlowCurrencyType.getCurrencyType(ro.getCashFlowCurrency());
-		double cashFlowSum = ro.getCashFlowSum();
+    // TODO get correct date from CashFlowRO
+    Date cashFlowDate = new Date();
 
-		// TODO get correct date from CashFlowRO
-		Date cashFlowDate = new Date();
+    CashFlow dao = new CashFlow(owner, cashFlowType, cashFlowCurrencyType, cashFlowSum, cashFlowDate);
 
-		CashFlow dao = new CashFlow(owner, cashFlowType, cashFlowCurrencyType, cashFlowSum, cashFlowDate);
-
-		return dao;
-	}
+    return dao;
+  }
 
 }

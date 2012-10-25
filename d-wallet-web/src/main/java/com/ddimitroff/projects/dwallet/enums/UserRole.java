@@ -1,6 +1,11 @@
 package com.ddimitroff.projects.dwallet.enums;
 
-public enum UserRole
-{
+/**
+ * Enumeration class for defining user roles
+ * 
+ * @author Dimitar Dimitrov
+ * 
+ */
+public enum UserRole {
   ADMIN, USER, NOT_AUTHORIZED;
 }

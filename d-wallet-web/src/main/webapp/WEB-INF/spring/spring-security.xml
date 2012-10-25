@@ -8,8 +8,13 @@
                     	http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
     <http use-expressions="true">
+        <!-- admin access -->
         <intercept-url pattern="/web/home**" access="hasRole('supervisor')" />
         <intercept-url pattern="/web/**" access="hasRole('supervisor')" />
+        
+        <!-- mobile access -->
+        <intercept-url pattern="/rest/**" access="permitAll" />
+        
         <intercept-url pattern="/**" access="hasRole('user')" />
         <form-login default-target-url="/web/home" />
     </http>

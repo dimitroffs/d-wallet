@@ -14,154 +14,220 @@ import javax.persistence.Table;
 import com.ddimitroff.projects.dwallet.enums.CashFlowCurrencyType;
 import com.ddimitroff.projects.dwallet.enums.CashFlowType;
 
+/**
+ * An entity class for object mapping to 'CASH_FLOWS' database table.
+ * 
+ * @author Dimitar Dimitrov
+ * 
+ */
 @Entity
 @Table(name = "CASH_FLOWS")
-@NamedQueries({
-// @NamedQuery(name = CashFlowDAO.GET_USER_BY_CREDENTIALS, query =
-// "SELECT user FROM UserDAO user WHERE user.email = :email AND user.hashPassword = :password"),
-@NamedQuery(name = CashFlow.GET_CASH_FLOWS_BY_USER, query = "SELECT cashFlow FROM CashFlow cashFlow WHERE cashFlow.owner = :owner ORDER BY cashFlow.date") })
+@NamedQueries({ @NamedQuery(name = CashFlow.GET_CASH_FLOWS_BY_USER, query = "SELECT cashFlow FROM CashFlow cashFlow WHERE cashFlow.owner = :owner ORDER BY cashFlow.date") })
 public class CashFlow extends BaseEntity implements Comparable<CashFlow> {
 
-	private static final long serialVersionUID = 1L;
+  /** Serial version UID constant */
+  private static final long serialVersionUID = 1L;
 
-	public static final String GET_CASH_FLOWS_BY_USER = "CashFlowDAO.getCashFlowsByUser";
-	// public static final String GET_USER_BY_CREDENTIALS =
-	// "User.getUserByCredentials";
+  /** Named query identification constant */
+  public static final String GET_CASH_FLOWS_BY_USER = "CashFlowDAO.getCashFlowsByUser";
 
-	@ManyToOne
-	private User owner;
+  /** Owner of cash flow */
+  @ManyToOne
+  private User owner;
 
-	@Column(length = 32)
-	@Enumerated(EnumType.STRING)
-	private CashFlowType type;
+  /** Cash flow type */
+  @Column(length = 32)
+  @Enumerated(EnumType.STRING)
+  private CashFlowType type;
 
-	@Column(length = 32)
-	@Enumerated(EnumType.STRING)
-	private CashFlowCurrencyType currencyType;
+  /** Cash flow currency type */
+  @Column(length = 32)
+  @Enumerated(EnumType.STRING)
+  private CashFlowCurrencyType currencyType;
 
-	@Column
-	private double sum;
+  /** Cash flow sum value */
+  @Column
+  private double sum;
 
-	@Column
-	private Date date;
+  /** Cash flow creation date */
+  @Column
+  private Date date;
 
-	public CashFlow() {
-	}
+  /**
+   * {@link CashFlow} default constructor
+   */
+  public CashFlow() {
+  }
 
-	public CashFlow(User owner, CashFlowType type, CashFlowCurrencyType currencyType, double sum, Date date) {
-		if (null == owner) {
-			throw new IllegalArgumentException("Cash flow owner should be specified!");
-		}
-		if (null == type) {
-			throw new IllegalArgumentException("Cash flow type should be specified!");
-		}
-		if (null == currencyType) {
-			throw new IllegalArgumentException("Cash flow currency type should be specified!");
-		}
-		if (0 >= sum) {
-			throw new IllegalArgumentException("Positive cash flow sum should be specified!");
-		}
-		if (null == date) {
-			throw new IllegalArgumentException("Cash flow date should be specified!");
-		}
+  /**
+   * {@link CashFlow} parametrized constructor
+   * 
+   * @param owner
+   *          - owner to be set
+   * @param type
+   *          - cash flow type to be set
+   * @param currencyType
+   *          - cash flow currency type to be set
+   * @param sum
+   *          - cash flow sum to be set
+   * @param date
+   *          - cash flow creation date to be set
+   * 
+   * @throws IllegalArgumentException
+   *           if cash flow owner is not specified, cash flow type is not
+   *           specified, cash flow currency type is not specified, cash flow
+   *           sum is negative or equal to zero number value, cash flow creation
+   *           date is not specified.
+   */
+  public CashFlow(User owner, CashFlowType type, CashFlowCurrencyType currencyType, double sum, Date date) {
+    if (null == owner) {
+      throw new IllegalArgumentException("Cash flow owner should be specified!");
+    }
+    if (null == type) {
+      throw new IllegalArgumentException("Cash flow type should be specified!");
+    }
+    if (null == currencyType) {
+      throw new IllegalArgumentException("Cash flow currency type should be specified!");
+    }
+    if (0 >= sum) {
+      throw new IllegalArgumentException("Positive cash flow sum should be specified!");
+    }
+    if (null == date) {
+      throw new IllegalArgumentException("Cash flow date should be specified!");
+    }
 
-		this.owner = owner;
-		this.type = type;
-		this.currencyType = currencyType;
-		this.sum = sum;
-		this.date = date;
-	}
+    this.owner = owner;
+    this.type = type;
+    this.currencyType = currencyType;
+    this.sum = sum;
+    this.date = date;
+  }
 
-	public User getOwner() {
-		return owner;
-	}
+  /**
+   * @return the owner
+   */
+  public User getOwner() {
+    return owner;
+  }
 
-	public void setOwner(User owner) {
-		this.owner = owner;
-	}
+  /**
+   * @param owner
+   *          the owner to set
+   */
+  public void setOwner(User owner) {
+    this.owner = owner;
+  }
 
-	public CashFlowType getType() {
-		return type;
-	}
+  /**
+   * @return the type
+   */
+  public CashFlowType getType() {
+    return type;
+  }
 
-	public void setType(CashFlowType type) {
-		this.type = type;
-	}
+  /**
+   * @param type
+   *          the type to set
+   */
+  public void setType(CashFlowType type) {
+    this.type = type;
+  }
 
-	public CashFlowCurrencyType getCurrencyType() {
-		return currencyType;
-	}
+  /**
+   * @return the currencyType
+   */
+  public CashFlowCurrencyType getCurrencyType() {
+    return currencyType;
+  }
 
-	public void setCurrencyType(CashFlowCurrencyType currencyType) {
-		this.currencyType = currencyType;
-	}
+  /**
+   * @param currencyType
+   *          the currencyType to set
+   */
+  public void setCurrencyType(CashFlowCurrencyType currencyType) {
+    this.currencyType = currencyType;
+  }
 
-	public double getSum() {
-		return sum;
-	}
+  /**
+   * @return the sum
+   */
+  public double getSum() {
+    return sum;
+  }
 
-	public void setSum(double sum) {
-		this.sum = sum;
-	}
+  /**
+   * @param sum
+   *          the sum to set
+   */
+  public void setSum(double sum) {
+    this.sum = sum;
+  }
 
-	public Date getDate() {
-		return date;
-	}
+  /**
+   * @return the date
+   */
+  public Date getDate() {
+    return date;
+  }
 
-	public void setDate(Date date) {
-		this.date = date;
-	}
+  /**
+   * @param date
+   *          the date to set
+   */
+  public void setDate(Date date) {
+    this.date = date;
+  }
 
-	@Override
-	public int compareTo(CashFlow o) {
-		return date.compareTo(o.getDate());
-	}
+  @Override
+  public int compareTo(CashFlow o) {
+    return date.compareTo(o.getDate());
+  }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((currencyType == null) ? 0 : currencyType.hashCode());
-		result = prime * result + ((date == null) ? 0 : date.hashCode());
-		result = prime * result + ((owner == null) ? 0 : owner.hashCode());
-		long temp;
-		temp = Double.doubleToLongBits(sum);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
-		return result;
-	}
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((currencyType == null) ? 0 : currencyType.hashCode());
+    result = prime * result + ((date == null) ? 0 : date.hashCode());
+    result = prime * result + ((owner == null) ? 0 : owner.hashCode());
+    long temp;
+    temp = Double.doubleToLongBits(sum);
+    result = prime * result + (int) (temp ^ (temp >>> 32));
+    result = prime * result + ((type == null) ? 0 : type.hashCode());
+    return result;
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		CashFlow other = (CashFlow) obj;
-		if (currencyType != other.currencyType)
-			return false;
-		if (date == null) {
-			if (other.date != null)
-				return false;
-		} else if (!date.equals(other.date))
-			return false;
-		if (owner == null) {
-			if (other.owner != null)
-				return false;
-		} else if (!owner.equals(other.owner))
-			return false;
-		if (Double.doubleToLongBits(sum) != Double.doubleToLongBits(other.sum))
-			return false;
-		if (type != other.type)
-			return false;
-		return true;
-	}
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    CashFlow other = (CashFlow) obj;
+    if (currencyType != other.currencyType)
+      return false;
+    if (date == null) {
+      if (other.date != null)
+        return false;
+    } else if (!date.equals(other.date))
+      return false;
+    if (owner == null) {
+      if (other.owner != null)
+        return false;
+    } else if (!owner.equals(other.owner))
+      return false;
+    if (Double.doubleToLongBits(sum) != Double.doubleToLongBits(other.sum))
+      return false;
+    if (type != other.type)
+      return false;
+    return true;
+  }
 
-	@Override
-	public String toString() {
-		return type + " [" + owner + ", " + currencyType + ", " + sum + ", " + date + "]";
-	}
+  @Override
+  public String toString() {
+    return type + " [" + owner + ", " + currencyType + ", " + sum + ", " + date + "]";
+  }
 
 }

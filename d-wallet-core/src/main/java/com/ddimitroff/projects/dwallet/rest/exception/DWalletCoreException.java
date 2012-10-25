@@ -1,17 +1,13 @@
 package com.ddimitroff.projects.dwallet.rest.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
-
 /**
- * A class for custom exception. Thrown where exceptions occur in D-Wallet's
- * response actions
+ * A class for custom exception. Thrown where exceptions occur in core
+ * D-Wallet's back-end data manipulations
  * 
  * @author Dimitar Dimitrov
  * 
  */
-@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
-public class DWalletResponseException extends Exception {
+public class DWalletCoreException extends Exception {
 
   /** Serial version UID constant */
   private static final long serialVersionUID = 1L;
@@ -19,7 +15,7 @@ public class DWalletResponseException extends Exception {
   /**
    * Default constructor
    */
-  public DWalletResponseException() {
+  public DWalletCoreException() {
     super();
   }
 
@@ -29,7 +25,7 @@ public class DWalletResponseException extends Exception {
    * @param message
    *          - message to set
    */
-  public DWalletResponseException(String message) {
+  public DWalletCoreException(String message) {
     super(message);
   }
 
@@ -39,7 +35,7 @@ public class DWalletResponseException extends Exception {
    * @param t
    *          - {@link Throwable} object to set
    */
-  public DWalletResponseException(Throwable t) {
+  public DWalletCoreException(Throwable t) {
     super(t);
   }
 
@@ -51,7 +47,7 @@ public class DWalletResponseException extends Exception {
    * @param t
    *          - {@link Throwable} object to set
    */
-  public DWalletResponseException(String message, Throwable t) {
+  public DWalletCoreException(String message, Throwable t) {
     super(message, t);
   }
 

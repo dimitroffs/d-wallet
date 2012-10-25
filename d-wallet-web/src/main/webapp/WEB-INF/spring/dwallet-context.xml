@@ -49,21 +49,13 @@
 	<bean id="adminUsers" class="java.util.ArrayList" scope="singleton">
 		<constructor-arg>
 			<list>
-				<ref bean="admin1" />
-				<ref bean="admin2" />
+				<!-- <ref bean="admin1" /> -->
 			</list>
 		</constructor-arg>
 	</bean>
 
-	<!-- Admin users -->
+	<!-- Mobile admin users -->
 	<bean id="admin1" class="com.ddimitroff.projects.dwallet.db.entities.User"
-		scope="prototype">
-		<property name="email" value="mykob.11@gmail.com" />
-		<property name="hashPassword" value="mykob.11" />
-		<property name="role" value="ADMIN" />
-	</bean>
-
-	<bean id="admin2" class="com.ddimitroff.projects.dwallet.db.entities.User"
 		scope="prototype">
 		<property name="email" value="mykob.12@gmail.com" />
 		<property name="hashPassword" value="mykob.12" />

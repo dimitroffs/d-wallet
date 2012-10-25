@@ -11,14 +11,24 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ddimitroff.projects.dwallet.db.dao.BaseDAO;
 import com.ddimitroff.projects.dwallet.db.entities.BaseEntity;
 
+/**
+ * Implementation class of {@link BaseDAO} interface
+ * 
+ * @author Dimitar Dimitrov
+ * 
+ * @param <E>
+ *          should extends {@link BaseEntity} object
+ */
 public class BaseDAOImpl<E extends BaseEntity> implements BaseDAO<E> {
 
+  /** Logger constant */
   private static final Logger LOG = Logger.getLogger(BaseDAOImpl.class);
 
+  /** Entity manager field - injected by String */
   @PersistenceContext(name = "dwallet")
   protected EntityManager em;
 
-  @Transactional(readOnly=true)
+  @Transactional(readOnly = true)
   public E getById(Class<E> clazz, int id) {
     E entity = (E) em.find(clazz, id);
 
@@ -30,7 +40,7 @@ public class BaseDAOImpl<E extends BaseEntity> implements BaseDAO<E> {
   }
 
   @SuppressWarnings("unchecked")
-  @Transactional(readOnly=true)
+  @Transactional(readOnly = true)
   public List<E> getAll(Class<E> clazz) {
     List<E> objects = em.createQuery("from " + clazz.getName()).getResultList();
 

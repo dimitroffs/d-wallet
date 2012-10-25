@@ -11,14 +11,29 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import com.ddimitroff.projects.dwallet.db.entities.CashFlow;
 import com.ddimitroff.projects.dwallet.db.entities.User;
 import com.ddimitroff.projects.dwallet.managers.CashFlowManager;
+import com.ddimitroff.projects.dwallet.managers.impl.CashFlowManagerImpl;
 
+/**
+ * A class representing Wicket page for cash flows
+ * 
+ * @author Dimitar Dimitrov
+ * 
+ */
 public class CashFlowsPage extends WebPage {
 
+  /** Serialization field */
   private static final long serialVersionUID = 1L;
 
+  /** Injected {@link CashFlowManagerImpl} object by Spring */
   @SpringBean
   private CashFlowManager cashFlowManager;
 
+  /**
+   * Constructor for creating new {@link CashFlowsPage} object
+   * 
+   * @param user
+   *          - user who created page object
+   */
   public CashFlowsPage(User user) {
     add(new Label("userEmail", user.getEmail()));
 
@@ -38,4 +53,5 @@ public class CashFlowsPage extends WebPage {
 
     });
   }
+
 }

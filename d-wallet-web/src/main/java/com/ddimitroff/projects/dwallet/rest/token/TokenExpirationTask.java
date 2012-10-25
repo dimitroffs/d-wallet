@@ -2,27 +2,45 @@ package com.ddimitroff.projects.dwallet.rest.token;
 
 import org.apache.log4j.Logger;
 
+/**
+ * A class for expiration task of {@link Token} object
+ * 
+ * @author Dimitar Dimitrov
+ * 
+ */
 public class TokenExpirationTask implements Runnable {
 
-	private static final Logger logger = Logger.getLogger(TokenExpirationTask.class);
+  /** Logger object */
+  private static final Logger logger = Logger.getLogger(TokenExpirationTask.class);
 
-	private String tokenId;
-	private TokenWatcher tokenWatcher;
+  /** Id of token to expire */
+  private String tokenId;
 
-	public TokenExpirationTask(String tokenId, TokenWatcher tokenWatcher) {
-		this.tokenId = tokenId;
-		this.tokenWatcher = tokenWatcher;
-		logger.info("Successfully generated expiration task for token: " + tokenId);
-	}
+  /** {@link TokenWatcher} object */
+  private TokenWatcher tokenWatcher;
 
-	@Override
-	public void run() {
-		tokenWatcher.removeToken(tokenId);
-		logger.info("Expiration task for token " + tokenId + " successfully executed");
-	}
+  /**
+   * A constructor for new {@link TokenExpirationTask} object
+   * 
+   * @param tokenId
+   *          - token id to set
+   * @param tokenWatcher
+   *          - token watcher to set
+   */
+  public TokenExpirationTask(String tokenId, TokenWatcher tokenWatcher) {
+    this.tokenId = tokenId;
+    this.tokenWatcher = tokenWatcher;
+    logger.info("Successfully generated expiration task for token: " + tokenId);
+  }
 
-	public String getTokenId() {
-		return tokenId;
-	}
+  @Override
+  public void run() {
+    tokenWatcher.removeToken(tokenId);
+    logger.info("Expiration task for token " + tokenId + " successfully executed");
+  }
+
+  public String getTokenId() {
+    return tokenId;
+  }
 
 }

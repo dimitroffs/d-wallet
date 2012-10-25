@@ -9,81 +9,151 @@ import org.springframework.scheduling.TaskScheduler;
 import com.ddimitroff.projects.dwallet.db.entities.User;
 import com.ddimitroff.projects.dwallet.managers.UserManager;
 
+/**
+ * A class for manipulating token objects
+ * 
+ * @author Dimitar Dimitrov
+ * 
+ */
 public class TokenGenerator {
 
-	private static final Logger logger = Logger.getLogger(TokenGenerator.class);
-	private static final int TOKEN_EXPIRATION_INTERVAL = 5; // TODO
+  /** Logger object */
+  private static final Logger logger = Logger.getLogger(TokenGenerator.class);
 
-	private UserManager userManager;
-	private TokenWatcher tokenWatcher;
-	private TaskScheduler tokenScheduler;
+  /** {@link UserManager} object, set via Spring */
+  private UserManager userManager;
 
-	public Token generate(User dao) {
-		if (null != dao) {
-			if (isUserLoggedIn(dao)) {
-				logger.error("User " + dao.getEmail() + " already has token for 'd-wallet' server operations");
-				return null;
-			} else {
-				Token token = new Token(dao);
-				tokenWatcher.addToken(token);
-				tokenScheduler.schedule(new TokenExpirationTask(token.getId(), tokenWatcher), getTokenExpireDate());
+  /** {@link TokenWatcher} object, set via Spring */
+  private TokenWatcher tokenWatcher;
 
-				return token;
-			}
-		} else {
-			throw new NullPointerException("Unable to generate token for NULL input user");
-		}
-	}
+  /** {@link TaskScheduler} object, set via Spring as token scheduler */
+  private TaskScheduler tokenScheduler;
 
-	private boolean isUserLoggedIn(User dao) {
-		if (null != tokenWatcher.getTokenByUser(dao)) {
-			return true;
-		}
+  /**
+   * A method for generating new {@link Token} object
+   * 
+   * @param userEntity
+   *          - owner of token
+   * 
+   * @return newly created {@link Token} object of user, {@code null} otherwise
+   */
+  public Token generate(User userEntity) {
+    if (null != userEntity) {
+      if (isUserLoggedIn(userEntity)) {
+        logger.error("User " + userEntity.getEmail() + " already has token for 'd-wallet' server operations");
+        return null;
+      } else {
+        Token token = new Token(userEntity);
+        tokenWatcher.addToken(token);
+        tokenScheduler.schedule(new TokenExpirationTask(token.getId(), tokenWatcher), getTokenExpireDate());
 
-		return false;
-	}
+        return token;
+      }
+    } else {
+      throw new NullPointerException("Unable to generate token for NULL input user");
+    }
+  }
 
-	public TokenRO convert(Token token) {
-		TokenRO output = new TokenRO(token.getId());
+  /**
+   * A method for checking if {@link User} object provided is currently logged
+   * in
+   * 
+   * @param userEntity
+   *          - user to check
+   * 
+   * @return {@code true} if user is logged in, {@code false} otherwise
+   */
+  private boolean isUserLoggedIn(User userEntity) {
+    if (null != tokenWatcher.getTokenByUser(userEntity)) {
+      return true;
+    }
 
-		return output;
-	}
+    return false;
+  }
 
-	public Token getConvertedToken(TokenRO tokenRO) {
-		Token output = tokenWatcher.getTokenById(tokenRO.getTokenId());
+  /**
+   * A method for converting {@link Token} object to {@link TokenRO} object
+   * 
+   * @param token
+   *          - {@link Token} to convert to
+   * 
+   * @return converted {@link TokenRO} object
+   */
+  public TokenRO convert(Token token) {
+    TokenRO output = new TokenRO(token.getId());
 
-		return output;
-	}
+    return output;
+  }
 
-	private Date getTokenExpireDate() {
-		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.MINUTE, TOKEN_EXPIRATION_INTERVAL);
+  /**
+   * A method for converting {@link TokenRO} object to {@link Token} object
+   * 
+   * @param token
+   *          - {@link TokenRO} to convert to
+   * 
+   * @return converted {@link Token} object
+   */
+  public Token getConvertedToken(TokenRO tokenRO) {
+    Token output = tokenWatcher.getTokenById(tokenRO.getTokenId());
 
-		return cal.getTime();
-	}
+    return output;
+  }
 
-	public UserManager getUserManager() {
-		return userManager;
-	}
+  /**
+   * A method for getting token expiration date
+   * 
+   * @return expiration {@link Date} object of token
+   */
+  private Date getTokenExpireDate() {
+    Calendar cal = Calendar.getInstance();
+    cal.add(Calendar.MINUTE, Token.TOKEN_TIMEOUT);
 
-	public void setUserManager(UserManager userManager) {
-		this.userManager = userManager;
-	}
+    return cal.getTime();
+  }
 
-	public TokenWatcher getTokenWatcher() {
-		return tokenWatcher;
-	}
+  /**
+   * @return the userManager
+   */
+  public UserManager getUserManager() {
+    return userManager;
+  }
 
-	public void setTokenWatcher(TokenWatcher tokenWatcher) {
-		this.tokenWatcher = tokenWatcher;
-	}
+  /**
+   * @param userManager
+   *          the userManager to set
+   */
+  public void setUserManager(UserManager userManager) {
+    this.userManager = userManager;
+  }
 
-	public TaskScheduler getTokenScheduler() {
-		return tokenScheduler;
-	}
+  /**
+   * @return the tokenWatcher
+   */
+  public TokenWatcher getTokenWatcher() {
+    return tokenWatcher;
+  }
 
-	public void setTokenScheduler(TaskScheduler tokenScheduler) {
-		this.tokenScheduler = tokenScheduler;
-	}
+  /**
+   * @param tokenWatcher
+   *          the tokenWatcher to set
+   */
+  public void setTokenWatcher(TokenWatcher tokenWatcher) {
+    this.tokenWatcher = tokenWatcher;
+  }
+
+  /**
+   * @return the tokenScheduler
+   */
+  public TaskScheduler getTokenScheduler() {
+    return tokenScheduler;
+  }
+
+  /**
+   * @param tokenScheduler
+   *          the tokenScheduler to set
+   */
+  public void setTokenScheduler(TaskScheduler tokenScheduler) {
+    this.tokenScheduler = tokenScheduler;
+  }
 
 }

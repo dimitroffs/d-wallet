@@ -13,127 +13,181 @@ import javax.persistence.Table;
 
 import com.ddimitroff.projects.dwallet.enums.CashFlowCurrencyType;
 
+/**
+ * An entity class for object mapping to 'CASH_BALANCES' database table.
+ * 
+ * @author Dimitar Dimitrov
+ * 
+ */
 @Entity
 @Table(name = "CASH_BALANCES")
-@NamedQueries({
-// @NamedQuery(name = CashFlowDAO.GET_USER_BY_CREDENTIALS, query =
-// "SELECT user FROM UserDAO user WHERE user.email = :email AND user.hashPassword = :password"),
-@NamedQuery(name = CashBalance.GET_CASH_BALANCE_BY_USER, query = "SELECT cashBalance FROM CashBalance cashBalance WHERE cashBalance.owner = :owner") })
+@NamedQueries({ @NamedQuery(name = CashBalance.GET_CASH_BALANCE_BY_USER, query = "SELECT cashBalance FROM CashBalance cashBalance WHERE cashBalance.owner = :owner") })
 public class CashBalance extends BaseEntity implements Comparable<CashBalance>, Serializable {
 
-	private static final long serialVersionUID = 1L;
+  /** Serial version UID constant */
+  private static final long serialVersionUID = 1L;
 
-	public static final String GET_CASH_BALANCE_BY_USER = "CashBalanceDAO.getCashBalanceByUser";
-	// public static final String GET_USER_BY_CREDENTIALS =
-	// "User.getUserByCredentials";
+  /** Named query identification constant */
+  public static final String GET_CASH_BALANCE_BY_USER = "CashBalanceDAO.getCashBalanceByUser";
 
-	@ManyToOne
-	private User owner;
+  /** Owner of cash balance */
+  @ManyToOne
+  private User owner;
 
-	@Column(length = 32)
-	@Enumerated(EnumType.STRING)
-	private CashFlowCurrencyType currency;
+  /** Cash balance' currency */
+  @Column(length = 32)
+  @Enumerated(EnumType.STRING)
+  private CashFlowCurrencyType currency;
 
-	@Column
-	private double debit;
+  /** Cash balance' debit value */
+  @Column
+  private double debit;
 
-	@Column
-	private double credit;
+  /** Cash balance' credit value */
+  @Column
+  private double credit;
 
-	public CashBalance() {
-	}
+  /**
+   * {@link CashBalance} default constructor
+   */
+  public CashBalance() {
+  }
 
-	public CashBalance(User owner, CashFlowCurrencyType currency, double debit, double credit) {
-		if (null == owner) {
-			throw new IllegalArgumentException("Cash balance owner should be specified!");
-		}
-		if (null == currency) {
-			throw new IllegalArgumentException("Cash balance currency type should be specified!");
-		}
+  /**
+   * {@link CashBalance} parametrized constructor
+   * 
+   * @param owner
+   *          - owner to be set
+   * @param currency
+   *          - currency to be set
+   * @param debit
+   *          - startup debit value to be set
+   * @param credit
+   *          - startup credit value to be set
+   * 
+   * @throws IllegalArgumentException
+   *           if cash balance owner is not specified or cash default currency
+   *           is not specified
+   */
+  public CashBalance(User owner, CashFlowCurrencyType currency, double debit, double credit) {
+    if (null == owner) {
+      throw new IllegalArgumentException("Cash balance owner should be specified!");
+    }
+    if (null == currency) {
+      throw new IllegalArgumentException("Cash balance currency type should be specified!");
+    }
 
-		this.owner = owner;
-		this.currency = currency;
-		this.debit = debit;
-		this.credit = credit;
-	}
+    this.owner = owner;
+    this.currency = currency;
+    this.debit = debit;
+    this.credit = credit;
+  }
 
-	public User getOwner() {
-		return owner;
-	}
+  /**
+   * @return the owner
+   */
+  public User getOwner() {
+    return owner;
+  }
 
-	public void setOwner(User owner) {
-		this.owner = owner;
-	}
+  /**
+   * @param owner
+   *          the owner to set
+   */
+  public void setOwner(User owner) {
+    this.owner = owner;
+  }
 
-	public CashFlowCurrencyType getCurrency() {
-		return currency;
-	}
+  /**
+   * @return the currency
+   */
+  public CashFlowCurrencyType getCurrency() {
+    return currency;
+  }
 
-	public void setCurrency(CashFlowCurrencyType currency) {
-		this.currency = currency;
-	}
+  /**
+   * @param currency
+   *          the currency to set
+   */
+  public void setCurrency(CashFlowCurrencyType currency) {
+    this.currency = currency;
+  }
 
-	public double getDebit() {
-		return debit;
-	}
+  /**
+   * @return the debit
+   */
+  public double getDebit() {
+    return debit;
+  }
 
-	public void setDebit(double debit) {
-		this.debit = debit;
-	}
+  /**
+   * @param debit
+   *          the debit to set
+   */
+  public void setDebit(double debit) {
+    this.debit = debit;
+  }
 
-	public double getCredit() {
-		return credit;
-	}
+  /**
+   * @return the credit
+   */
+  public double getCredit() {
+    return credit;
+  }
 
-	public void setCredit(double credit) {
-		this.credit = credit;
-	}
+  /**
+   * @param credit
+   *          the credit to set
+   */
+  public void setCredit(double credit) {
+    this.credit = credit;
+  }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		long temp;
-		temp = Double.doubleToLongBits(credit);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		result = prime * result + ((currency == null) ? 0 : currency.hashCode());
-		temp = Double.doubleToLongBits(debit);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		result = prime * result + ((owner == null) ? 0 : owner.hashCode());
-		return result;
-	}
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    long temp;
+    temp = Double.doubleToLongBits(credit);
+    result = prime * result + (int) (temp ^ (temp >>> 32));
+    result = prime * result + ((currency == null) ? 0 : currency.hashCode());
+    temp = Double.doubleToLongBits(debit);
+    result = prime * result + (int) (temp ^ (temp >>> 32));
+    result = prime * result + ((owner == null) ? 0 : owner.hashCode());
+    return result;
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		CashBalance other = (CashBalance) obj;
-		if (Double.doubleToLongBits(credit) != Double.doubleToLongBits(other.credit))
-			return false;
-		if (currency != other.currency)
-			return false;
-		if (Double.doubleToLongBits(debit) != Double.doubleToLongBits(other.debit))
-			return false;
-		if (owner == null) {
-			if (other.owner != null)
-				return false;
-		} else if (!owner.equals(other.owner))
-			return false;
-		return true;
-	}
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    CashBalance other = (CashBalance) obj;
+    if (Double.doubleToLongBits(credit) != Double.doubleToLongBits(other.credit))
+      return false;
+    if (currency != other.currency)
+      return false;
+    if (Double.doubleToLongBits(debit) != Double.doubleToLongBits(other.debit))
+      return false;
+    if (owner == null) {
+      if (other.owner != null)
+        return false;
+    } else if (!owner.equals(other.owner))
+      return false;
+    return true;
+  }
 
-	@Override
-	public String toString() {
-		return owner + " balance: (+) " + debit + " (-) " + credit;
-	}
+  @Override
+  public String toString() {
+    return owner + " balance: (+) " + debit + " (-) " + credit;
+  }
 
-	@Override
-	public int compareTo(CashBalance o) {
-		return this.owner.compareTo(o.getOwner());
-	}
+  @Override
+  public int compareTo(CashBalance o) {
+    return this.owner.compareTo(o.getOwner());
+  }
 
 }

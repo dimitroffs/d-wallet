@@ -12,13 +12,20 @@ import com.ddimitroff.projects.dwallet.db.dao.CashFlowDAO;
 import com.ddimitroff.projects.dwallet.db.entities.CashFlow;
 import com.ddimitroff.projects.dwallet.db.entities.User;
 
+/**
+ * Implementation class of {@link CashFlowDAO} interface. It is used as Spring
+ * component.
+ * 
+ * @author Dimitar Dimitrov
+ * 
+ */
 @Repository("cashFlowDao")
 public class CashFlowDAOImpl extends BaseDAOImpl<CashFlow> implements CashFlowDAO {
 
+  /** Logger constant */
   private static final Logger LOG = Logger.getLogger(CashFlowDAOImpl.class);
 
   @SuppressWarnings("unchecked")
-  @Override
   @Transactional(readOnly = true)
   public List<CashFlow> getCashFlowsByUser(User owner) {
     try {

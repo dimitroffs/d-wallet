@@ -11,6 +11,12 @@ import javax.persistence.Table;
 import com.ddimitroff.projects.dwallet.enums.CashFlowCurrencyType;
 import com.ddimitroff.projects.dwallet.enums.UserRole;
 
+/**
+ * An entity class for object mapping to 'USERS' database table.
+ * 
+ * @author Dimitar Dimitrov
+ * 
+ */
 @Entity
 @Table(name = "USERS")
 @NamedQueries({
@@ -18,31 +24,59 @@ import com.ddimitroff.projects.dwallet.enums.UserRole;
     @NamedQuery(name = User.GET_USER_BY_EMAIL, query = "SELECT user FROM User user WHERE user.email = :email") })
 public class User extends BaseEntity implements Comparable<User> {
 
+  /** Serial version UID constant */
   private static final long serialVersionUID = 1L;
 
+  /** Named query identification constant */
   public static final String GET_USER_BY_EMAIL = "User.getUserByEmail";
+
+  /** Named query identification constant */
   public static final String GET_USER_BY_CREDENTIALS = "User.getUserByCredentials";
 
+  /** Email of user */
   @Column(unique = true, length = 64)
   private String email;
 
+  /** Password of user */
   @Column(length = 64)
   private String hashPassword;
 
+  /** User's role */
   @Column(length = 32)
   @Enumerated(EnumType.STRING)
   private UserRole role;
 
+  /** User's default currency */
   @Column(length = 32)
   @Enumerated(EnumType.STRING)
   private CashFlowCurrencyType defaultCurrency;
 
+  /** User's startup balance */
   @Column
   private double startupBalance;
 
+  /**
+   * {@link User} default constructor
+   */
   public User() {
   }
 
+  /**
+   * {@link User} parametrized constructor
+   * 
+   * @param email
+   *          - email to set
+   * @param role
+   *          - role to set
+   * @param defaultCurrency
+   *          - default currency to set
+   * @param startupBalance
+   *          - startup balance to set
+   * 
+   * @throws IllegalArgumentException
+   *           if user email is not specified, user role is not specified, user
+   *           default currency is not specified.
+   */
   public User(String email, UserRole role, CashFlowCurrencyType defaultCurrency, double startupBalance) {
     if (null == email) {
       throw new IllegalArgumentException("User name should be specified!");
@@ -60,42 +94,77 @@ public class User extends BaseEntity implements Comparable<User> {
     this.startupBalance = startupBalance;
   }
 
+  /**
+   * @return the email
+   */
   public String getEmail() {
     return email;
   }
 
+  /**
+   * @param email
+   *          the email to set
+   */
   public void setEmail(String email) {
     this.email = email;
   }
 
+  /**
+   * @return the hashPassword
+   */
   public String getHashPassword() {
     return hashPassword;
   }
 
+  /**
+   * @param hashPassword
+   *          the hashPassword to set
+   */
   public void setHashPassword(String hashPassword) {
     this.hashPassword = hashPassword;
   }
 
+  /**
+   * @return the role
+   */
   public UserRole getRole() {
     return role;
   }
 
+  /**
+   * @param role
+   *          the role to set
+   */
   public void setRole(UserRole role) {
     this.role = role;
   }
 
+  /**
+   * @return the defaultCurrency
+   */
   public CashFlowCurrencyType getDefaultCurrency() {
     return defaultCurrency;
   }
 
+  /**
+   * @param defaultCurrency
+   *          the defaultCurrency to set
+   */
   public void setDefaultCurrency(CashFlowCurrencyType defaultCurrency) {
     this.defaultCurrency = defaultCurrency;
   }
 
+  /**
+   * @return the startupBalance
+   */
   public double getStartupBalance() {
     return startupBalance;
   }
 
+  /**
+   * @param startupBalance
+   *          the startupBalance to set
+   */
   public void setStartupBalance(double startupBalance) {
     this.startupBalance = startupBalance;
   }

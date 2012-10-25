@@ -15,22 +15,31 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import com.ddimitroff.projects.dwallet.db.entities.User;
 import com.ddimitroff.projects.dwallet.managers.UserManager;
+import com.ddimitroff.projects.dwallet.managers.impl.UserManagerImpl;
 import com.ddimitroff.projects.dwallet.web.pages.cash.CashBalancePage;
 import com.ddimitroff.projects.dwallet.web.pages.cash.CashFlowsPage;
 
 /**
- * Class for 'Home' page
+ * Class for 'Home' page of web administration application
  * 
- * @author ddimitrov
+ * @author Dimitar Dimitrov
  * 
  */
 public class HomePage extends WebPage {
 
+  /** Serialization field */
   private static final long serialVersionUID = 1L;
 
+  /** Injected {@link UserManagerImpl} object by Spring */
   @SpringBean
   private UserManager userManager;
 
+  /**
+   * Constructor for creating new {@link HomePage} object
+   * 
+   * @param parameters
+   *          - initial page parameters
+   */
   public HomePage(final PageParameters parameters) {
     super(parameters);
 
@@ -117,4 +126,5 @@ public class HomePage extends WebPage {
     });
 
   }
+
 }

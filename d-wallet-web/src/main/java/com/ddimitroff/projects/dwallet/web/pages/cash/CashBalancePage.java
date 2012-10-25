@@ -8,23 +8,40 @@ import com.ddimitroff.projects.dwallet.db.entities.CashBalance;
 import com.ddimitroff.projects.dwallet.db.entities.User;
 import com.ddimitroff.projects.dwallet.managers.CashBalanceManager;
 import com.ddimitroff.projects.dwallet.managers.UserManager;
+import com.ddimitroff.projects.dwallet.managers.impl.CashBalanceManagerImpl;
+import com.ddimitroff.projects.dwallet.managers.impl.UserManagerImpl;
 
+/**
+ * A class representing Wicket page for cash balances
+ * 
+ * @author Dimitar Dimitrov
+ * 
+ */
 public class CashBalancePage extends WebPage {
 
+  /** Serialization field */
   private static final long serialVersionUID = 1L;
 
+  /** Injected {@link CashBalanceManagerImpl} object by Spring */
   @SpringBean
   private CashBalanceManager cashBalanceManager;
-  
+
+  /** Injected {@link UserManagerImpl} object by Spring */
   @SpringBean
   private UserManager userManager;
 
+  /**
+   * Constructor for creating new {@link CashBalancePage} object
+   * 
+   * @param userId
+   *          - id of user
+   */
   public CashBalancePage(int userId) {
     User user = userManager.getById(User.class, userId);
-    
+
     add(new Label("userEmail", user.getEmail()));
 
-    CashBalance cashBalance = cashBalanceManager.getByUser(user);
+    CashBalance cashBalance = cashBalanceManager.getCashBalanceByUser(user);
 
     if (null != cashBalance) {
       add(new Label("userBalance", String.valueOf(cashBalance.getDebit() - cashBalance.getCredit())));
@@ -36,4 +53,5 @@ public class CashBalancePage extends WebPage {
       add(new Label("userCost", "0.0"));
     }
   }
+
 }

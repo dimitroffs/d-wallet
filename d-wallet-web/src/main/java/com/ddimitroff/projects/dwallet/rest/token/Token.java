@@ -8,78 +8,141 @@ import org.jsecurity.crypto.hash.Md5Hash;
 
 import com.ddimitroff.projects.dwallet.db.entities.User;
 
+/**
+ * A class representing token for using the D-Wallet API
+ * 
+ * @author Dimitar Dimitrov
+ * 
+ */
 public class Token implements Comparable<Token> {
 
-	private static final int TOKEN_TIMEOUT = 30; // 30 minutes
-	private static final SimpleDateFormat TOKEN_DATE_FORMAT = new SimpleDateFormat("yyyyMMdd-hhmm");
+  /** Token timeout in minutes */
+  static final int TOKEN_TIMEOUT = 30;
 
-	private User owner;
-	private Date createdOn;
-	private String id;
-	private String validTo;
+  /** Simple date format for representing dates for token */
+  private static final SimpleDateFormat TOKEN_DATE_FORMAT = new SimpleDateFormat("yyyyMMdd-hhmm");
 
-	public Token(User owner) {
-		this.owner = owner;
-		this.createdOn = new Date();
-		this.id = generateTokenId(owner.getEmail());
-		this.validTo = getValidToDateAsString();
-	}
+  /** Owner of token */
+  private User owner;
 
-	private String generateTokenId(String username) {
-		Md5Hash hash = new Md5Hash(username, String.valueOf(createdOn.getTime()));
+  /** Creation date of token */
+  private Date createdOn;
 
-		return hash.toHex();
-	}
+  /** Id of token */
+  private String id;
 
-	private String getValidToDateAsString() {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(createdOn);
-		cal.add(Calendar.MINUTE, TOKEN_TIMEOUT);
+  /** Valid to date of token */
+  private String validTo;
 
-		return TOKEN_DATE_FORMAT.format(cal.getTime());
-	}
+  /**
+   * Constructor for new {@link Token} object
+   * 
+   * @param owner
+   *          - owner of token
+   */
+  public Token(User owner) {
+    this.owner = owner;
+    this.createdOn = new Date();
+    this.id = generateTokenId(owner.getEmail());
+    this.validTo = getValidToDateAsString();
+  }
 
-	public User getOwner() {
-		return owner;
-	}
+  /**
+   * A method for generating new token id
+   * 
+   * @param username
+   *          - username {@link String} object of owner
+   * 
+   * @return generated id of new token
+   */
+  private String generateTokenId(String username) {
+    Md5Hash hash = new Md5Hash(username, String.valueOf(createdOn.getTime()));
 
-	public void setOwner(User owner) {
-		this.owner = owner;
-	}
+    return hash.toHex();
+  }
 
-	public Date getCreatedOn() {
-		return createdOn;
-	}
+  /**
+   * A method for representing token's valid to date as {@link String}
+   * 
+   * @return {@link String} of valid to date of token
+   */
+  private String getValidToDateAsString() {
+    Calendar cal = Calendar.getInstance();
+    cal.setTime(createdOn);
+    cal.add(Calendar.MINUTE, TOKEN_TIMEOUT);
 
-	public void setCreatedOn(Date createdOn) {
-		this.createdOn = createdOn;
-	}
+    return TOKEN_DATE_FORMAT.format(cal.getTime());
+  }
 
-	public String getId() {
-		return id;
-	}
+  /**
+   * @return the owner
+   */
+  public User getOwner() {
+    return owner;
+  }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+  /**
+   * @param owner
+   *          the owner to set
+   */
+  public void setOwner(User owner) {
+    this.owner = owner;
+  }
 
-	public String getValidTo() {
-		return validTo;
-	}
+  /**
+   * @return the createdOn
+   */
+  public Date getCreatedOn() {
+    return createdOn;
+  }
 
-	public void setValidTo(String validTo) {
-		this.validTo = validTo;
-	}
+  /**
+   * @param createdOn
+   *          the createdOn to set
+   */
+  public void setCreatedOn(Date createdOn) {
+    this.createdOn = createdOn;
+  }
 
-	@Override
-	public String toString() {
-		return "Token [owner=" + owner.getEmail() + ", createdOn=" + createdOn + ", id=" + id + ", validTo=" + validTo
-				+ "]";
-	}
+  /**
+   * @return the id
+   */
+  public String getId() {
+    return id;
+  }
 
-	@Override
-	public int compareTo(Token token) {
-		return this.getOwner().compareTo(token.getOwner());
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  /**
+   * @return the validTo
+   */
+  public String getValidTo() {
+    return validTo;
+  }
+
+  /**
+   * @param validTo
+   *          the validTo to set
+   */
+  public void setValidTo(String validTo) {
+    this.validTo = validTo;
+  }
+
+  @Override
+  public String toString() {
+    return "Token [owner=" + owner.getEmail() + ", createdOn=" + createdOn + ", id=" + id + ", validTo=" + validTo
+        + "]";
+  }
+
+  @Override
+  public int compareTo(Token token) {
+    return this.getOwner().compareTo(token.getOwner());
+  }
 
 }
