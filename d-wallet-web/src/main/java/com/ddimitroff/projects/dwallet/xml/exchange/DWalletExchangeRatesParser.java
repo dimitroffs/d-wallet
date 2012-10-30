@@ -107,21 +107,36 @@ public class DWalletExchangeRatesParser {
   @Scheduled(cron = "0 30 16 * * MON-FRI")
   public void downloadExchangeRates() {
     logger.info("Downloading exchange rates from BNB server...");
-    BufferedInputStream in;
+
+    BufferedInputStream in = null;
+    FileOutputStream fos = null;
     try {
       in = new BufferedInputStream(new URL(EXCHANGE_RATES_DOWNLOAD_URL).openStream());
-      FileOutputStream fos = new FileOutputStream(EXCHANGE_RATES_FILEPATH);
+      fos = new FileOutputStream(EXCHANGE_RATES_FILEPATH);
       int i;
       while ((i = in.read()) != -1) {
         fos.write(i);
       }
       fos.flush();
-      fos.close();
-      in.close();
     } catch (MalformedURLException mue) {
       logger.error("Unable to download exchange rates from specified URL. ", mue);
     } catch (IOException ioe) {
       logger.error("Unable to create download file. ", ioe);
+    } finally {
+      if (null != fos) {
+        try {
+          fos.close();
+        } catch (IOException ioe) {
+          logger.error("Unable to close file output stream while trying to download exchange rates. ", ioe);
+        }
+      }
+      if (null != in) {
+        try {
+          in.close();
+        } catch (IOException ioe) {
+          logger.error("Unable to close input stream while trying to download exchange rates. ", ioe);
+        }
+      }
     }
 
     refreshExchangeRates();
