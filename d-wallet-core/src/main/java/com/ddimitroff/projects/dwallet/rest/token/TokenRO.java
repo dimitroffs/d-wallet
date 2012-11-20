@@ -2,6 +2,8 @@ package com.ddimitroff.projects.dwallet.rest.token;
 
 import java.io.Serializable;
 
+import com.ddimitroff.projects.dwallet.rest.response.Responsable;
+
 /**
  * A DTO class for object/JSON mapping tokens. It has the following structure:<br>
  * {"tokenId":"<token-id>"}
@@ -9,7 +11,7 @@ import java.io.Serializable;
  * @author Dimitar Dimitrov
  * 
  */
-public class TokenRO implements Serializable {
+public class TokenRO implements Serializable, Responsable {
 
   /** Serial version UID constant */
   private static final long serialVersionUID = 1L;

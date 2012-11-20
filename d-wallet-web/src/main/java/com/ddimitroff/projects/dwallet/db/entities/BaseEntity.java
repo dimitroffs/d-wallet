@@ -23,6 +23,10 @@ public abstract class BaseEntity implements Serializable {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private int id;
+  
+  //TODO insert created
+  
+  //TODO insert updated
 
   /**
    * @return the id

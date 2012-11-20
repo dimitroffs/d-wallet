@@ -20,8 +20,8 @@ import com.ddimitroff.projects.dwallet.enums.UserRole;
 @Entity
 @Table(name = "USERS")
 @NamedQueries({
-    @NamedQuery(name = User.GET_USER_BY_CREDENTIALS, query = "SELECT user FROM User user WHERE user.email = :email AND user.hashPassword = :password"),
-    @NamedQuery(name = User.GET_USER_BY_EMAIL, query = "SELECT user FROM User user WHERE user.email = :email") })
+    @NamedQuery(name = User.GET_USER_BY_CREDENTIALS, query = "SELECT u FROM User u WHERE u.email = :email AND u.hashPassword = :password"),
+    @NamedQuery(name = User.GET_USER_BY_EMAIL, query = "SELECT u FROM User u WHERE u.email = :email") })
 public class User extends BaseEntity implements Comparable<User> {
 
   /** Serial version UID constant */

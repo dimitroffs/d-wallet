@@ -22,7 +22,7 @@ import com.ddimitroff.projects.dwallet.enums.CashFlowType;
  */
 @Entity
 @Table(name = "CASH_FLOWS")
-@NamedQueries({ @NamedQuery(name = CashFlow.GET_CASH_FLOWS_BY_USER, query = "SELECT cashFlow FROM CashFlow cashFlow WHERE cashFlow.owner = :owner ORDER BY cashFlow.date") })
+@NamedQueries({ @NamedQuery(name = CashFlow.GET_CASH_FLOWS_BY_USER, query = "SELECT cf FROM CashFlow cf WHERE cf.owner = :owner ORDER BY cf.date") })
 public class CashFlow extends BaseEntity implements Comparable<CashFlow> {
 
   /** Serial version UID constant */
@@ -51,7 +51,9 @@ public class CashFlow extends BaseEntity implements Comparable<CashFlow> {
 
   /** Cash flow creation date */
   @Column
-  private Date date;
+  private Date date; //TODO remove from here
+  
+  //TODO insert cash flow description as string
 
   /**
    * {@link CashFlow} default constructor

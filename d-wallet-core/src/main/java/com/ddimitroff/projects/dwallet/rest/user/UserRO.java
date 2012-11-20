@@ -2,6 +2,8 @@ package com.ddimitroff.projects.dwallet.rest.user;
 
 import java.io.Serializable;
 
+import com.ddimitroff.projects.dwallet.rest.response.Responsable;
+
 /**
  * A DTO class for object/JSON mapping cash flows. It has the following
  * structure:<br>
@@ -11,7 +13,7 @@ import java.io.Serializable;
  * @author Dimitar Dimitrov
  * 
  */
-public class UserRO implements Serializable {
+public class UserRO implements Serializable, Responsable {
 
   /** Serial version UID constant */
   private static final long serialVersionUID = 1L;

@@ -21,7 +21,7 @@ import com.ddimitroff.projects.dwallet.enums.CashFlowCurrencyType;
  */
 @Entity
 @Table(name = "CASH_BALANCES")
-@NamedQueries({ @NamedQuery(name = CashBalance.GET_CASH_BALANCE_BY_USER, query = "SELECT cashBalance FROM CashBalance cashBalance WHERE cashBalance.owner = :owner") })
+@NamedQueries({ @NamedQuery(name = CashBalance.GET_CASH_BALANCE_BY_USER, query = "SELECT cb FROM CashBalance cb WHERE cb.owner = :owner") })
 public class CashBalance extends BaseEntity implements Comparable<CashBalance>, Serializable {
 
   /** Serial version UID constant */

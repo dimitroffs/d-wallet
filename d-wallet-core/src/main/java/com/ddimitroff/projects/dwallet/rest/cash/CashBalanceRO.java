@@ -2,6 +2,8 @@ package com.ddimitroff.projects.dwallet.rest.cash;
 
 import java.io.Serializable;
 
+import com.ddimitroff.projects.dwallet.rest.response.Responsable;
+
 /**
  * A DTO class for object/JSON mapping cash balance. It has the following
  * structure:<br>
@@ -10,7 +12,7 @@ import java.io.Serializable;
  * @author Dimitar Dimitrov
  * 
  */
-public class CashBalanceRO implements Serializable {
+public class CashBalanceRO implements Serializable, Responsable {
 
   /** Serial version UID constant */
   private static final long serialVersionUID = 1L;
