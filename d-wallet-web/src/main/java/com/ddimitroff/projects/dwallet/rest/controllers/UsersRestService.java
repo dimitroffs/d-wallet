@@ -23,6 +23,7 @@ import com.ddimitroff.projects.dwallet.managers.CashBalanceManager;
 import com.ddimitroff.projects.dwallet.managers.UserManager;
 import com.ddimitroff.projects.dwallet.managers.impl.CashBalanceManagerImpl;
 import com.ddimitroff.projects.dwallet.managers.impl.UserManagerImpl;
+import com.ddimitroff.projects.dwallet.rest.DWalletErrorUtils;
 import com.ddimitroff.projects.dwallet.rest.DWalletRestUtils;
 import com.ddimitroff.projects.dwallet.rest.exception.DWalletCoreException;
 import com.ddimitroff.projects.dwallet.rest.response.ErrorResponse;
@@ -94,9 +95,8 @@ public class UsersRestService {
   public Responsable getActiveUserByTokenId(
       @RequestHeader(value = DWalletRestUtils.DWALLET_REQUEST_HEADER, required = false) String apiKey,
       @RequestBody TokenRO tokenRO) {
-      
-      ErrorResponse errorResponse = new ErrorResponse();  
-      
+    ErrorResponse errorResponse = new ErrorResponse();
+
     if (DWalletRestUtils.isValidAPIKey(apiKey, apiKeys)) {
       if (null != tokenRO) {
         Token token = tokenWatcher.getTokenById(tokenRO.getTokenId());
@@ -106,23 +106,20 @@ public class UsersRestService {
           return ro;
         } else {
           logger.error("Unable to find token with id " + tokenRO.getTokenId());
-          //throw new DWalletResponseException("Unable to find token with id " + tokenRO.getTokenId());
-          errorResponse.setErrorCode("DWERROR002");
-          errorResponse.setErrorMessage("Unable to find active token with provided token id");
+          errorResponse.setErrorCode(DWalletErrorUtils.ERR002_CODE);
+          errorResponse.setErrorMessage(DWalletErrorUtils.ERR002_MSG);
         }
       } else {
         logger.error("Wrong request body for getting user by token id");
-        //throw new DWalletResponseException("Wrong request body - get user by token");
-        errorResponse.setErrorCode("DWERROR010");
-        errorResponse.setErrorMessage("Wrong request body - token structure is not correct");
+        errorResponse.setErrorCode(DWalletErrorUtils.ERR010_CODE);
+        errorResponse.setErrorMessage(DWalletErrorUtils.ERR010_MSG);
       }
     } else {
       logger.error("Wrong 'd-wallet' API key");
-      //throw new DWalletResponseException("Wrong 'd-wallet' API key");
-      errorResponse.setErrorCode("DWERROR001");
-      errorResponse.setErrorMessage("Wrong 'd-wallet' API key");
+      errorResponse.setErrorCode(DWalletErrorUtils.ERR001_CODE);
+      errorResponse.setErrorMessage(DWalletErrorUtils.ERR001_MSG);
     }
-    
+
     return errorResponse;
   }
 
@@ -145,9 +142,8 @@ public class UsersRestService {
   public Responsable registerUser(
       @RequestHeader(value = DWalletRestUtils.DWALLET_REQUEST_HEADER, required = false) String apiKey,
       @RequestBody UserRO userRO) {
-    
-    ErrorResponse errorResponse = new ErrorResponse();  
-      
+    ErrorResponse errorResponse = new ErrorResponse();
+
     if (DWalletRestUtils.isValidAPIKey(apiKey, apiKeys)) {
       if (null != userRO) {
         User entityToRegister = userManager.convert(userRO);
@@ -172,24 +168,22 @@ public class UsersRestService {
           userStartBalance = new CashBalance(entityToRegister, CashFlowCurrencyType.getCurrencyType(userRO
               .getDefaultCurrency()), entityToRegister.getStartupBalance(), 0);
         }
-        
+
         cashBalanceManager.save(userStartBalance);
-        
+
         Response successResponse = new Response(true);
         return successResponse;
       } else {
         logger.error("Wrong request body for register of new user");
-        //throw new DWalletResponseException("Wrong request body - register of new user");
-        errorResponse.setErrorCode("DWERROR011");
-        errorResponse.setErrorMessage("Wrong request body - user structure is not correct");
+        errorResponse.setErrorCode(DWalletErrorUtils.ERR011_CODE);
+        errorResponse.setErrorMessage(DWalletErrorUtils.ERR011_MSG);
       }
     } else {
       logger.error("Wrong 'd-wallet' API key");
-      //throw new DWalletResponseException("Wrong 'd-wallet' API key");
-      errorResponse.setErrorCode("DWERROR001");
-      errorResponse.setErrorMessage("Wrong 'd-wallet' API key");
+      errorResponse.setErrorCode(DWalletErrorUtils.ERR001_CODE);
+      errorResponse.setErrorMessage(DWalletErrorUtils.ERR001_MSG);
     }
-    
+
     return errorResponse;
   }
 
@@ -213,9 +207,8 @@ public class UsersRestService {
   public Responsable loginUser(
       @RequestHeader(value = DWalletRestUtils.DWALLET_REQUEST_HEADER, required = false) String apiKey,
       @RequestBody UserRO userRO) {
-      
-      ErrorResponse errorResponse = new ErrorResponse(); 
-      
+    ErrorResponse errorResponse = new ErrorResponse();
+
     if (DWalletRestUtils.isValidAPIKey(apiKey, apiKeys)) {
       if (null != userRO) {
         User entityToLogin = userManager.getConvertedUser(userRO);
@@ -225,23 +218,20 @@ public class UsersRestService {
           return tokenRO;
         } else {
           logger.error("Unable to generate token for user " + entityToLogin.getEmail());
-          //throw new DWalletResponseException("Unable to generate token for user " + entityToLogin.getEmail());
-          errorResponse.setErrorCode("DWERROR020");
-          errorResponse.setErrorMessage("Unable to generate new token for user");
+          errorResponse.setErrorCode(DWalletErrorUtils.ERR020_CODE);
+          errorResponse.setErrorMessage(DWalletErrorUtils.ERR020_MSG);
         }
       } else {
         logger.error("Wrong request body for login of user");
-        //throw new DWalletResponseException("Wrong request body - login of user");
-        errorResponse.setErrorCode("DWERROR011");
-        errorResponse.setErrorMessage("Wrong request body - user structure is not correct");
+        errorResponse.setErrorCode(DWalletErrorUtils.ERR011_CODE);
+        errorResponse.setErrorMessage(DWalletErrorUtils.ERR011_MSG);
       }
     } else {
       logger.error("Wrong 'd-wallet' API key");
-      //throw new DWalletResponseException("Wrong 'd-wallet' API key");
-      errorResponse.setErrorCode("DWERROR001");
-      errorResponse.setErrorMessage("Wrong 'd-wallet' API key");
+      errorResponse.setErrorCode(DWalletErrorUtils.ERR001_CODE);
+      errorResponse.setErrorMessage(DWalletErrorUtils.ERR001_MSG);
     }
-    
+
     return errorResponse;
   }
 
@@ -263,39 +253,33 @@ public class UsersRestService {
   public Responsable logoutUser(
       @RequestHeader(value = DWalletRestUtils.DWALLET_REQUEST_HEADER, required = false) String apiKey,
       @RequestBody TokenRO tokenRO) {
-      
-      ErrorResponse errorResponse = new ErrorResponse();
-      
+    ErrorResponse errorResponse = new ErrorResponse();
+
     if (DWalletRestUtils.isValidAPIKey(apiKey, apiKeys)) {
       if (null != tokenRO) {
         Token token = tokenWatcher.getTokenById(tokenRO.getTokenId());
         if (null != token) {
           tokenWatcher.removeToken(tokenRO.getTokenId());
-          
+
           Response successResponse = new Response(true);
           return successResponse;
         } else {
           logger.error("Token " + tokenRO.getTokenId() + " is not valid active token");
-          //throw new DWalletResponseException("Token " + tokenRO.getTokenId() + " is not valid active token");
-          errorResponse.setErrorCode("DWERROR002");
-          errorResponse.setErrorMessage("Unable to find active token with provided token id");
+          errorResponse.setErrorCode(DWalletErrorUtils.ERR002_CODE);
+          errorResponse.setErrorMessage(DWalletErrorUtils.ERR002_MSG);
         }
       } else {
         logger.error("Wrong request body for logout of user");
-        //throw new DWalletResponseException("Wrong request body - logout of user");
-        errorResponse.setErrorCode("DWERROR010");
-        errorResponse.setErrorMessage("Wrong request body - token structure is not correct");
+        errorResponse.setErrorCode(DWalletErrorUtils.ERR010_CODE);
+        errorResponse.setErrorMessage(DWalletErrorUtils.ERR010_MSG);
       }
     } else {
       logger.error("Wrong 'd-wallet' API key");
-      //throw new DWalletResponseException("Wrong 'd-wallet' API key");
-      errorResponse.setErrorCode("DWERROR001");
-      errorResponse.setErrorMessage("Wrong 'd-wallet' API key");
+      errorResponse.setErrorCode(DWalletErrorUtils.ERR001_CODE);
+      errorResponse.setErrorMessage(DWalletErrorUtils.ERR001_MSG);
     }
-    
+
     return errorResponse;
   }
-  
-  //TODO insert all error codes and corresponding error messages as constants in utilities class
 
 }

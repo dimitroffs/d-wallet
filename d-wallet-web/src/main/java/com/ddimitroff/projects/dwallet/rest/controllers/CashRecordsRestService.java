@@ -19,6 +19,7 @@ import com.ddimitroff.projects.dwallet.enums.CashFlowCurrencyType;
 import com.ddimitroff.projects.dwallet.enums.CashFlowType;
 import com.ddimitroff.projects.dwallet.managers.CashBalanceManager;
 import com.ddimitroff.projects.dwallet.managers.CashFlowManager;
+import com.ddimitroff.projects.dwallet.rest.DWalletErrorUtils;
 import com.ddimitroff.projects.dwallet.rest.DWalletRestUtils;
 import com.ddimitroff.projects.dwallet.rest.cash.CashBalanceRO;
 import com.ddimitroff.projects.dwallet.rest.cash.CashFlowRO;
@@ -85,9 +86,9 @@ public class CashRecordsRestService {
   public Responsable getCashBalance(
       @RequestHeader(value = DWalletRestUtils.DWALLET_REQUEST_HEADER, required = false) String apiKey,
       @RequestBody TokenRO tokenRO) {
-      
-      ErrorResponse errorResponse = new ErrorResponse();
-      
+
+    ErrorResponse errorResponse = new ErrorResponse();
+
     if (DWalletRestUtils.isValidAPIKey(apiKey, apiKeys)) {
       if (null != tokenRO) {
         Token token = tokenWatcher.getTokenById(tokenRO.getTokenId());
@@ -98,29 +99,25 @@ public class CashRecordsRestService {
             return output;
           } else {
             logger.error("Unable to find cash balance for user " + token.getOwner());
-            //throw new DWalletResponseException("Unable to find cash balance for user " + token.getOwner());
-            errorResponse.setErrorCode("DWERROR030");
-            errorResponse.setErrorMessage("Unable to find cash balance for user");
+            errorResponse.setErrorCode(DWalletErrorUtils.ERR030_CODE);
+            errorResponse.setErrorMessage(DWalletErrorUtils.ERR030_MSG);
           }
         } else {
           logger.error("Unable to find token with id " + tokenRO.getTokenId());
-          //throw new DWalletResponseException("Unable to find token with id " + tokenRO.getTokenId());
-          errorResponse.setErrorCode("DWERROR002");
-          errorResponse.setErrorMessage("Unable to find active token with provided token id");
+          errorResponse.setErrorCode(DWalletErrorUtils.ERR002_CODE);
+          errorResponse.setErrorMessage(DWalletErrorUtils.ERR002_MSG);
         }
       } else {
         logger.error("Wrong request body post of cash record");
-        //throw new DWalletResponseException("Wrong request body - get of cash balance");
-        errorResponse.setErrorCode("DWERROR010");
-        errorResponse.setErrorMessage("Wrong request body - token structure is not correct");
+        errorResponse.setErrorCode(DWalletErrorUtils.ERR010_CODE);
+        errorResponse.setErrorMessage(DWalletErrorUtils.ERR010_MSG);
       }
     } else {
       logger.error("Wrong 'd-wallet' API key");
-      //throw new DWalletResponseException("Wrong 'd-wallet' API key");
-      errorResponse.setErrorCode("DWERROR001");
-      errorResponse.setErrorMessage("Wrong 'd-wallet' API key");
+      errorResponse.setErrorCode(DWalletErrorUtils.ERR001_CODE);
+      errorResponse.setErrorMessage(DWalletErrorUtils.ERR001_MSG);
     }
-    
+
     return errorResponse;
   }
 
@@ -142,9 +139,9 @@ public class CashRecordsRestService {
   public Responsable postCashRecord(
       @RequestHeader(value = DWalletRestUtils.DWALLET_REQUEST_HEADER, required = false) String apiKey,
       @RequestBody CashRecordRO cashRecordRO) {
-      
-      ErrorResponse errorResponse = new ErrorResponse();
-      
+
+    ErrorResponse errorResponse = new ErrorResponse();
+
     if (DWalletRestUtils.isValidAPIKey(apiKey, apiKeys)) {
       if (null != cashRecordRO) {
         Token token = tokenWatcher.getTokenById(cashRecordRO.getToken().getTokenId());
@@ -181,34 +178,30 @@ public class CashRecordsRestService {
           cashBalanceManager.save(cashBalanceEntity);
           logger.info("Importing cash record from user " + token.getOwner() + " finished in "
               + (System.nanoTime() - start) / 1000000 + " ms.");
-          
+
           Response successResponse = new Response(true);
           return successResponse;
         } else {
           logger.error("Unable to find token with id " + cashRecordRO.getToken().getTokenId());
-          //throw new DWalletResponseException("Unable to find token with id " + cashRecordRO.getToken().getTokenId());
-          errorResponse.setErrorCode("DWERROR002");
-          errorResponse.setErrorMessage("Unable to find active token with provided token id");
+          errorResponse.setErrorCode(DWalletErrorUtils.ERR002_CODE);
+          errorResponse.setErrorMessage(DWalletErrorUtils.ERR002_MSG);
         }
       } else {
         logger.error("Wrong request body post of cash record");
-        //throw new DWalletResponseException("Wrong request body - post of cash record");
-        errorResponse.setErrorCode("DWERROR012");
-        errorResponse.setErrorMessage("Wrong request body - cash record structure is not correct");
+        errorResponse.setErrorCode(DWalletErrorUtils.ERR012_CODE);
+        errorResponse.setErrorMessage(DWalletErrorUtils.ERR012_MSG);
       }
     } else {
       logger.error("Wrong 'd-wallet' API key");
-      //throw new DWalletResponseException("Wrong 'd-wallet' API key");
-      errorResponse.setErrorCode("DWERROR001");
-      errorResponse.setErrorMessage("Wrong 'd-wallet' API key");
+      errorResponse.setErrorCode(DWalletErrorUtils.ERR001_CODE);
+      errorResponse.setErrorMessage(DWalletErrorUtils.ERR001_MSG);
     }
-    
+
     return errorResponse;
   }
-  
-  //TODO insert method for getting cash flows reports by time periods - daily, weekly, monthly, year basis
-  
-  //TODO insert all error codes and corresponding error messages as constants in utilities class
+
+  // TODO insert method for getting cash flows reports by time periods - daily,
+  // weekly, monthly, year basis
 
   /**
    * A method for checking every cash flow and transforming each currency to

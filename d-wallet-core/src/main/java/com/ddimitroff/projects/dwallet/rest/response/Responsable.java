@@ -8,6 +8,6 @@ package com.ddimitroff.projects.dwallet.rest.response;
  */
 public interface Responsable {
 
-    // Currently nothing to implement
+  // Currently nothing to implement
 
 }
