@@ -1,7 +1,5 @@
 package com.ddimitroff.projects.dwallet.db.entities;
 
-import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -22,7 +20,7 @@ import com.ddimitroff.projects.dwallet.enums.CashFlowType;
  */
 @Entity
 @Table(name = "CASH_FLOWS")
-@NamedQueries({ @NamedQuery(name = CashFlow.GET_CASH_FLOWS_BY_USER, query = "SELECT cf FROM CashFlow cf WHERE cf.owner = :owner ORDER BY cf.date") })
+@NamedQueries({ @NamedQuery(name = CashFlow.GET_CASH_FLOWS_BY_USER, query = "SELECT cf FROM CashFlow cf WHERE cf.owner = :owner ORDER BY cf.created") })
 public class CashFlow extends BaseEntity implements Comparable<CashFlow> {
 
   /** Serial version UID constant */
@@ -32,28 +30,19 @@ public class CashFlow extends BaseEntity implements Comparable<CashFlow> {
   public static final String GET_CASH_FLOWS_BY_USER = "CashFlowDAO.getCashFlowsByUser";
 
   /** Owner of cash flow */
-  @ManyToOne
   private User owner;
 
   /** Cash flow type */
-  @Column(length = 32)
-  @Enumerated(EnumType.STRING)
   private CashFlowType type;
 
   /** Cash flow currency type */
-  @Column(length = 32)
-  @Enumerated(EnumType.STRING)
   private CashFlowCurrencyType currencyType;
 
   /** Cash flow sum value */
-  @Column
   private double sum;
 
   /** Cash flow creation date */
-  @Column
-  private Date date; //TODO remove from here
-  
-  //TODO insert cash flow description as string
+  private String description;
 
   /**
    * {@link CashFlow} default constructor
@@ -72,16 +61,13 @@ public class CashFlow extends BaseEntity implements Comparable<CashFlow> {
    *          - cash flow currency type to be set
    * @param sum
    *          - cash flow sum to be set
-   * @param date
-   *          - cash flow creation date to be set
    * 
    * @throws IllegalArgumentException
    *           if cash flow owner is not specified, cash flow type is not
    *           specified, cash flow currency type is not specified, cash flow
-   *           sum is negative or equal to zero number value, cash flow creation
-   *           date is not specified.
+   *           sum is negative or equal to zero number value.
    */
-  public CashFlow(User owner, CashFlowType type, CashFlowCurrencyType currencyType, double sum, Date date) {
+  public CashFlow(User owner, CashFlowType type, CashFlowCurrencyType currencyType, double sum, String description) {
     if (null == owner) {
       throw new IllegalArgumentException("Cash flow owner should be specified!");
     }
@@ -94,20 +80,18 @@ public class CashFlow extends BaseEntity implements Comparable<CashFlow> {
     if (0 >= sum) {
       throw new IllegalArgumentException("Positive cash flow sum should be specified!");
     }
-    if (null == date) {
-      throw new IllegalArgumentException("Cash flow date should be specified!");
-    }
 
     this.owner = owner;
     this.type = type;
     this.currencyType = currencyType;
     this.sum = sum;
-    this.date = date;
+    this.description = description;
   }
 
   /**
    * @return the owner
    */
+  @ManyToOne
   public User getOwner() {
     return owner;
   }
@@ -123,6 +107,8 @@ public class CashFlow extends BaseEntity implements Comparable<CashFlow> {
   /**
    * @return the type
    */
+  @Column(length = 32)
+  @Enumerated(EnumType.STRING)
   public CashFlowType getType() {
     return type;
   }
@@ -138,6 +124,8 @@ public class CashFlow extends BaseEntity implements Comparable<CashFlow> {
   /**
    * @return the currencyType
    */
+  @Column(length = 32)
+  @Enumerated(EnumType.STRING)
   public CashFlowCurrencyType getCurrencyType() {
     return currencyType;
   }
@@ -153,6 +141,7 @@ public class CashFlow extends BaseEntity implements Comparable<CashFlow> {
   /**
    * @return the sum
    */
+  @Column
   public double getSum() {
     return sum;
   }
@@ -166,23 +155,24 @@ public class CashFlow extends BaseEntity implements Comparable<CashFlow> {
   }
 
   /**
-   * @return the date
+   * @return the description
    */
-  public Date getDate() {
-    return date;
+  @Column(length = 256)
+  public String getDescription() {
+    return description;
   }
 
   /**
-   * @param date
-   *          the date to set
+   * @param description
+   *          the description to set
    */
-  public void setDate(Date date) {
-    this.date = date;
+  public void setDescription(String description) {
+    this.description = description;
   }
 
   @Override
   public int compareTo(CashFlow o) {
-    return date.compareTo(o.getDate());
+    return getCreated().compareTo(o.getCreated());
   }
 
   @Override
@@ -190,7 +180,7 @@ public class CashFlow extends BaseEntity implements Comparable<CashFlow> {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((currencyType == null) ? 0 : currencyType.hashCode());
-    result = prime * result + ((date == null) ? 0 : date.hashCode());
+    result = prime * result + ((getCreated() == null) ? 0 : getCreated().hashCode());
     result = prime * result + ((owner == null) ? 0 : owner.hashCode());
     long temp;
     temp = Double.doubleToLongBits(sum);
@@ -210,10 +200,10 @@ public class CashFlow extends BaseEntity implements Comparable<CashFlow> {
     CashFlow other = (CashFlow) obj;
     if (currencyType != other.currencyType)
       return false;
-    if (date == null) {
-      if (other.date != null)
+    if (getCreated() == null) {
+      if (other.getCreated() != null)
         return false;
-    } else if (!date.equals(other.date))
+    } else if (!getCreated().equals(other.getCreated()))
       return false;
     if (owner == null) {
       if (other.owner != null)
@@ -229,7 +219,7 @@ public class CashFlow extends BaseEntity implements Comparable<CashFlow> {
 
   @Override
   public String toString() {
-    return type + " [" + owner + ", " + currencyType + ", " + sum + ", " + date + "]";
+    return type + " [" + owner + ", " + currencyType + ", " + sum + "] created on " + getCreated();
   }
 
 }

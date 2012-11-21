@@ -48,7 +48,7 @@ public class CashFlowsPage extends WebPage {
         item.add(new Label("type", flow.getType().name()));
         item.add(new Label("currencyType", flow.getCurrencyType().name()));
         item.add(new Label("sum", String.valueOf(flow.getSum())));
-        item.add(new Label("date", flow.getDate().toString()));
+        item.add(new Label("date", flow.getCreated().toString()));
       }
 
     });

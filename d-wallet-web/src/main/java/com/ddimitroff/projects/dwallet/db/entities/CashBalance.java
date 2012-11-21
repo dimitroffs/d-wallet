@@ -31,20 +31,15 @@ public class CashBalance extends BaseEntity implements Comparable<CashBalance>, 
   public static final String GET_CASH_BALANCE_BY_USER = "CashBalanceDAO.getCashBalanceByUser";
 
   /** Owner of cash balance */
-  @ManyToOne
   private User owner;
 
   /** Cash balance' currency */
-  @Column(length = 32)
-  @Enumerated(EnumType.STRING)
   private CashFlowCurrencyType currency;
 
   /** Cash balance' debit value */
-  @Column
   private double debit;
 
   /** Cash balance' credit value */
-  @Column
   private double credit;
 
   /**
@@ -86,6 +81,7 @@ public class CashBalance extends BaseEntity implements Comparable<CashBalance>, 
   /**
    * @return the owner
    */
+  @ManyToOne
   public User getOwner() {
     return owner;
   }
@@ -101,6 +97,8 @@ public class CashBalance extends BaseEntity implements Comparable<CashBalance>, 
   /**
    * @return the currency
    */
+  @Column(length = 32)
+  @Enumerated(EnumType.STRING)
   public CashFlowCurrencyType getCurrency() {
     return currency;
   }
@@ -116,6 +114,7 @@ public class CashBalance extends BaseEntity implements Comparable<CashBalance>, 
   /**
    * @return the debit
    */
+  @Column
   public double getDebit() {
     return debit;
   }
@@ -131,6 +130,7 @@ public class CashBalance extends BaseEntity implements Comparable<CashBalance>, 
   /**
    * @return the credit
    */
+  @Column
   public double getCredit() {
     return credit;
   }

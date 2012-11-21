@@ -1,6 +1,5 @@
 package com.ddimitroff.projects.dwallet.managers.impl;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +40,9 @@ public class CashFlowManagerImpl extends BaseManagerImpl<CashFlow> implements Ca
     int cashFlowType = entity.getType().getIntType();
     int cashFlowCurrencyType = entity.getCurrencyType().getIntCurrencyCode();
     double cashFlowSum = entity.getSum();
+    String cashFlowDescription = entity.getDescription();
 
-    CashFlowRO ro = new CashFlowRO(cashFlowType, cashFlowCurrencyType, cashFlowSum);
+    CashFlowRO ro = new CashFlowRO(cashFlowType, cashFlowCurrencyType, cashFlowSum, cashFlowDescription);
 
     return ro;
   }
@@ -51,11 +51,9 @@ public class CashFlowManagerImpl extends BaseManagerImpl<CashFlow> implements Ca
     CashFlowType cashFlowType = CashFlowType.getType(ro.getCashFlowType());
     CashFlowCurrencyType cashFlowCurrencyType = CashFlowCurrencyType.getCurrencyType(ro.getCashFlowCurrency());
     double cashFlowSum = ro.getCashFlowSum();
+    String cashFlowDescription = ro.getCashFlowDescription();
 
-    // TODO get correct date from CashFlowRO
-    Date cashFlowDate = new Date();
-
-    CashFlow dao = new CashFlow(owner, cashFlowType, cashFlowCurrencyType, cashFlowSum, cashFlowDate);
+    CashFlow dao = new CashFlow(owner, cashFlowType, cashFlowCurrencyType, cashFlowSum, cashFlowDescription);
 
     return dao;
   }

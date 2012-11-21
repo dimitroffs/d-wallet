@@ -24,6 +24,9 @@ public class CashFlowRO implements Serializable {
   /** Cash flow sum field */
   private double cashFlowSum;
 
+  /** Cash flow description field */
+  private String cashFlowDescription;
+
   /**
    * Default no argument constructor for creating new {@link CashFlowRO} object
    */
@@ -40,10 +43,11 @@ public class CashFlowRO implements Serializable {
    * @param cashFlowSum
    *          - cashFlowSum to set
    */
-  public CashFlowRO(int cashFlowType, int cashFlowCurrency, double cashFlowSum) {
+  public CashFlowRO(int cashFlowType, int cashFlowCurrency, double cashFlowSum, String cashFlowDescription) {
     this.cashFlowType = cashFlowType;
     this.cashFlowCurrency = cashFlowCurrency;
     this.cashFlowSum = cashFlowSum;
+    this.cashFlowDescription = cashFlowDescription;
   }
 
   /**
@@ -89,6 +93,21 @@ public class CashFlowRO implements Serializable {
    */
   public void setCashFlowSum(double cashFlowSum) {
     this.cashFlowSum = cashFlowSum;
+  }
+
+  /**
+   * @return the cashFlowDescription
+   */
+  public String getCashFlowDescription() {
+    return cashFlowDescription;
+  }
+
+  /**
+   * @param cashFlowDescription
+   *          the cashFlowDescription to set
+   */
+  public void setCashFlowDescription(String cashFlowDescription) {
+    this.cashFlowDescription = cashFlowDescription;
   }
 
 }

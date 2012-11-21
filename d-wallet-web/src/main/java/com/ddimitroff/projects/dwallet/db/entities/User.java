@@ -34,25 +34,18 @@ public class User extends BaseEntity implements Comparable<User> {
   public static final String GET_USER_BY_CREDENTIALS = "User.getUserByCredentials";
 
   /** Email of user */
-  @Column(unique = true, length = 64)
   private String email;
 
   /** Password of user */
-  @Column(length = 64)
   private String hashPassword;
 
   /** User's role */
-  @Column(length = 32)
-  @Enumerated(EnumType.STRING)
   private UserRole role;
 
   /** User's default currency */
-  @Column(length = 32)
-  @Enumerated(EnumType.STRING)
   private CashFlowCurrencyType defaultCurrency;
 
   /** User's startup balance */
-  @Column
   private double startupBalance;
 
   /**
@@ -97,6 +90,7 @@ public class User extends BaseEntity implements Comparable<User> {
   /**
    * @return the email
    */
+  @Column(unique = true, length = 64)
   public String getEmail() {
     return email;
   }
@@ -112,6 +106,7 @@ public class User extends BaseEntity implements Comparable<User> {
   /**
    * @return the hashPassword
    */
+  @Column(length = 64)
   public String getHashPassword() {
     return hashPassword;
   }
@@ -127,6 +122,8 @@ public class User extends BaseEntity implements Comparable<User> {
   /**
    * @return the role
    */
+  @Column(length = 32)
+  @Enumerated(EnumType.STRING)
   public UserRole getRole() {
     return role;
   }
@@ -142,6 +139,8 @@ public class User extends BaseEntity implements Comparable<User> {
   /**
    * @return the defaultCurrency
    */
+  @Column(length = 32)
+  @Enumerated(EnumType.STRING)
   public CashFlowCurrencyType getDefaultCurrency() {
     return defaultCurrency;
   }
@@ -157,6 +156,7 @@ public class User extends BaseEntity implements Comparable<User> {
   /**
    * @return the startupBalance
    */
+  @Column
   public double getStartupBalance() {
     return startupBalance;
   }
