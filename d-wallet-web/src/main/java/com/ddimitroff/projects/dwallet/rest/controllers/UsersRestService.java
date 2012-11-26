@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.ddimitroff.projects.dwallet.db.entities.CashBalance;
 import com.ddimitroff.projects.dwallet.db.entities.User;
@@ -137,7 +135,7 @@ public class UsersRestService {
    *          - {@link UserRO} object representing user to register
    */
   @RequestMapping(method = RequestMethod.POST, value = "/users/register")
-  @ResponseStatus(value = HttpStatus.OK)
+  @ResponseBody
   @Transactional
   public Responsable registerUser(
       @RequestHeader(value = DWalletRestUtils.DWALLET_REQUEST_HEADER, required = false) String apiKey,
@@ -249,7 +247,7 @@ public class UsersRestService {
    *          - {@link TokenRO} object representing token of logged in user
    */
   @RequestMapping(method = RequestMethod.POST, value = "/users/logout")
-  @ResponseStatus(value = HttpStatus.OK)
+  @ResponseBody
   public Responsable logoutUser(
       @RequestHeader(value = DWalletRestUtils.DWALLET_REQUEST_HEADER, required = false) String apiKey,
       @RequestBody TokenRO tokenRO) {

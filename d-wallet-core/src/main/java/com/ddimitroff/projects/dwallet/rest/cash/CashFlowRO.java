@@ -5,7 +5,9 @@ import java.io.Serializable;
 /**
  * A DTO class for object/JSON mapping cash flows. It has the following
  * structure:<br>
- * {"cashFlowType":"1", "cashFlowCurrency":"1", "cashFlowSum":"11.8"}
+ * {"cashFlowType":"1", "cashFlowCurrency":"1", "cashFlowSum":"11.8",
+ * "cashFlowDescription":"*description-as-string*"
+ * "cashFlowDate":"*date-as-long*"}
  * 
  * @author Dimitar Dimitrov
  * 
@@ -26,6 +28,9 @@ public class CashFlowRO implements Serializable {
 
   /** Cash flow description field */
   private String cashFlowDescription;
+
+  /** Cash flow date */
+  private long cashFlowDate;
 
   /**
    * Default no argument constructor for creating new {@link CashFlowRO} object
@@ -108,6 +113,21 @@ public class CashFlowRO implements Serializable {
    */
   public void setCashFlowDescription(String cashFlowDescription) {
     this.cashFlowDescription = cashFlowDescription;
+  }
+
+  /**
+   * @return the cashFlowDate
+   */
+  public long getCashFlowDate() {
+    return cashFlowDate;
+  }
+
+  /**
+   * @param cashFlowDate
+   *          the cashFlowDate to set
+   */
+  public void setCashFlowDate(long cashFlowDate) {
+    this.cashFlowDate = cashFlowDate;
   }
 
 }

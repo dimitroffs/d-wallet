@@ -4,14 +4,13 @@ import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.ddimitroff.projects.dwallet.db.entities.CashBalance;
 import com.ddimitroff.projects.dwallet.db.entities.CashFlow;
@@ -78,7 +77,8 @@ public class CashRecordsRestService {
    *          request
    * @param tokenRO
    *          - valid token in system, represented as {@link TokenRO} object
-   * @return {@link CashBalanceRO} object representing JSON notation<br>
+   * @return {@link Responsable} object representing success or error response
+   *         as JSON notation<br>
    *         Example: {"currency":"1", "profit":"11.8", "cost":"11.8"}
    */
   @RequestMapping(method = RequestMethod.POST, value = "/cash/balance")
@@ -133,9 +133,12 @@ public class CashRecordsRestService {
    *          request
    * @param cashRecordRO
    *          - valid cash record, represented as {@link CashRecordRO} object
+   * @return {@link Responsable} object representing success or error response
+   *         as JSON notation
+   * 
    */
   @RequestMapping(method = RequestMethod.POST, value = "/cash/post")
-  @ResponseStatus(value = HttpStatus.OK)
+  @ResponseBody
   public Responsable postCashRecord(
       @RequestHeader(value = DWalletRestUtils.DWALLET_REQUEST_HEADER, required = false) String apiKey,
       @RequestBody CashRecordRO cashRecordRO) {
@@ -202,6 +205,57 @@ public class CashRecordsRestService {
 
   // TODO insert method for getting cash flows reports by time periods - daily,
   // weekly, monthly, year basis
+
+  /**
+   * HTTP POST method for getting specified cash report by posting existing
+   * token in system<br>
+   * Request path: /cash/report/*cash-flows-report-type*<br>
+   * Headers needed:<br>
+   * Content-Type: application/json<br>
+   * DWallet-API-Key: api-key
+   * 
+   * @param apiKey
+   *          - valid application key, represented as header in HTTP POST
+   *          request
+   * @param type
+   *          - valid URL path parameter describing cash flows report type
+   * @param tokenRO
+   *          - valid token in system, represented as {@link TokenRO} object
+   * @return {@link Responsable} object representing success or error response
+   *         as JSON notation
+   * 
+   */
+  @RequestMapping(method = RequestMethod.POST, value = "/cash/report/{type}")
+  @ResponseBody
+  public Responsable getCashReport(
+      @RequestHeader(value = DWalletRestUtils.DWALLET_REQUEST_HEADER, required = false) String apiKey,
+      @PathVariable int type, @RequestBody TokenRO tokenRO) {
+
+    ErrorResponse errorResponse = new ErrorResponse();
+
+    if (DWalletRestUtils.isValidAPIKey(apiKey, apiKeys)) {
+      if (null != tokenRO) {
+        Token token = tokenWatcher.getTokenById(tokenRO.getTokenId());
+        if (null != token) {
+          // TODO get cash report by user
+        } else {
+          logger.error("Unable to find token with id " + tokenRO.getTokenId());
+          errorResponse.setErrorCode(DWalletErrorUtils.ERR002_CODE);
+          errorResponse.setErrorMessage(DWalletErrorUtils.ERR002_MSG);
+        }
+      } else {
+        logger.error("Wrong request body get of cash report");
+        errorResponse.setErrorCode(DWalletErrorUtils.ERR010_CODE);
+        errorResponse.setErrorMessage(DWalletErrorUtils.ERR010_MSG);
+      }
+    } else {
+      logger.error("Wrong 'd-wallet' API key");
+      errorResponse.setErrorCode(DWalletErrorUtils.ERR001_CODE);
+      errorResponse.setErrorMessage(DWalletErrorUtils.ERR001_MSG);
+    }
+
+    return errorResponse;
+  }
 
   /**
    * A method for checking every cash flow and transforming each currency to

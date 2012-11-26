@@ -43,6 +43,7 @@ public class CashFlowManagerImpl extends BaseManagerImpl<CashFlow> implements Ca
     String cashFlowDescription = entity.getDescription();
 
     CashFlowRO ro = new CashFlowRO(cashFlowType, cashFlowCurrencyType, cashFlowSum, cashFlowDescription);
+    ro.setCashFlowDate(entity.getCreated().getTime());
 
     return ro;
   }
