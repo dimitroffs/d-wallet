@@ -1,5 +1,6 @@
 package com.ddimitroff.projects.dwallet.db.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import com.ddimitroff.projects.dwallet.db.entities.CashFlow;
@@ -25,5 +26,15 @@ public interface CashFlowDAO extends BaseDAO<CashFlow> {
    *         {@code null} otherwise
    */
   public List<CashFlow> getCashFlowsByUser(User owner);
+
+  /**
+   * A method for getting a list of {@link CashFlow} entity objects by specifying their owner and cash flow report start date
+   * 
+   * @param ownerArg - owner of {@link CashFlow} entity objects
+   * @param reportStartDateArg - start date for cash flow report
+   * 
+   * @return a list of {@link CashFlow} entity objects of specified user and cash flow report start date, {@code null} otherwise
+   */
+  public List<CashFlow> getCashFlowsByUserAndDate(User ownerArg, Date reportStartDateArg);
 
 }

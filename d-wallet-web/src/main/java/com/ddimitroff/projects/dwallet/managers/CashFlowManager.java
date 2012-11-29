@@ -4,7 +4,9 @@ import java.util.List;
 
 import com.ddimitroff.projects.dwallet.db.entities.CashFlow;
 import com.ddimitroff.projects.dwallet.db.entities.User;
+import com.ddimitroff.projects.dwallet.enums.CashFlowsReportType;
 import com.ddimitroff.projects.dwallet.rest.cash.CashFlowRO;
+import com.ddimitroff.projects.dwallet.rest.cash.CashReportRO;
 
 /**
  * Interface for {@link CashFlow} entity object manager. Used to specify methods
@@ -50,5 +52,17 @@ public interface CashFlowManager extends BaseManager<CashFlow> {
    * @return converted {@link CashFlow} entity object
    */
   public CashFlow convert(CashFlowRO ro, User owner);
+
+  /**
+   * A method for generating specified cash report type for selected user
+   * 
+   * @param ownerArg
+   *          - owner of cash report
+   * @param cashFlowsReportTypeArg
+   *          - {@link CashFlowsReportType} object specifying cash report type
+   * 
+   * @return {@link CashReportRO} object if report is successfully generated, {@code null} otherwise
+   */
+  public CashReportRO generateCashReportByUserAndType(User ownerArg, CashFlowsReportType cashFlowsReportTypeArg);
 
 }

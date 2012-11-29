@@ -28,7 +28,7 @@ public class CashBalance extends BaseEntity implements Comparable<CashBalance>, 
   private static final long serialVersionUID = 1L;
 
   /** Named query identification constant */
-  public static final String GET_CASH_BALANCE_BY_USER = "CashBalanceDAO.getCashBalanceByUser";
+  public static final String GET_CASH_BALANCE_BY_USER = "CashBalance.getCashBalanceByUser";
 
   /** Owner of cash balance */
   private User owner;

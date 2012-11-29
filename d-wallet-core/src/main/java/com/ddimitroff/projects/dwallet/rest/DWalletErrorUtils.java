@@ -30,6 +30,9 @@ public class DWalletErrorUtils {
 
   public static final String ERR030_CODE = "DWERROR030";
   public static final String ERR030_MSG = "Unable to find cash balance for user";
+  
+  public static final String ERR040_CODE = "DWERROR040";
+  public static final String ERR040_MSG = "Unable to generate cash report for user";
 
   /** End of error codes and corresponding error messages */
 

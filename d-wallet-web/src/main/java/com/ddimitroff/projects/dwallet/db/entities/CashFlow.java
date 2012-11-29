@@ -20,14 +20,17 @@ import com.ddimitroff.projects.dwallet.enums.CashFlowType;
  */
 @Entity
 @Table(name = "CASH_FLOWS")
-@NamedQueries({ @NamedQuery(name = CashFlow.GET_CASH_FLOWS_BY_USER, query = "SELECT cf FROM CashFlow cf WHERE cf.owner = :owner ORDER BY cf.created") })
+@NamedQueries({
+    @NamedQuery(name = CashFlow.GET_CASH_FLOWS_BY_USER, query = "SELECT cf FROM CashFlow cf WHERE cf.owner = :owner ORDER BY cf.created"),
+    @NamedQuery(name = CashFlow.GET_CASH_FLOWS_BY_USER_AND_DATE, query = "SELECT cf FROM CashFlow cf WHERE cf.owner = :owner AND cf.created >= :created ORDER BY cf.created") })
 public class CashFlow extends BaseEntity implements Comparable<CashFlow> {
 
   /** Serial version UID constant */
   private static final long serialVersionUID = 1L;
 
-  /** Named query identification constant */
-  public static final String GET_CASH_FLOWS_BY_USER = "CashFlowDAO.getCashFlowsByUser";
+  /** Named query identification constants */
+  public static final String GET_CASH_FLOWS_BY_USER = "CashFlow.getCashFlowsByUser";
+  public static final String GET_CASH_FLOWS_BY_USER_AND_DATE = "CashFlow.getCashFlowsByUserAndDate";
 
   /** Owner of cash flow */
   private User owner;

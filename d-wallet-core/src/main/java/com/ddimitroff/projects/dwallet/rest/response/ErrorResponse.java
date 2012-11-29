@@ -3,7 +3,7 @@ package com.ddimitroff.projects.dwallet.rest.response;
 /**
  * A DTO class for object/JSON mapping error response. It has the following
  * structure:<br>
- * {"errorCode":"DWERROR001", "errorMessage":"Wrong 'd-wallet' API key"}
+ * {"success":"false", "errorCode":"DWERROR001", "errorMessage":"Wrong 'd-wallet' API key"}
  * 
  * @author Dimitar Dimitrov
  * 

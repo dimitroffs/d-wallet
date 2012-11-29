@@ -1,5 +1,6 @@
 package com.ddimitroff.projects.dwallet.db.dao.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.NoResultException;
@@ -25,6 +26,7 @@ public class CashFlowDAOImpl extends BaseDAOImpl<CashFlow> implements CashFlowDA
   /** Logger constant */
   private static final Logger LOG = Logger.getLogger(CashFlowDAOImpl.class);
 
+  @Override
   @SuppressWarnings("unchecked")
   @Transactional(readOnly = true)
   public List<CashFlow> getCashFlowsByUser(User owner) {
@@ -34,6 +36,19 @@ public class CashFlowDAOImpl extends BaseDAOImpl<CashFlow> implements CashFlowDA
       return cashFlows;
     } catch (NoResultException e) {
       LOG.error("Unable to find cash flows by user [e-mail='" + owner.getEmail() + "']");
+      return null;
+    }
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  @Transactional(readOnly = true)
+  public List<CashFlow> getCashFlowsByUserAndDate(User ownerArg, Date reportStartDateArg) {
+    try {
+      List<CashFlow> cashFlows = em.createNamedQuery(CashFlow.GET_CASH_FLOWS_BY_USER_AND_DATE).setParameter("owner", ownerArg).setParameter("created", reportStartDateArg).getResultList();
+      return cashFlows;
+    } catch (NoResultException e) {
+      LOG.error("Unable to find cash flows by user [e-mail='" + ownerArg.getEmail() + "'] and start date [" + reportStartDateArg + "]");
       return null;
     }
   }

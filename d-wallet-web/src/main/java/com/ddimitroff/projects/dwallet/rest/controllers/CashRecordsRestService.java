@@ -16,6 +16,7 @@ import com.ddimitroff.projects.dwallet.db.entities.CashBalance;
 import com.ddimitroff.projects.dwallet.db.entities.CashFlow;
 import com.ddimitroff.projects.dwallet.enums.CashFlowCurrencyType;
 import com.ddimitroff.projects.dwallet.enums.CashFlowType;
+import com.ddimitroff.projects.dwallet.enums.CashFlowsReportType;
 import com.ddimitroff.projects.dwallet.managers.CashBalanceManager;
 import com.ddimitroff.projects.dwallet.managers.CashFlowManager;
 import com.ddimitroff.projects.dwallet.rest.DWalletErrorUtils;
@@ -23,6 +24,7 @@ import com.ddimitroff.projects.dwallet.rest.DWalletRestUtils;
 import com.ddimitroff.projects.dwallet.rest.cash.CashBalanceRO;
 import com.ddimitroff.projects.dwallet.rest.cash.CashFlowRO;
 import com.ddimitroff.projects.dwallet.rest.cash.CashRecordRO;
+import com.ddimitroff.projects.dwallet.rest.cash.CashReportRO;
 import com.ddimitroff.projects.dwallet.rest.response.ErrorResponse;
 import com.ddimitroff.projects.dwallet.rest.response.Responsable;
 import com.ddimitroff.projects.dwallet.rest.response.Response;
@@ -237,7 +239,15 @@ public class CashRecordsRestService {
       if (null != tokenRO) {
         Token token = tokenWatcher.getTokenById(tokenRO.getTokenId());
         if (null != token) {
-          // TODO get cash report by user
+          CashFlowsReportType cashFlowsReportType = CashFlowsReportType.getType(type);
+          CashReportRO output = cashFlowManager.generateCashReportByUserAndType(token.getOwner(), cashFlowsReportType);
+          if (null != output) {
+              return output;
+          } else {
+              logger.error("Unable to generate " + cashFlowsReportType.toString() + " cash report for user " + token.getOwner());
+              errorResponse.setErrorCode(DWalletErrorUtils.ERR040_CODE);
+              errorResponse.setErrorMessage(DWalletErrorUtils.ERR040_MSG);
+          }
         } else {
           logger.error("Unable to find token with id " + tokenRO.getTokenId());
           errorResponse.setErrorCode(DWalletErrorUtils.ERR002_CODE);
