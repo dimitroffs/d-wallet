@@ -19,7 +19,7 @@ import com.ddimitroff.projects.dwallet.enums.CashFlowType;
  * 
  */
 @Entity
-@Table(name = "CASH_FLOWS")
+@Table(name = "CASHFLOWS")
 @NamedQueries({
     @NamedQuery(name = CashFlow.GET_CASH_FLOWS_BY_USER, query = "SELECT cf FROM CashFlow cf WHERE cf.owner = :owner ORDER BY cf.created"),
     @NamedQuery(name = CashFlow.GET_CASH_FLOWS_BY_USER_AND_DATE, query = "SELECT cf FROM CashFlow cf WHERE cf.owner = :owner AND cf.created >= :created ORDER BY cf.created") })
